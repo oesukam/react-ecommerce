@@ -1,13 +1,17 @@
 module.exports = {
   currentUser: {
     loginModel: false,
-    isAuth: localStorage.getItem('token') || false,
+    isAuth: localStorage.getItem('accessToken') || false,
     user: {},
   },
   item: {
-    loadingAllItems: false,
     loadingItems: false,
-    allItems: [],
+    loadingSingleItem: false,
+    error: { message: '', field: '' },
+    items: [],
     singleItem: {},
+    departments: [],
+    categories: [],
+    departmentId: '',
   },
 };

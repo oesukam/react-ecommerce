@@ -15,12 +15,14 @@
     width: 100%;
   }
   .navbar-item {
-    &:hover {
+    &:hover,
+    &:active,
+    &:link {
       background-color: transparent;
     }
   }
   .nav-top {
-    padding: 0.5rem 0;
+    padding: 0.5rem 15px;
     .navbar-item {
       color: $color-black;
       display: inline-block;
@@ -44,6 +46,10 @@
     }
     .navbar-item {
       color: $color-white;
+      &:hover,
+      &.active {
+        color: $color-red;
+      }
     }
   }
 }

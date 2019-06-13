@@ -42,10 +42,10 @@ export class Header extends Component {
               Help & Contact
             </Link>
           </div>
-          <div className="is-flex content-space-between items-center">
-            <div className="is-flex items-center mr-20">
-              <img src={UKFlag} alt="UK Flag" className="mr-10" />£ GBP
-            </div>
+          <div className="is-flex items-center mr-20">
+            <img src={UKFlag} alt="UK Flag" className="mr-10" />£ GBP
+          </div>
+          <div className="is-flex content-flex-end items-center">
             <div>
               <div className="nav-cart">
                 <img
@@ -63,73 +63,63 @@ export class Header extends Component {
     </div>
   );
 
-  renderBottom = () => (
-    <div className="nav-bottom">
-      <div className="container">
-        <div className="navbar">
-          <div className="navbar-brand">
-            <Link to="/" className="navbar-item">
-              <div className="brand-name">SHOPMATE</div>
-            </Link>
-            <button
-              className="navbar-burger burger"
-              aria-label="menu"
-              aria-expanded="false"
-            >
-              <span aria-hidden="true" />
-              <span aria-hidden="true" />
-              <span aria-hidden="true" />
-            </button>
-          </div>
-
-          <div className="navbar-menu">
-            <div className="navbar-start">
+  renderDepartments = () => {
+    const { departments } = this.props;
+    return departments.map(dep => (
+      <Link key={dep.department_id} to="/" className="navbar-item">
+        {dep.name}
+      </Link>
+    ));
+  };
+  renderBottom = () => {
+    return (
+      <div className="nav-bottom">
+        <div className="container">
+          <div className="navbar">
+            <div className="navbar-brand">
               <Link to="/" className="navbar-item">
-                Women
+                <div className="brand-name">SHOPMATE</div>
               </Link>
-
-              <Link to="/posts" className="navbar-item">
-                Men
-              </Link>
-
-              <Link to="/posts" className="navbar-item">
-                Kids
-              </Link>
-
-              <Link to="/posts" className="navbar-item">
-                Shoes
-              </Link>
-
-              <Link to="/posts" className="navbar-item">
-                Brands
-              </Link>
+              <button
+                className="navbar-burger burger"
+                aria-label="menu"
+                aria-expanded="false"
+              >
+                <span aria-hidden="true" />
+                <span aria-hidden="true" />
+                <span aria-hidden="true" />
+              </button>
             </div>
-            <div className="navbar-end">
-              <div className="navbar-item">
-                <div className="nav-search">
-                  <img
-                    src={searchIcon}
-                    className="nav-search__loop"
-                    alt="Search loop icon"
-                  />
-                  <input
-                    className="nav-search__input"
-                    placeholder="search anything"
-                  />
-                  <img
-                    src={closeSmallIcon}
-                    className="nav-search__close"
-                    alt="Search close icon"
-                  />
+
+            <div className="navbar-menu">
+              <div className="navbar-start">{this.renderDepartments()}</div>
+              <div className="navbar-end">
+                <div className="navbar-item">
+                  <div className="nav-search">
+                    <img
+                      src={searchIcon}
+                      className="nav-search__loop"
+                      alt="Search loop icon"
+                    />
+                    <input
+                      className="nav-search__input"
+                      placeholder="search anything"
+                    />
+                    <img
+                      src={closeSmallIcon}
+                      className="nav-search__close"
+                      alt="Search close icon"
+                    />
+                  </div>
                 </div>
+                <div className="navbar-item">{this.renderAuthNav()}</div>
               </div>
-              <div className="navbar-item">{this.renderAuthNav()}</div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-  );
+    );
+  };
 
   render() {
     return (
@@ -146,8 +136,12 @@ export class Header extends Component {
   }
 }
 
-export const mapStateToProps = ({ currentUser: { isAuth } }) => ({
+export const mapStateToProps = ({
+  currentUser: { isAuth },
+  item: { departments },
+}) => ({
   isAuth,
+  departments,
 });
 
 export default connect(mapStateToProps)(Header);

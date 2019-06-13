@@ -1,4 +1,5 @@
 @import './styles/colors';
+@import './styles/forms';
 
 @font-face {
   font-family: Playfair-Bold;
@@ -56,9 +57,32 @@ h3 {
 .bg-red {
   background-color: $color-red;
 }
-
 .bg-white {
   background-color: $color-white;
+}
+.bg-gray {
+  background-color: $color-gray;
+}
+.bg-yellow {
+  background-color: $color-yellow;
+}
+.bg-yellow-dark {
+  background-color: $color-yellow-dark;
+}
+.bg-green {
+  background-color: $color-green;
+}
+.bg-blue {
+  background-color: $color-blue;
+}
+.bg-cyan {
+  background-color: $color-cyan;
+}
+.bg-purple {
+  background-color: $color-purple;
+}
+.bg-orange {
+  background-color: $color-orange;
 }
 
 // Flec Alignment helpers
@@ -103,4 +127,25 @@ h3 {
 }
 .mb-20 {
   margin-bottom: 20px;
+}
+
+.color-box {
+  width: 25px;
+  height: 25px;
+  display: inline-block;
+  border-radius: 50%;
+  margin: 20px 20px 10px 0;
+  position: relative;
+  &.selected {
+    &::after {
+      position: absolute;
+      border: 1px solid $color-gray-light;
+      content: ' ';
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      left: -5px;
+      top: -5px;
+    }
+  }
 }

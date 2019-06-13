@@ -5,27 +5,18 @@ import facebookIcon from '../../assets/icons/icons-facebook-grey.png';
 import twitterIcon from '../../assets/icons/icons-twitter-grey.png';
 import instagramIcon from '../../assets/icons/icons-instagram-grey.png';
 import pinterestIcon from '../../assets/icons/icons-pinterest-grey.png';
+import { connect } from 'react-redux';
 
-const Footer = () => (
+const Footer = ({ departments }) => (
   <footer className="page-footer">
     <div className="container">
       <div className="columns">
         <div className="column is-flex content-space-around">
-          <Link to="/items" className="footer-link">
-            Women
-          </Link>
-          <Link to="/items" className="footer-link">
-            Men
-          </Link>
-          <Link to="/items" className="footer-link">
-            Kids
-          </Link>
-          <Link to="/items" className="footer-link">
-            Shoes
-          </Link>
-          <Link to="/items" className="footer-link">
-            Brands
-          </Link>
+          {departments.map(dep => (
+            <Link key={dep.department_id} to="/" className="footer-link">
+              {dep.name}
+            </Link>
+          ))}
         </div>
       </div>
       <div className="columns">
@@ -65,4 +56,8 @@ const Footer = () => (
   </footer>
 );
 
-export default Footer;
+export const mapStateToProps = ({ item: { departments } }) => ({
+  departments,
+});
+
+export default connect(mapStateToProps)(Footer);

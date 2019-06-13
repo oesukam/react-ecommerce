@@ -2,15 +2,40 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import propTypes from 'prop-types';
 import Layout from '../../containers/Layout/Layout';
+import HomeShow from './HomeShow';
+import './Home.scss';
+import HomeSideFilter from './HomeSideFilter';
+import { fetchItems } from '../../actions/itemActions';
+import ItemCard from '../../components/ItemCard/ItemCard';
 
 export class Home extends Component {
+  componentDidMount() {
+    const { getItems } = this.props;
+    getItems();
+  }
+
+  renderItems = () => {
+    const { items } = this.props;
+    return items.map(item => (
+      <div className="column is-4" key={item.product_id}>
+        <ItemCard item={item} />
+      </div>
+    ));
+  };
+
   render() {
     return (
       <Layout>
-        <div className="bg-red">
-          <h1>Home</h1>
-          <h2>Home</h2>
-          <h3>Home</h3>
+        <div className="container">
+          <HomeShow />
+          <div className="columns">
+            <div className="column is-3">
+              <HomeSideFilter />
+            </div>
+            <div className="column is-9">
+              <div className="columns is-multiline">{this.renderItems()}</div>
+            </div>
+          </div>
         </div>
       </Layout>
     );
@@ -18,15 +43,22 @@ export class Home extends Component {
 }
 
 Home.propTypes = {
-  allItems: propTypes.array,
+  items: propTypes.array,
 };
 
 Home.defaultProps = {
-  allItems: [],
+  items: [],
 };
 
-export const mapStateToProps = ({ item: { allItems } }) => ({
-  allItems,
+export const mapStateToProps = ({ item: { items } }) => ({
+  items,
 });
 
-export default connect(mapStateToProps)(Home);
+export const mapDisptachToProps = dispatch => ({
+  getItems: payload => dispatch(fetchItems(payload)),
+});
+
+export default connect(
+  mapStateToProps,
+  mapDisptachToProps,
+)(Home);

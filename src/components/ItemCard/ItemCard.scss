@@ -1,0 +1,75 @@
+@import '../../styles/colors';
+@import '../../styles/mixins';
+
+@mixin item-button {
+  font-size: 1rem;
+  background-color: $color-red;
+  color: #fff;
+  border: none;
+  border-radius: 20px;
+  padding: 10px 20px;
+  cursor: pointer;
+  &:hover {
+    color: $color-gray;
+  }
+}
+.item-card {
+  position: relative;
+  &:hover {
+    @include block-shadow-hover;
+    transform: scale(1.02);
+    .item-card__hover {
+      display: flex;
+      visibility: visible;
+      opacity: 1;
+    }
+  }
+  transition: transform 0.2s;
+  height: 40vh;
+  min-height: 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 15px;
+  font-family: Montserra-Bold;
+  background-color: $color-white;
+  @include block-shadow;
+  &__image {
+    object-fit: cover;
+    width: 60%;
+  }
+  &__name {
+    display: flex;
+    align-items: center;
+    height: 70px;
+    font-size: 1.4rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  &__bottom {
+    height: 60px;
+    display: flex;
+    align-items: center;
+    &__buy-btn {
+      @include item-button;
+    }
+  }
+
+  &__hover {
+    background-color: rgba($color: #fff, $alpha: 0.9);
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 90px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0s, opacity 0.5s linear;
+    &__view-btn {
+      @include item-button;
+    }
+  }
+}

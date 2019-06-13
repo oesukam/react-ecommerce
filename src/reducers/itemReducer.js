@@ -8,20 +8,25 @@ const reducer = (state = initialState, { type, payload }) => {
         ...state,
         loadingItems: payload,
       };
-    case types.SET_LOADING_ALL_ITEMS:
-      return {
-        ...state,
-        loadingAllItems: payload,
-      };
-    case types.SET_ALL_ITEMS:
-      return {
-        ...state,
-        allItems: payload,
-      };
     case types.SET_ITEMS:
       return {
         ...state,
-        allItems: payload,
+        items: payload,
+      };
+    case types.SET_ITEM_ERROR:
+      return {
+        ...state,
+        error: payload,
+      };
+    case types.SET_DEPARTMENTS:
+      return {
+        ...state,
+        departments: payload,
+      };
+    case types.SET_CATEGORIES:
+      return {
+        ...state,
+        categories: payload,
       };
 
     default:

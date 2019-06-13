@@ -1,14 +1,13 @@
 import axios from 'axios';
-import store from '../store';
+import { store } from '../store';
 
-const {
-  user: { token },
-} = store.getState().user;
+const { accessToken } = store.getState().currentUser;
 
 const http = axios.create({
   baseURL: process.env.API_URL,
   headers: {
-    Authorization: token || localStorage.getItem('token') || undefined,
+    Authorization:
+      accessToken || localStorage.getItem('accessToken') || undefined,
   },
 });
 

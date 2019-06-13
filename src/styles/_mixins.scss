@@ -1,0 +1,13 @@
+@import './colors';
+
+@mixin block-shadow {
+  box-shadow: 0px 1px 3px 0px $color-gray-light;
+}
+
+@mixin block-shadow-hover {
+  box-shadow: 0px 1px 10px 0px $color-gray-light;
+}
+
+@mixin block-outline {
+  border: 1px solid $color-gray-light;
+}
