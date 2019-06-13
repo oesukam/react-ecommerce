@@ -1,0 +1,27 @@
+@import '../../styles/colors';
+
+.show-container {
+  margin: 40px 0;
+  padding: 2rem 4rem;
+  background-color: $color-gray-light;
+  background-image: url('../../assets//images/Images-modal4.png');
+  background-position: right;
+  background-repeat: no-repeat;
+  background-size: cover;
+  display: flex;
+  align-items: center;
+  div {
+    width: 100%;
+  }
+}
+.show-title {
+  font-size: 3rem;
+  font-family: PlayFaire-Bold;
+}
+.show-categories {
+  li {
+    color: $color-white;
+    font-family: Montserrat-Bold;
+    font-size: 1.5rem;
+  }
+}

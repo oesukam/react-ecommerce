@@ -1,13 +1,151 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@import './styles/colors';
+@import './styles/forms';
+
+@font-face {
+  font-family: Playfair-Bold;
+  src: url('./assets/fonts/PlayfairDisplay-Bold.ttf');
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
+@font-face {
+  font-family: Montserrat-Bold;
+  src: url('./assets/fonts/Montserrat-Bold.ttf');
+}
+
+@font-face {
+  font-family: Roboto;
+  src: url('./assets/fonts/Roboto-Regular.ttf');
+}
+
+@font-face {
+  font-family: OpenSans;
+  src: url('./assets/fonts/OpenSans-Regular.ttf');
+}
+
+body {
+  margin: 0;
+  font-family: OpenSans;
+}
+
+// Typography
+h1 {
+  font-family: Playfair-Bold;
+  font-size: 48px;
+}
+
+h2 {
+  font-family: Montserrat-Bold;
+  font-size: 24px;
+}
+
+h3 {
+  font-family: Montserrat-Bold;
+  font-size: 16px;
+}
+
+// Color helpers
+.color-red {
+  color: $color-red;
+}
+.color-white {
+  color: $color-white;
+}
+.color-gray {
+  color: $color-gray;
+}
+
+// Background color helpers
+.bg-red {
+  background-color: $color-red;
+}
+.bg-white {
+  background-color: $color-white;
+}
+.bg-gray {
+  background-color: $color-gray;
+}
+.bg-yellow {
+  background-color: $color-yellow;
+}
+.bg-yellow-dark {
+  background-color: $color-yellow-dark;
+}
+.bg-green {
+  background-color: $color-green;
+}
+.bg-blue {
+  background-color: $color-blue;
+}
+.bg-cyan {
+  background-color: $color-cyan;
+}
+.bg-purple {
+  background-color: $color-purple;
+}
+.bg-orange {
+  background-color: $color-orange;
+}
+
+// Flec Alignment helpers
+.content-center {
+  justify-content: center;
+}
+.content-flex-end {
+  justify-content: flex-end;
+}
+.content-space-between {
+  justify-content: space-between;
+}
+.content-space-around {
+  justify-content: space-around;
+}
+.items-center {
+  align-items: center;
+}
+
+// Margins helpers
+.mr-10 {
+  margin-right: 10px;
+}
+.ml-10 {
+  margin-left: 10px;
+}
+.mt-10 {
+  margin-top: 10px;
+}
+.mb-10 {
+  margin-bottom: 10px;
+}
+
+.mr-20 {
+  margin-right: 20px;
+}
+.ml-20 {
+  margin-left: 20px;
+}
+.mt-20 {
+  margin-top: 20px;
+}
+.mb-20 {
+  margin-bottom: 20px;
+}
+
+.color-box {
+  width: 25px;
+  height: 25px;
+  display: inline-block;
+  border-radius: 50%;
+  margin: 20px 20px 10px 0;
+  position: relative;
+  &.selected {
+    &::after {
+      position: absolute;
+      border: 1px solid $color-gray-light;
+      content: ' ';
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      left: -5px;
+      top: -5px;
+    }
+  }
 }

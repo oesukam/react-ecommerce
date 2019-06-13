@@ -1,0 +1,5 @@
+export const SET_LOADING_ITEMS = 'SET_LOADING_ITEMS';
+export const SET_ITEMS = 'SET_ITEMS';
+export const SET_ITEM_ERROR = 'SET_ITEM_ERROR';
+export const SET_DEPARTMENTS = 'SET_DEPARTMENTS';
+export const SET_CATEGORIES = 'SET_CATEGORIES';

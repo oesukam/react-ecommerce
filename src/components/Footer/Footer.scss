@@ -1,0 +1,29 @@
+@import '../../styles/colors';
+
+.page-footer {
+  background-color: $color-black;
+  font-family: Montserrat-bold;
+  padding: 3rem 1rem;
+  z-index: -1;
+}
+
+.footer-link {
+  font-size: 2rem;
+  color: $color-white;
+  &:hover {
+    color: $color-gray;
+  }
+}
+
+.footer-socials {
+  &__icon {
+    margin: 10px;
+  }
+}
+
+.footer-copyright {
+  color: $color-gray;
+  font-family: Roboto;
+  font-size: 1.3rem;
+  text-align: center;
+}

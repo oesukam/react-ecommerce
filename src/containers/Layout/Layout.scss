@@ -1,0 +1,11 @@
+@import '../../styles/colors';
+
+.main-content {
+  padding-top: 152px;
+  padding-right: 15px;
+  padding-left: 15px;
+  min-height: 100vh;
+  min-height: calc(100vh - 290px);
+  background-color: $color-white-gray;
+  padding-bottom: 2rem;
+}

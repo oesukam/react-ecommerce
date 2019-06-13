@@ -1,0 +1,62 @@
+@import '../../styles/mixins';
+
+.side-filter {
+  font-family: Montserra-Bold;
+  .filter-header {
+    padding: 15px;
+    h1 {
+      font-family: Roboto;
+      font-size: 1.8rem;
+    }
+    @include block-shadow;
+    background-color: $color-white-gray-2;
+    .selected-category {
+      display: flex;
+      align-items: center;
+      margin-top: 5px;
+      img {
+        cursor: pointer;
+      }
+    }
+  }
+  .filters {
+    @include block-shadow;
+    background-color: #fff;
+    padding: 15px;
+    h2 {
+      font-size: 1.5rem;
+      color: $color-gray-light;
+    }
+    .size-blocks {
+      display: flex;
+      flex-wrap: wrap;
+      margin-top: 15px;
+      .size-block {
+        background-color: $color-white-gray;
+        color: $color-gray;
+        margin: 5px;
+        width: 33.33%;
+        min-width: 70px;
+        min-width: 50px;
+        max-width: 100px;
+        text-align: center;
+        font-size: 1rem;
+        padding: 5px;
+        font-family: Roboto;
+        border-radius: 4px;
+        &.selected {
+          background-color: $color-red;
+          color: #fff;
+        }
+      }
+    }
+  }
+}
+
+.check-category {
+  font-family: Roboto;
+  font-size: 1.2rem;
+  input {
+    margin-right: 5px;
+  }
+}
