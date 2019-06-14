@@ -11,7 +11,8 @@ const reducer = (state = initialState, { type, payload }) => {
     case types.SET_ITEMS:
       return {
         ...state,
-        items: payload,
+        items: payload.rows,
+        meta: payload.meta || initialState.meta,
       };
     case types.SET_ITEM_ERROR:
       return {
@@ -27,6 +28,16 @@ const reducer = (state = initialState, { type, payload }) => {
       return {
         ...state,
         categories: payload,
+      };
+    case types.SET_DEPARTMENT_ID:
+      return {
+        ...state,
+        departmentId: parseInt(payload, 10),
+      };
+    case types.SET_CATEGORY_ID:
+      return {
+        ...state,
+        categoryId: parseInt(payload, 10),
       };
 
     default:

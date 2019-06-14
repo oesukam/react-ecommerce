@@ -16,6 +16,7 @@ export const Routes = ({ isAuth }) => (
   <Router>
     <Switch>
       <Route exact path="/" component={Home} />
+      <Route exact path="/departments/:departmentId" component={Home} />
       <Route
         exact
         path="/login"

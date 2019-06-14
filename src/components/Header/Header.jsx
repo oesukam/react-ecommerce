@@ -7,6 +7,7 @@ import bagBlackIcon from '../../assets/icons/icons-bag.png';
 import closeSmallIcon from '../../assets/icons/icons-close-small-white.png';
 import searchIcon from '../../assets/icons/icons-search-white.png';
 import UKFlag from '../../assets/icons/gbr.png';
+import { setDepartmentId } from '../../actions/itemActions';
 
 export class Header extends Component {
   renderAuthNav = () => {
@@ -64,9 +65,22 @@ export class Header extends Component {
   );
 
   renderDepartments = () => {
-    const { departments } = this.props;
+    const {
+      departments,
+      match: {
+        params: { departmentId },
+      },
+      setDepartment,
+    } = this.props;
+    const id = parseInt(departmentId, 10);
+    setDepartment(id || '');
+
     return departments.map(dep => (
-      <Link key={dep.department_id} to="/" className="navbar-item">
+      <Link
+        key={dep.department_id}
+        to={`/departments/${dep.department_id}`}
+        className={`navbar-item ${dep.department_id === id ? 'active' : ''}`}
+      >
         {dep.name}
       </Link>
     ));
@@ -144,4 +158,11 @@ export const mapStateToProps = ({
   departments,
 });
 
-export default connect(mapStateToProps)(Header);
+export const mapDispatchToProps = disptach => ({
+  setDepartment: payload => disptach(setDepartmentId(payload)),
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(Header);

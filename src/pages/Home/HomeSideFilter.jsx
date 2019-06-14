@@ -1,71 +1,108 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import propTypes from 'prop-types';
 import './HomeSideFilter.scss';
 import closeSmallIcon from '../../assets/icons/icons-close-small-black.png';
+import { setCategoryId, fetchItems } from '../../actions/itemActions';
 
-const filterCategories = categories =>
-  categories.map(cat => (
-    <li key={cat.category_id} className="selected-category">
-      <img src={closeSmallIcon} alt="Close icon" />
-      {cat.name}
-    </li>
-  ));
+export class HomeSideFilter extends Component {
+  clearFilter = () => {
+    const { categoryChange, getItems } = this.props;
+    categoryChange('');
+    getItems();
+  };
 
-const allCategories = categories =>
-  categories.map(cat => (
-    <li key={cat.category_id} className="check-category">
-      <input type="checkbox" className="checkbox" />
-      {cat.name}
-    </li>
-  ));
+  filterByCategory = categoryId => {
+    const { categoryChange, getItems } = this.props;
+    categoryChange(categoryId);
+    getItems({ categoryId, type: 'category' });
+  };
 
-export const HomeSideFilter = ({ categories }) => (
-  <div className="side-filter">
-    <div className="filter-header">
-      <h1>Filter 5000 Items</h1>
-      <ul>{filterCategories(categories)}</ul>
-    </div>
-    <div className="filters">
-      <h2>Color</h2>
-      <div>
-        <span className="color-box bg-blue selected" />
-        <span className="color-box bg-cyan" />
-        <span className="color-box bg-red" />
-        <span className="color-box bg-orange" />
-        <span className="color-box bg-yellow" />
-        <span className="color-box bg-green" />
-        <span className="color-box bg-purple" />
+  renderFilterCategories = () => {
+    const { categories, categoryId } = this.props;
+    return categories.map(cat =>
+      cat.category_id === categoryId ? (
+        <li key={cat.category_id} className="selected-category">
+          <img
+            src={closeSmallIcon}
+            onClick={this.clearFilter}
+            alt="Close icon"
+          />
+          {cat.name}
+        </li>
+      ) : null,
+    );
+  };
+
+  renderCategories = () => {
+    const { categories, departmentId, categoryId } = this.props;
+    return categories.map(cat =>
+      !departmentId || departmentId === cat.department_id ? (
+        <li key={cat.category_id} className="radio-category">
+          <input
+            type="radio"
+            name="categoryId"
+            checked={categoryId === cat.category_id}
+            value={cat.category_id}
+            onChange={() => this.filterByCategory(cat.category_id)}
+          />
+          <label onClick={() => this.filterByCategory(cat.category_id)}>
+            {cat.name}
+          </label>
+        </li>
+      ) : null,
+    );
+  };
+
+  render() {
+    const { itemsCount } = this.props;
+    return (
+      <div className="side-filter">
+        <div className="filter-header">
+          <h1>Filter {itemsCount} Items</h1>
+          <ul>{this.renderFilterCategories()}</ul>
+        </div>
+        <div className="filters">
+          <h2>Categories</h2>
+          <ul className="categories-blocks">{this.renderCategories()}</ul>
+        </div>
       </div>
-
-      <h2>Size</h2>
-      <div className="size-blocks">
-        <div className="size-block">XS</div>
-        <div className="size-block selected">S</div>
-        <div className="size-block">M</div>
-        <div className="size-block">L</div>
-        <div className="size-block">XL</div>
-      </div>
-
-      <h2>Categories</h2>
-      <ul className="categories-blocks">{allCategories(categories)}</ul>
-    </div>
-  </div>
-);
+    );
+  }
+}
 
 HomeSideFilter.propTypes = {
   categories: propTypes.array,
-  departmentId: propTypes.string,
+  departmentId: propTypes.oneOfType([propTypes.number, propTypes.string]),
+  categoryId: propTypes.oneOfType([propTypes.number, propTypes.string]),
+  itemsCount: propTypes.number,
+  categoryChange: propTypes.func,
+  getItems: propTypes.func,
 };
 
 HomeSideFilter.defaultProps = {
   categories: [],
   departmentId: '',
+  categoryId: '',
+  itemsCount: 0,
+  categoryChange: () => '',
+  getItems: () => '',
 };
 
-export const mapStateToProps = ({ item: { categories, departmentId } }) => ({
+export const mapStateToProps = ({
+  item: { categories, departmentId, categoryId },
+}) => ({
   categories,
   departmentId,
+  categoryId,
 });
 
-export default connect(mapStateToProps)(HomeSideFilter);
+export const mapDispatchToProps = dispatch => ({
+  categoryChange: categoryId => dispatch(setCategoryId(categoryId)),
+  getItems: paylaod => dispatch(fetchItems(paylaod)),
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(HomeSideFilter);
