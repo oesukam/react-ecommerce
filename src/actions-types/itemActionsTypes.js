@@ -3,3 +3,5 @@ export const SET_ITEMS = 'SET_ITEMS';
 export const SET_ITEM_ERROR = 'SET_ITEM_ERROR';
 export const SET_DEPARTMENTS = 'SET_DEPARTMENTS';
 export const SET_CATEGORIES = 'SET_CATEGORIES';
+export const SET_CATEGORY_ID = 'SET_CATEGORY_ID';
+export const SET_DEPARTMENT_ID = 'SET_DEPARTMENT_ID';

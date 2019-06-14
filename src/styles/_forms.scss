@@ -1,0 +1,26 @@
+@import './colors';
+
+@mixin radio-input {
+  width: 15px;
+  height: 15px;
+  border-radius: 15px;
+  top: -2px;
+  left: -1px;
+  position: relative;
+  content: '';
+  display: inline-block;
+  visibility: visible;
+  border: 2px solid white;
+}
+input[type='radio'] {
+  &:after {
+    @include radio-input;
+    background-color: #d1d3d1;
+  }
+  &:checked:after,
+  &.active:after {
+    @include radio-input;
+    @include radio-input;
+    background-color: $color-red;
+  }
+}

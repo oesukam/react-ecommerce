@@ -13,5 +13,11 @@ module.exports = {
     departments: [],
     categories: [],
     departmentId: '',
+    categoryId: '',
+    meta: {
+      page: 1,
+      pages: 1,
+      total: 0,
+    },
   },
 };
