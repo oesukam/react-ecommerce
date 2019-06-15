@@ -44,7 +44,7 @@ h3 {
 
 // Color helpers
 .color-red {
-  color: $color-red;
+  color: $color-red !important;
 }
 .color-white {
   color: $color-white;
@@ -214,4 +214,8 @@ h3 {
 
 .position-relative {
   position: relative;
+}
+
+.font-roboto {
+  font-family: Roboto;
 }

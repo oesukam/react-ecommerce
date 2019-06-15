@@ -1,0 +1,139 @@
+@import '../../styles/mixins';
+
+.product-container {
+  @include block-shadow;
+  background-color: #fff;
+  margin-top: 40px;
+}
+
+.images {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 400px;
+  &__view {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    padding: 15px;
+    img {
+      object-fit: cover;
+    }
+  }
+  &__views {
+    padding: 15px;
+    height: 115px;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    img {
+      height: 100%;
+      object-fit: cover;
+      width: 100px;
+      margin-right: 20px;
+      cursor: pointer;
+      &.active {
+        border: 2px solid $color-red;
+      }
+    }
+  }
+}
+
+.product {
+  padding: 15px 20px;
+  font-family: Montserrat-Bold;
+  &__name {
+    font-size: 2rem;
+  }
+  &__price {
+    color: $color-red;
+    font-size: 2rem;
+  }
+  &__info {
+    font-size: 1.3rem;
+    color: $color-gray-light;
+    margin-top: 20px;
+    &-light {
+      font-family: Roboto;
+      color: $color-red;
+    }
+  }
+  &__quantity {
+    margin: 20px 0 30px 0;
+    &--icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: $color-gray-light-2;
+      border: none;
+      cursor: pointer;
+      &:focus {
+        outline: none;
+      }
+    }
+    &--count {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      width: 60px;
+      height: 40px;
+      border-radius: 20px;
+      margin: 0 15px;
+      border: 1px solid $color-gray-light-2;
+    }
+  }
+
+  &__add-btn {
+    background-color: $color-red;
+    border-radius: 30px;
+    padding: 15px 30px;
+    color: #fff;
+    font-size: 1.2rem;
+    border: none;
+    font-family: Montserrat-Bold;
+    cursor: pointer;
+  }
+  &__wish-btn {
+    color: $color-gray-light;
+    border: none;
+    font-size: 1rem;
+    i {
+      margin-right: 10px;
+    }
+  }
+}
+
+.size-blocks {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 15px;
+  .size-block {
+    background-color: $color-white-gray;
+    color: $color-gray;
+    margin: 5px;
+    width: 33.33%;
+    min-width: 70px;
+    min-width: 50px;
+    max-width: 100px;
+    text-align: center;
+    font-size: 1rem;
+    padding: 5px;
+    font-family: Roboto;
+    border-radius: 4px;
+    cursor: pointer;
+    &.selected {
+      background-color: $color-red;
+      color: #fff;
+    }
+  }
+}
+
+.product-reviews {
+  @include block-shadow;
+  background-color: #fafafa;
+  margin-top: 10px;
+  padding: 15px;
+  h1 {
+    font-family: Montserrat-Bold;
+    font-size: 1.8rem;
+  }
+}

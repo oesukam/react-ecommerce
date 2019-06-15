@@ -3,6 +3,11 @@ import { item as initialState } from '../store/initialState';
 
 const reducer = (state = initialState, { type, payload }) => {
   switch (type) {
+    case types.SET_LOADING_ITEM:
+      return {
+        ...state,
+        loadingItem: payload,
+      };
     case types.SET_LOADING_ITEMS:
       return {
         ...state,
@@ -13,6 +18,29 @@ const reducer = (state = initialState, { type, payload }) => {
         ...state,
         items: payload.rows,
         meta: payload.meta || initialState.meta,
+      };
+    case types.SET_ITEM:
+      return {
+        ...state,
+        item: payload,
+      };
+    case types.SET_ITEM_FORM:
+      return {
+        ...state,
+        itemForm: payload,
+      };
+    case types.SET_ITEM_FORM_FIELD:
+      return {
+        ...state,
+        itemForm: {
+          [payload.name]: payload.value,
+          ...state.itemForm,
+        },
+      };
+    case types.CLEAR_ITEM_FORM:
+      return {
+        ...state,
+        itemForm: state.itemForm,
       };
     case types.SET_ITEM_ERROR:
       return {

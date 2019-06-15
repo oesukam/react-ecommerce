@@ -1,4 +1,5 @@
 import axios from 'axios';
+import 'dotenv/config';
 import { store } from '../store';
 
 const { accessToken } = store.getState().currentUser;
