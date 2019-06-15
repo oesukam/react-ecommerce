@@ -10,6 +10,7 @@ import { connect } from 'react-redux';
 import { PropTypes } from 'prop-types';
 
 import Home from '../pages/Home/Home';
+import SingleItem from '../pages/SingleItem/SingleItem';
 import Login from '../pages/Home/Home';
 
 export const Routes = ({ isAuth }) => (
@@ -17,6 +18,7 @@ export const Routes = ({ isAuth }) => (
     <Switch>
       <Route exact path="/" component={Home} />
       <Route exact path="/departments/:departmentId" component={Home} />
+      <Route exact path="/products/:productId" component={SingleItem} />
       <Route
         exact
         path="/login"

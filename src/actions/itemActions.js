@@ -2,8 +2,18 @@ import * as types from '../actions-types/itemActionsTypes';
 import axios from '../utils/axios';
 import getMetaData from '../utils/getMetaData';
 
+export const setItem = payload => ({
+  type: types.SET_ITEM,
+  payload,
+});
+
 export const setItems = payload => ({
   type: types.SET_ITEMS,
+  payload,
+});
+
+export const setLoadingItem = payload => ({
+  type: types.SET_LOADING_ITEM,
   payload,
 });
 
@@ -94,3 +104,28 @@ export const setCategoryId = payload => ({
   type: types.SET_CATEGORY_ID,
   payload,
 });
+
+export const setItemForm = payload => ({
+  type: types.SET_ITEM_FORM,
+  payload,
+});
+
+export const setItemFormField = payload => ({
+  type: types.SET_ITEM_FORM_FIELD,
+  payload,
+});
+
+export const fetchItem = id => dispatch => {
+  dispatch(setLoadingItem(true));
+  return axios
+    .get(`/products/${id}`)
+    .then(({ data }) => {
+      dispatch(setItem(data));
+      dispatch(setLoadingItem(false));
+      return data;
+    })
+    .catch(err => {
+      dispatch(setItemError(err));
+      dispatch(setLoadingItem(false));
+    });
+};

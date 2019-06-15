@@ -1,4 +1,5 @@
 @import '../../styles/colors';
+@import '../../styles/variables';
 
 #fixed-nav {
   position: fixed;
@@ -108,5 +109,11 @@
     -moz-border-radius: 50%;
     -ms-border-radius: 50%;
     -o-border-radius: 50%;
+  }
+}
+
+@media screen and (max-width: $desktop) {
+  .nav-top {
+    font-size: 0.8rem;
   }
 }

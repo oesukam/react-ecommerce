@@ -6,10 +6,14 @@ module.exports = {
   },
   item: {
     loadingItems: false,
-    loadingSingleItem: false,
+    loadingItem: false,
     error: { message: '', field: '' },
     items: [],
-    singleItem: {},
+    item: {},
+    itemForm: {
+      quantity: 0,
+      size: 'S',
+    },
     departments: [],
     categories: [],
     departmentId: '',
