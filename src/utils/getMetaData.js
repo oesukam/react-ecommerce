@@ -1,6 +1,6 @@
 const getMetaData = ({ count, page, limit = 20 } = {}) => ({
   pages: Math.ceil(count / 20),
-  page,
+  page: parseInt(page, 10),
   total: count,
 });
 

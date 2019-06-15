@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@babel/core": "7.4.3",
+    "@fortawesome/fontawesome-free": "^5.9.0",
     "@svgr/webpack": "4.1.0",
     "@typescript-eslint/eslint-plugin": "1.6.0",
     "@typescript-eslint/parser": "1.6.0",
@@ -58,6 +59,7 @@
     "query-string": "^6.7.0",
     "react": "^16.8.6",
     "react-app-polyfill": "^1.0.1",
+    "react-content-loader": "^4.2.1",
     "react-dev-utils": "^9.0.1",
     "react-dom": "^16.8.6",
     "react-redux": "^7.1.0",

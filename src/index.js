@@ -6,6 +6,7 @@ import './index.scss';
 import { store, persistor } from './store';
 import App from './components/App';
 import 'bulma/css/bulma.css';
+import '@fortawesome/fontawesome-free/css/all.min.css';
 import * as serviceWorker from './serviceWorker';
 
 render(
