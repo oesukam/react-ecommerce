@@ -8,6 +8,8 @@ import './Home.scss';
 import HomeSideFilter from './HomeSideFilter';
 import { fetchItems, setCategoryId } from '../../actions/itemActions';
 import ItemCard from '../../components/ItemCard/ItemCard';
+import Pagination from '../../components/Pagination/Pagination';
+import ItemsLoader from '../../components/ContentLoader/ItemsLoader';
 
 export class Home extends Component {
   componentDidMount() {
@@ -15,11 +17,13 @@ export class Home extends Component {
     const { category: categoryId, page = 1 } = queryString.parse(
       location.search,
     );
+    let type = '';
+    if (categoryId) {
+      type = 'category';
+    }
 
-    console.log('===', categoryId);
-    setCategory(categoryId);
-
-    getItems({ page, categoryId });
+    setCategory(categoryId || '');
+    getItems({ page, categoryId, type });
   }
 
   renderItems = () => {
@@ -35,22 +39,39 @@ export class Home extends Component {
 
   renderLoading = () => {
     const { loadingItems } = this.props;
-    return loadingItems ? (
-      <div className="loading-container">
-        <div className="loading center" />
-      </div>
-    ) : null;
+    return loadingItems ? <ItemsLoader /> : null;
+  };
+
+  goToPage = page => {
+    const { getItems, categoryId, departmentId, history } = this.props;
+    let url = `/?page=${page}`;
+    let type;
+    if (categoryId) {
+      url += `&category=${categoryId}`;
+      type = 'category';
+    }
+    if (departmentId) {
+      url = `/departments/${departmentId}${url}`;
+      type = 'department';
+    }
+    history.push(url);
+    getItems({ page, categoryId, type });
   };
 
   render() {
-    const { match } = this.props;
+    const {
+      match,
+      history,
+      meta: { page, pages },
+    } = this.props;
     return (
-      <Layout match={match}>
+      <Layout match={match} history={history}>
         <div className="container">
           <HomeShow />
+          <Pagination goToPage={this.goToPage} page={page} pages={pages} />
           <div className="columns">
             <div className="column is-3">
-              <HomeSideFilter />
+              <HomeSideFilter history={history} />
             </div>
             <div className="column is-9 position-relative">
               {this.renderLoading()}
@@ -66,16 +87,29 @@ export class Home extends Component {
 Home.propTypes = {
   items: propTypes.array,
   loadingItems: propTypes.bool,
+  meta: propTypes.object,
+  categoryId: propTypes.oneOfType([propTypes.number, propTypes.string]),
+  departmentId: propTypes.oneOfType([propTypes.number, propTypes.string]),
 };
 
 Home.defaultProps = {
   items: [],
   loadingItems: true,
+  meta: {
+    page: 1,
+    pages: 1,
+    total: 0,
+  },
 };
 
-export const mapStateToProps = ({ item: { items, loadingItems } }) => ({
+export const mapStateToProps = ({
+  item: { items, loadingItems, categoryId, departmentId, meta },
+}) => ({
   items,
   loadingItems,
+  categoryId,
+  departmentId,
+  meta,
 });
 
 export const mapDisptachToProps = dispatch => ({

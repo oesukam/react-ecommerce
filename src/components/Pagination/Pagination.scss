@@ -1,0 +1,73 @@
+@import '../../styles/colors';
+
+nav {
+  &.pagination-container {
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    &__list {
+    }
+  }
+}
+
+.pagination-nav {
+  border: none;
+  background-color: transparent;
+  display: inline-flex;
+  justify-content: space-between;
+  align-items: center;
+  width: auto;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.pagination-arrow {
+  border-radius: 50%;
+  background-color: $color-gray-light-2;
+  padding: 5px;
+  cursor: pointer;
+  &:disabled {
+    &:hover {
+      cursor: not-allowed !important;
+    }
+  }
+}
+
+.pagination-pages {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  list-style: none;
+  li {
+    display: inline-block;
+    .pagination-page {
+      background-color: transparent;
+      border: none;
+      font-size: 1rem;
+      padding: 8px;
+      margin: 5px;
+      width: 40px;
+      height: 40px;
+      text-align: center;
+      display: flex;
+      justify-content: center;
+      border-radius: 50%;
+      cursor: pointer;
+      &:focus {
+        outline: none;
+      }
+      &.active {
+        background-color: $color-black;
+        color: #fff;
+      }
+    }
+    .pagination-dots {
+      margin: 5px;
+      content: ' ';
+      &::after {
+        content: '...';
+      }
+    }
+  }
+}

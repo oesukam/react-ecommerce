@@ -13,8 +13,19 @@ export class HomeSideFilter extends Component {
   };
 
   filterByCategory = categoryId => {
-    const { categoryChange, getItems } = this.props;
+    const {
+      categoryChange,
+      getItems,
+      history,
+      meta: { page = 1 },
+      departmentId,
+    } = this.props;
+    let url = `/?page=${page}&category=${categoryId}`;
+    if (departmentId) {
+      url = `/departments/${departmentId}${url}`;
+    }
     categoryChange(categoryId);
+    history.push(url);
     getItems({ categoryId, type: 'category' });
   };
 
@@ -44,9 +55,15 @@ export class HomeSideFilter extends Component {
             name="categoryId"
             checked={categoryId === cat.category_id}
             value={cat.category_id}
-            onChange={() => this.filterByCategory(cat.category_id)}
+            onChange={() =>
+              this.filterByCategory(cat.category_id, cat.department_id)
+            }
           />
-          <label onClick={() => this.filterByCategory(cat.category_id)}>
+          <label
+            onClick={() =>
+              this.filterByCategory(cat.category_id, cat.department_id)
+            }
+          >
             {cat.name}
           </label>
         </li>
@@ -55,11 +72,14 @@ export class HomeSideFilter extends Component {
   };
 
   render() {
-    const { itemsCount } = this.props;
+    const {
+      meta: { total = 0 },
+      loadingItems,
+    } = this.props;
     return (
       <div className="side-filter">
         <div className="filter-header">
-          <h1>Filter {itemsCount} Items</h1>
+          <h1>Filter {!loadingItems ? total : ''} Items</h1>
           <ul>{this.renderFilterCategories()}</ul>
         </div>
         <div className="filters">
@@ -78,6 +98,8 @@ HomeSideFilter.propTypes = {
   itemsCount: propTypes.number,
   categoryChange: propTypes.func,
   getItems: propTypes.func,
+  meta: propTypes.object,
+  loadingItems: propTypes.bool,
 };
 
 HomeSideFilter.defaultProps = {
@@ -87,14 +109,22 @@ HomeSideFilter.defaultProps = {
   itemsCount: 0,
   categoryChange: () => '',
   getItems: () => '',
+  meta: {
+    total: 0,
+    page: 1,
+    pages: 1,
+  },
+  loadingItems: true,
 };
 
 export const mapStateToProps = ({
-  item: { categories, departmentId, categoryId },
+  item: { categories, departmentId, categoryId, meta, loadingItems },
 }) => ({
   categories,
   departmentId,
   categoryId,
+  meta,
+  loadingItems,
 });
 
 export const mapDispatchToProps = dispatch => ({
