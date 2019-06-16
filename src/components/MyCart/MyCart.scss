@@ -1,0 +1,99 @@
+@import '../../styles/colors';
+@import '../../styles/variables';
+
+.cart-modal {
+  .modal-card {
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.6);
+    .modal-card-head {
+      border-radius: 0;
+      border-bottom: 0;
+      background-color: #fff;
+      p {
+        font-family: Montserrat-Bold;
+        font-size: 1.8rem;
+      }
+    }
+    .modal-card-body {
+      min-height: 200px;
+    }
+    .modal-card-foot {
+      border-radius: 0;
+      border-top: 0;
+      justify-content: space-between;
+      button {
+        border-radius: 30px;
+        padding: 15px 30px;
+        border: none;
+        font-family: Montserrat-Bold;
+        font-size: 0.8rem;
+        cursor: pointer;
+        &:focus {
+          outline: none;
+        }
+        &.empty-cart-btn {
+          color: $color-red;
+        }
+        &.checkout-btn,
+        &.back-btn {
+          background-color: $color-red;
+          color: #fff;
+        }
+      }
+    }
+  }
+}
+
+.cart-item {
+  display: flex;
+  align-items: center;
+  font-family: Roboto;
+  &__cover {
+    width: 100px;
+    object-fit: cover;
+    border: 1px solid $color-gray-light;
+  }
+  &__body {
+    flex: 1;
+    padding: 15px;
+    h1 {
+      font-family: Roboto;
+      font-size: 1.5rem;
+    }
+  }
+  &__delete-btn {
+    color: $color-gray;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+  }
+}
+
+.modal-close-btn {
+  cursor: pointer;
+}
+
+.table {
+  font-family: Roboto;
+  min-width: 70wh !important;
+  tbody {
+    td {
+      vertical-align: middle;
+      &.price {
+        font-size: 1.8rem;
+        text-align: center;
+      }
+      &.quantity {
+        font-size: 1.5rem;
+        text-align: center;
+      }
+    }
+  }
+}
+
+@media screen and (min-width: $desktop) {
+  .cart-modal {
+    .modal-card {
+      width: $desktop;
+    }
+  }
+}

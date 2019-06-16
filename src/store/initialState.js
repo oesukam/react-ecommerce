@@ -1,6 +1,6 @@
 module.exports = {
   currentUser: {
-    loginModel: false,
+    authModal: '',
     isAuth: localStorage.getItem('accessToken') || false,
     user: {},
   },
@@ -14,6 +14,10 @@ module.exports = {
       quantity: 0,
       size: 'S',
     },
+    itemAttributes: {
+      Color: [],
+      Size: [],
+    },
     departments: [],
     categories: [],
     departmentId: '',
@@ -22,6 +26,25 @@ module.exports = {
       page: 1,
       pages: 1,
       total: 0,
+    },
+  },
+  cart: {
+    loadingCartProducts: false,
+    loadingCartProduct: false,
+    submittingCartProduct: false,
+    clearingCart: false,
+    cartModal: false,
+    error: { message: '', field: '' },
+    cartTotalAmount: 0,
+    cartProducts: [],
+    cartProduct: {},
+    cartProductForm: {
+      cart_id: '',
+      product_id: '',
+      quantity: 1,
+      attributes: '',
+      size: '',
+      color: '',
     },
   },
 };

@@ -1,5 +1,6 @@
 import * as types from '../actions-types/itemActionsTypes';
 import axios from '../utils/axios';
+import groupArray from '../utils/groupArray';
 import getMetaData from '../utils/getMetaData';
 
 export const setItem = payload => ({
@@ -115,6 +116,11 @@ export const setItemFormField = payload => ({
   payload,
 });
 
+export const setItemAttributes = payload => ({
+  type: types.SET_ITEM_ATTRIBUTES,
+  payload,
+});
+
 export const fetchItem = id => dispatch => {
   dispatch(setLoadingItem(true));
   return axios
@@ -127,5 +133,18 @@ export const fetchItem = id => dispatch => {
     .catch(err => {
       dispatch(setItemError(err));
       dispatch(setLoadingItem(false));
+    });
+};
+
+export const fetchItemAttributes = id => dispatch => {
+  return axios
+    .get(`/attributes/inProduct/${id}`)
+    .then(({ data }) => {
+      const dataClearn = groupArray(data, 'attribute_name');
+      dispatch(setItemAttributes(dataClearn));
+      return data;
+    })
+    .catch(err => {
+      dispatch(setItemError(err));
     });
 };

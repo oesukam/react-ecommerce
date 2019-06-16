@@ -1,0 +1,26 @@
+@import '../../styles/colors';
+
+.product-quantity {
+  margin: 20px 0 30px 0;
+  &--icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: $color-gray-light-2;
+    border: none;
+    cursor: pointer;
+    &:focus {
+      outline: none;
+    }
+  }
+  &--count {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 60px;
+    height: 40px;
+    border-radius: 20px;
+    margin: 0 15px;
+    border: 1px solid $color-gray-light-2;
+  }
+}

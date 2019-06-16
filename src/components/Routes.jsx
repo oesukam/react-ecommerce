@@ -12,9 +12,11 @@ import { PropTypes } from 'prop-types';
 import Home from '../pages/Home/Home';
 import SingleItem from '../pages/SingleItem/SingleItem';
 import Login from '../pages/Home/Home';
+import MyCart from './MyCart/MyCart';
 
-export const Routes = ({ isAuth }) => (
+export const Routes = ({ isAuth, cartModal }) => (
   <Router>
+    {cartModal ? <MyCart /> : null}
     <Switch>
       <Route exact path="/" component={Home} />
       <Route exact path="/departments/:departmentId" component={Home} />
@@ -36,8 +38,12 @@ Routes.defaultProps = {
   isAuth: false,
 };
 
-export const mapStateToProps = ({ currentUser: { isAuth } }) => ({
+export const mapStateToProps = ({
+  currentUser: { isAuth },
+  cart: { cartModal },
+}) => ({
   isAuth,
+  cartModal,
 });
 
 export default connect(mapStateToProps)(Routes);

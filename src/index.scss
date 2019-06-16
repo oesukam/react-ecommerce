@@ -130,22 +130,24 @@ h3 {
 }
 
 .color-box {
-  width: 25px;
-  height: 25px;
+  width: 22px;
+  height: 22px;
   display: inline-block;
   border-radius: 50%;
-  margin: 20px 20px 10px 0;
+  margin: 30px 30px 10px 0;
   position: relative;
+  box-shadow: 0 0 1px $color-gray-light;
+  cursor: pointer;
   &.selected {
     &::after {
       position: absolute;
-      border: 1px solid $color-gray-light;
+      border: 2px solid $color-gray-light;
       content: ' ';
-      width: 35px;
-      height: 35px;
+      width: 40px;
+      height: 40px;
       border-radius: 50%;
-      left: -5px;
-      top: -5px;
+      left: -9px;
+      top: -9px;
     }
   }
 }
@@ -178,11 +180,11 @@ h3 {
   right: auto;
   content: ' ';
   display: inline-block;
-  width: 50px;
-  height: 50px;
-  border: 3px solid rgba(255, 0, 0, 0.3);
+  width: 20px;
+  height: 20px;
+  border: 3px solid rgba(247, 234, 234, 0.3);
   border-radius: 50%;
-  border-top-color: $color-red;
+  border-top-color: #fbd2dc;
   animation: spin 1s linear infinite;
   -webkit-animation: spin 1s linear infinite;
 }
@@ -218,4 +220,10 @@ h3 {
 
 .font-roboto {
   font-family: Roboto;
+}
+
+button {
+  &.button {
+    border: 30px;
+  }
 }
