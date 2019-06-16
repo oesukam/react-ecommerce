@@ -1,17 +1,25 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import propTypes from 'prop-types';
 import './SingleItem.scss';
 import Layout from '../../containers/Layout/Layout';
-import { connect } from 'react-redux';
-import { fetchItem } from '../../actions/itemActions';
-import propTypes from 'prop-types';
+import { fetchItem, fetchItemAttributes } from '../../actions/itemActions';
+import {
+  generateCartId,
+  setCartProductFormField,
+  submitCartProduct,
+} from '../../actions/cartActions';
+import Quantity from '../../components/Quantity/Quantity';
 
 export class SingleItem extends Component {
   state = {
     selectedImage: '',
   };
+
   componentDidMount() {
     const {
       getItem,
+      getItemAttributes,
       match: {
         params: { productId },
       },
@@ -19,16 +27,39 @@ export class SingleItem extends Component {
 
     getItem(productId).then(data => {
       this.setState({
-        selectedImage: data.image,
+        selectedImage: (data && data.image) || '',
       });
     });
+    getItemAttributes(productId);
   }
 
-  setSelecteedImage = selectedImage => {
+  _onQuantityChange = value => {
+    const { setCartField } = this.props;
+    setCartField({ name: 'quantity', value });
+  };
+
+  _setSelecteedImage = selectedImage => {
     this.setState({ selectedImage });
   };
 
-  renderItemImages = () => {
+  _addToCart = () => {
+    const { cartProductForm, item, getCartId, addToCart } = this.props;
+    const data = {
+      cart_id: cartProductForm.cart_id,
+      product_id: item.product_id,
+      attributes: [cartProductForm.size, cartProductForm.color].join(', '),
+      quantity: cartProductForm.quantity,
+    };
+    if (!data.cart_id) {
+      getCartId().then(() => {
+        addToCart(cartProductForm);
+      });
+      return;
+    }
+    addToCart(data);
+  };
+
+  _renderItemImages = () => {
     const { selectedImage } = this.state;
     const { item } = this.props;
     const folder = '/product_images';
@@ -43,10 +74,10 @@ export class SingleItem extends Component {
             src={`${folder}/${item.image}`}
             className={selectedImage === item.image ? 'active' : ''}
             alt="Item cover"
-            onClick={() => this.setSelecteedImage(item.image)}
+            onClick={() => this._setSelecteedImage(item.image)}
           />
           <img
-            onClick={() => this.setSelecteedImage(item.image_2)}
+            onClick={() => this._setSelecteedImage(item.image_2)}
             className={selectedImage === item.image_2 ? 'active' : ''}
             src={`${folder}/${item.image_2}`}
             alt="Item cover"
@@ -56,25 +87,47 @@ export class SingleItem extends Component {
     );
   };
 
-  renderItemDescription = () => {
-    const { item, itemForm } = this.props;
-    console.log('==', itemForm);
+  _renderColors = () => {
+    const {
+      itemAttributes: { Color = [] },
+      cartProductForm: { color: selectedColor },
+      setCartField,
+    } = this.props;
+
+    if (Color.length === 0) return;
+
     return (
-      <div className="product">
-        <h3 className="product__name">{item.name}</h3>
-        <h3 className="product__price">£ {item.price}</h3>
-
-        <h2 className="product__info">Size</h2>
-        <div>
-          <span className="color-box bg-blue selected" />
-          <span className="color-box bg-cyan" />
-          <span className="color-box bg-red" />
-          <span className="color-box bg-orange" />
-          <span className="color-box bg-yellow" />
-          <span className="color-box bg-green" />
-          <span className="color-box bg-purple" />
+      <React.Fragment>
+        <h2 className="product__info">Color</h2>
+        <div className="color-block">
+          {Color.map(c => (
+            <span
+              key={c.attribute_value_id}
+              className={`color-box ${
+                c.attribute_value === selectedColor ? 'selected' : ''
+              }`}
+              style={{ backgroundColor: c.attribute_value }}
+              onClick={() =>
+                setCartField({ name: 'color', value: c.attribute_value })
+              }
+            />
+          ))}
         </div>
+      </React.Fragment>
+    );
+  };
 
+  _renderSize = () => {
+    const {
+      itemAttributes: { Size = [] },
+      cartProductForm: { size: selectedSize },
+      setCartField,
+    } = this.props;
+
+    if (Size.length === 0) return;
+
+    return (
+      <React.Fragment>
         <div className="level">
           <div className="level-left">
             <div className="level-item">
@@ -89,52 +142,61 @@ export class SingleItem extends Component {
         </div>
 
         <div className="size-blocks">
-          <div
-            className={`size-block ${itemForm.size === 'XS' ? 'selected' : ''}`}
-          >
-            XS
-          </div>
-          <div
-            className={`size-block ${itemForm.size === 'S' ? 'selected' : ''}`}
-          >
-            S
-          </div>
-          <div
-            className={`size-block ${itemForm.size === 'M' ? 'selected' : ''}`}
-          >
-            M
-          </div>
-          <div
-            className={`size-block ${itemForm.size === 'L' ? 'selected' : ''}`}
-          >
-            L
-          </div>
-          <div
-            className={`size-block ${itemForm.size === 'XL' ? 'selected' : ''}`}
-          >
-            XL
-          </div>
+          {Size.map(s => (
+            <div
+              key={s.attribute_value_id}
+              className={`size-block ${
+                s.attribute_value === selectedSize ? 'selected' : ''
+              }`}
+              onClick={() =>
+                setCartField({ name: 'size', value: s.attribute_value })
+              }
+            >
+              {s.attribute_value}
+            </div>
+          ))}
         </div>
+      </React.Fragment>
+    );
+  };
+
+  _renderItemDescription = () => {
+    const { item, cartProductForm, submittingCartProduct } = this.props;
+    return (
+      <div className="product">
+        <h3 className="product__name">{item.name}</h3>
+        <h3 className="product__price">£ {item.price}</h3>
+
+        {this._renderColors()}
+
+        {this._renderSize()}
 
         <h2 className="product__info">Quantity</h2>
-        <div className="product__quantity">
-          <button className="product__quantity--icon">
-            <i className="fa fa-minus" />
-          </button>
-          <span className="product__quantity--count">{itemForm.quantity}</span>
-          <button className="product__quantity--icon">
-            <i className="fa fa-plus" />
-          </button>
-        </div>
+        <Quantity
+          quantity={cartProductForm.quantity}
+          onQuantityChange={this._onQuantityChange}
+        />
         <div className="level">
           <div className="level-left">
             <div className="level-item">
-              <button className="product__add-btn">Add to cart</button>
+              <button
+                onClick={this._addToCart}
+                className={`product__add-btn ${
+                  submittingCartProduct ? 'loading' : ''
+                }`}
+                disabled={submittingCartProduct}
+              >
+                Add to cart
+              </button>
             </div>
           </div>
           <div className="level-right">
             <div className="level-item">
-              <button className="product__wish-btn">
+              <button
+                className={`product__wish-btn ${
+                  submittingCartProduct ? 'is-loading' : ''
+                }`}
+              >
                 <i className="fa fa-heart" />
                 Add to Wish List
               </button>
@@ -145,7 +207,7 @@ export class SingleItem extends Component {
     );
   };
 
-  renderProductReviews = () => {
+  _renderProductReviews = () => {
     return (
       <div className="product-reviews">
         <h1>Product reviews</h1>
@@ -163,11 +225,11 @@ export class SingleItem extends Component {
         <div className="container">
           <div className="product-container">
             <div className="columns">
-              <div className="column is-6">{this.renderItemImages()}</div>
-              <div className="column is-6">{this.renderItemDescription()}</div>
+              <div className="column is-6">{this._renderItemImages()}</div>
+              <div className="column is-6">{this._renderItemDescription()}</div>
             </div>
           </div>
-          {this.renderProductReviews()}
+          {this._renderProductReviews()}
         </div>
       </Layout>
     );
@@ -177,16 +239,25 @@ export class SingleItem extends Component {
 SingleItem.propTypes = {
   item: propTypes.object,
   loadingItem: propTypes.bool,
-  itemForm: propTypes.object,
+  cartProductForm: propTypes.object,
 };
-export const mapStateToProps = ({ item: { loadingItem, item, itemForm } }) => ({
+export const mapStateToProps = ({
+  item: { loadingItem, item, itemAttributes },
+  cart: { cartProductForm, submittingCartProduct },
+}) => ({
   item,
   loadingItem,
-  itemForm,
+  cartProductForm,
+  submittingCartProduct,
+  itemAttributes,
 });
 
 export const mapDispactToProps = dispatch => ({
   getItem: payload => dispatch(fetchItem(payload)),
+  getCartId: () => dispatch(generateCartId()),
+  setCartField: payload => dispatch(setCartProductFormField(payload)),
+  addToCart: payload => dispatch(submitCartProduct(payload)),
+  getItemAttributes: payload => dispatch(fetchItemAttributes(payload)),
 });
 
 export default connect(

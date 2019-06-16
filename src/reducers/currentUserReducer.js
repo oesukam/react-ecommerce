@@ -3,6 +3,11 @@ import { currentUser as initialState } from '../store/initialState';
 
 const reducer = (state = initialState, { type, payload }) => {
   switch (type) {
+    case types.SET_AUTH_MODAL:
+      return {
+        ...state,
+        authModal: payload,
+      };
     case types.SET_IS_AUTH:
       return {
         ...state,

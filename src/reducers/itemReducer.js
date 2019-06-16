@@ -24,6 +24,11 @@ const reducer = (state = initialState, { type, payload }) => {
         ...state,
         item: payload,
       };
+    case types.SET_ITEM_ATTRIBUTES:
+      return {
+        ...state,
+        itemAttributes: payload,
+      };
     case types.SET_ITEM_FORM:
       return {
         ...state,

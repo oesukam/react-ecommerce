@@ -8,61 +8,69 @@ import closeSmallIcon from '../../assets/icons/icons-close-small-white.png';
 import searchIcon from '../../assets/icons/icons-search-white.png';
 import UKFlag from '../../assets/icons/gbr.png';
 import { setDepartmentId } from '../../actions/itemActions';
+import { setCartModal } from '../../actions/cartActions';
 
 export class Header extends Component {
   renderAuthNav = () => {
-    const { isAuth, user } = this.props;
+    const { isAuth, user, cartCount, _setCartModal } = this.props;
     if (isAuth)
       return <img className="user-avatar" src={user.image} alt="User avatar" />;
     return (
       <div className="buttons">
-        <div className="nav-cart">
+        <div className="nav-cart" onClick={_setCartModal}>
           <img src={bagWhiteIcon} className="nav-cart__image" alt="Nav cart" />
-          <div className="nav-cart__counter bg-white color-red">6</div>
+          <div className="nav-cart__counter bg-white color-red">
+            {cartCount}
+          </div>
         </div>
       </div>
     );
   };
 
-  renderTop = () => (
-    <div className="nav-top">
-      <div className="container">
-        <div className="is-flex content-space-between">
-          <div className="is-flex items-center">
-            Hi! <button className="auth-btn mr-10 ml-10">Sign in</button> or
-            <button className="auth-btn">Register</button>
-          </div>
-          <div className="is-flex items-center">
-            <Link to="/items" className="navbar-item">
-              Daily Deals
-            </Link>
-            <Link to="/items" className="navbar-item">
-              Sell
-            </Link>
-            <Link to="/items" className="navbar-item">
-              Help & Contact
-            </Link>
-          </div>
-          <div className="is-flex items-center mr-20">
-            <img src={UKFlag} alt="UK Flag" className="mr-10" />£ GBP
-          </div>
-          <div className="is-flex content-flex-end items-center">
-            <div>
-              <div className="nav-cart">
-                <img
-                  src={bagBlackIcon}
-                  className="nav-cart__image"
-                  alt="Nav cart"
-                />
-                <div className="nav-cart__counter bg-red color-white">6</div>
+  renderTop = () => {
+    const { cartCount, _setCartModal, cartTotalAmount } = this.props;
+    return (
+      <div className="nav-top">
+        <div className="container">
+          <div className="is-flex content-space-between">
+            <div className="is-flex items-center">
+              Hi! <button className="auth-btn mr-10 ml-10">Sign in</button> or
+              <button className="auth-btn ml-10">Register</button>
+            </div>
+            <div className="is-flex items-center">
+              <Link to="/items" className="navbar-item">
+                Daily Deals
+              </Link>
+              <Link to="/items" className="navbar-item">
+                Sell
+              </Link>
+              <Link to="/items" className="navbar-item">
+                Help & Contact
+              </Link>
+            </div>
+            <div className="is-flex items-center mr-20">
+              <img src={UKFlag} alt="UK Flag" className="mr-10" />£ GBP
+            </div>
+            <div className="is-flex content-flex-end items-center">
+              <div>
+                <div className="nav-cart" onClick={_setCartModal}>
+                  <img
+                    src={bagBlackIcon}
+                    className="nav-cart__image"
+                    alt="Nav cart"
+                  />
+                  <div className="nav-cart__counter bg-red color-white">
+                    {cartCount}
+                  </div>
+                </div>
+                <span className="ml-10">Your bag: £{cartTotalAmount}</span>
               </div>
-              <span className="ml-10">Your bag: £3.99</span>
             </div>
           </div>
         </div>
       </div>
-    </div>
-  );
+    );
+  };
 
   renderDepartments = () => {
     const {
@@ -153,13 +161,17 @@ export class Header extends Component {
 export const mapStateToProps = ({
   currentUser: { isAuth },
   item: { departments },
+  cart: { cartProducts, cartTotalAmount },
 }) => ({
   isAuth,
   departments,
+  cartCount: cartProducts.length || 0,
+  cartTotalAmount,
 });
 
 export const mapDispatchToProps = disptach => ({
   setDepartment: payload => disptach(setDepartmentId(payload)),
+  _setCartModal: () => disptach(setCartModal(true)),
 });
 
 export default connect(

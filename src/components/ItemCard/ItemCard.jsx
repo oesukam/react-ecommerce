@@ -1,7 +1,7 @@
 import React from 'react';
 import propTypes from 'prop-types';
-import './ItemCard.scss';
 import { Link } from 'react-router-dom';
+import './ItemCard.scss';
 
 const ItemCard = ({ item, addToCart }) => (
   <div className="item-card">
