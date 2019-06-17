@@ -1,5 +1,6 @@
 @import '../../styles/colors';
 @import '../../styles/variables';
+@import '../../styles/mixins';
 
 #fixed-nav {
   position: fixed;
@@ -115,5 +116,43 @@
 @media screen and (max-width: $desktop) {
   .nav-top {
     font-size: 0.8rem;
+  }
+}
+
+.user {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  position: relative;
+  .user-avatar {
+    height: 50px;
+    border: 2px solid $color-gray;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+  .drop-down {
+    position: absolute;
+    top: 69px;
+    min-width: 170px;
+    text-align: right;
+    right: 0;
+    min-height: 30px;
+    background-color: $color-black;
+    font-size: 1rem;
+    border-top: 1px solid $color-gray;
+    display: none;
+    color: #fff;
+    cursor: pointer;
+    &.active {
+      display: block;
+    }
+    a {
+      color: #fff;
+      padding: 10px;
+      display: block;
+      &:hover {
+        color: $color-gray-light;
+      }
+    }
   }
 }

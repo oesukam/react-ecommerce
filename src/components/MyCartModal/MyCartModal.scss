@@ -1,13 +1,9 @@
 @import '../../styles/colors';
 @import '../../styles/variables';
 
-.cart-modal {
+.modal-view {
   .modal-card {
-    box-shadow: 0 0 10px rgba(255, 255, 255, 0.6);
     .modal-card-head {
-      border-radius: 0;
-      border-bottom: 0;
-      background-color: #fff;
       p {
         font-family: Montserrat-Bold;
         font-size: 1.8rem;
@@ -17,9 +13,6 @@
       min-height: 200px;
     }
     .modal-card-foot {
-      border-radius: 0;
-      border-top: 0;
-      justify-content: space-between;
       button {
         border-radius: 30px;
         padding: 15px 30px;
@@ -68,10 +61,6 @@
   }
 }
 
-.modal-close-btn {
-  cursor: pointer;
-}
-
 .table {
   font-family: Roboto;
   min-width: 70wh !important;
@@ -91,7 +80,7 @@
 }
 
 @media screen and (min-width: $desktop) {
-  .cart-modal {
+  .modal-view {
     .modal-card {
       width: $desktop;
     }
