@@ -1,0 +1,24 @@
+@import '../../styles/colors';
+@import '../../styles/variables';
+
+button {
+  border: none;
+  &.action-btn {
+    margin-top: 0.5rem;
+    font-family: Montserrat-Bold;
+    font-size: 1.2rem;
+    border-radius: 30px;
+    padding: 10px 40px;
+    background-color: $color-red;
+    color: #fff;
+  }
+}
+
+.title {
+  font-family: Montserrat-Bold;
+  margin-top: 20px;
+}
+
+.box {
+  margin-top: 30px;
+}

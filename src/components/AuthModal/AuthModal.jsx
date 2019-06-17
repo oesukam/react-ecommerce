@@ -120,7 +120,7 @@ export class AuthModal extends Component {
           </div>
           <div className="level-right">
             <button
-              onClick={() => _setAuthModal('Register')}
+              onClick={() => _setAuthModal('Sign Up')}
               className="bottom-btn"
             >
               Crate an account
@@ -131,7 +131,7 @@ export class AuthModal extends Component {
     );
   };
 
-  _renderRegister = () => {
+  _renderSignup = () => {
     const {
       userError,
       _handleInput,
@@ -204,11 +204,12 @@ export class AuthModal extends Component {
         </button>
 
         <div className="has-text-centered mt-20 mb-20">
+          Already a member?
           <button
             onClick={() => _setAuthModal('Sign In')}
             className="bottom-btn"
           >
-            Have an account
+            Sign In
           </button>
         </div>
       </form>
@@ -248,9 +249,7 @@ export class AuthModal extends Component {
             <h1 className="modal-card-title">{title}</h1>
           </header>
           <section className="modal-card-body">
-            {title === 'Register'
-              ? this._renderRegister()
-              : this._renderSignin()}
+            {title === 'Sign Up' ? this._renderSignup() : this._renderSignin()}
           </section>
         </div>
       </div>

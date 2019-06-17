@@ -92,7 +92,7 @@ export class Header extends Component {
                   </button>{' '}
                   or
                   <button
-                    onClick={() => _setAuthModal('Register')}
+                    onClick={() => _setAuthModal('Sign Up')}
                     className="auth-btn ml-10"
                   >
                     Register
