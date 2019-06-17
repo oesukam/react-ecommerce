@@ -1,0 +1,29 @@
+@import '../../styles/colors';
+
+#not-found {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+  color: #fff;
+  .hero {
+    background-color: $color-black;
+  }
+  h1,
+  h4 {
+    color: #fff;
+  }
+  .error-code {
+    font-size: 4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  a {
+    border-radius: 30px;
+    font-size: 1rem;
+    padding: 10px 40px;
+  }
+}

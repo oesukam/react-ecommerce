@@ -12,11 +12,14 @@ import { PropTypes } from 'prop-types';
 import Home from '../pages/Home/Home';
 import SingleItem from '../pages/SingleItem/SingleItem';
 import Login from '../pages/Home/Home';
-import MyCart from './MyCart/MyCart';
+import MyCartModal from './MyCartModal/MyCartModal';
+import AuthModal from './AuthModal/AuthModal';
+import NotFound from '../pages/NotFound/NotFound';
 
-export const Routes = ({ isAuth, cartModal }) => (
+export const Routes = ({ isAuth, cartModal, authModal }) => (
   <Router>
-    {cartModal ? <MyCart /> : null}
+    {authModal && !isAuth ? <AuthModal title={authModal} /> : null}
+    {cartModal ? <MyCartModal /> : null}
     <Switch>
       <Route exact path="/" component={Home} />
       <Route exact path="/departments/:departmentId" component={Home} />
@@ -26,24 +29,30 @@ export const Routes = ({ isAuth, cartModal }) => (
         path="/login"
         render={props => (!isAuth ? <Login {...props} /> : <Redirect to="/" />)}
       />
+      <Route path="*" component={NotFound} />
     </Switch>
   </Router>
 );
 
 Routes.propTypes = {
   isAuth: PropTypes.bool,
+  authModal: PropTypes.string,
+  cartModal: PropTypes.bool,
 };
 
 Routes.defaultProps = {
   isAuth: false,
+  authModal: '',
+  cartModal: false,
 };
 
 export const mapStateToProps = ({
-  currentUser: { isAuth },
+  currentUser: { isAuth, authModal },
   cart: { cartModal },
 }) => ({
   isAuth,
   cartModal,
+  authModal,
 });
 
 export default connect(mapStateToProps)(Routes);

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import propTypes from 'prop-types';
 import { connect } from 'react-redux';
-import './MyCart.scss';
+import './MyCartModal.scss';
 import {
   setCartModal,
   submitCartProductUpdate,
@@ -9,10 +9,10 @@ import {
   submitDeleteCartItem,
   submitEmptyCart,
 } from '../../actions/cartActions';
-import Quantity from '../../components/Quantity/Quantity';
+import Quantity from '../Quantity/Quantity';
 import closeIcon from '../../assets/icons/icons-close-big-black.png';
 
-export class MyCart extends Component {
+export class MyCartModal extends Component {
   componentDidMount() {
     const { cartId, _fetchCartProducts } = this.props;
     if (cartId) {
@@ -109,7 +109,7 @@ export class MyCart extends Component {
       clearingCart,
     } = this.props;
     return (
-      <div className="modal is-active cart-modal">
+      <div className="modal is-active modal-view">
         <div className="modal-background" />
         <div className="modal-card">
           <header className="modal-card-head">
@@ -147,11 +147,11 @@ export class MyCart extends Component {
   }
 }
 
-MyCart.propTypes = {
+MyCartModal.propTypes = {
   cartProducts: propTypes.array,
 };
 
-MyCart.defaultProps = {
+MyCartModal.defaultProps = {
   cartProducts: [],
 };
 
@@ -179,4 +179,4 @@ export const mapDispatchToProps = dispatch => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(MyCart);
+)(MyCartModal);

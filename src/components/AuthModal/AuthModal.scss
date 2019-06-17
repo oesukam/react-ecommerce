@@ -1,0 +1,44 @@
+@import '../../styles/colors';
+@import '../../styles/variables';
+
+.modal-view {
+  .modal-card {
+    &.auth {
+      max-width: 400px;
+      .modal-card-head {
+        display: block;
+        text-align: center;
+        h1 {
+          font-family: Montserrat-Bold;
+          font-size: 1.8rem;
+        }
+      }
+    }
+
+    .modal-card-body {
+      text-align: center;
+      padding: 0 2rem;
+      .level {
+        padding: 2rem 0;
+      }
+      button {
+        border: none;
+        &.auth-btn {
+          margin-top: 0.5rem;
+          font-family: Montserrat-Bold;
+          font-size: 1.3rem;
+          border-radius: 30px;
+          padding: 10px 40px;
+          background-color: $color-red;
+          color: #fff;
+        }
+        &.bottom-btn {
+          color: $color-red;
+          background-color: #fff;
+          font-size: 1rem;
+          cursor: pointer;
+        }
+      }
+    }
+  }
+}

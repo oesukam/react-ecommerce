@@ -1,8 +1,26 @@
 module.exports = {
   currentUser: {
+    accessToken: localStorage.getItem('accessToken'),
+    userError: { message: '', field: '' },
     authModal: '',
     isAuth: localStorage.getItem('accessToken') || false,
+    loggingIn: false,
+    signingUp: false,
     user: {},
+    authForm: {
+      email: {
+        value: '',
+        valid: true,
+      },
+      password: {
+        value: '',
+        valid: true,
+      },
+      name: {
+        value: '',
+        valid: true,
+      },
+    },
   },
   item: {
     loadingItems: false,
@@ -10,10 +28,6 @@ module.exports = {
     error: { message: '', field: '' },
     items: [],
     item: {},
-    itemForm: {
-      quantity: 0,
-      size: 'S',
-    },
     itemAttributes: {
       Color: [],
       Size: [],

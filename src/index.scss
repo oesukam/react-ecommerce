@@ -227,3 +227,37 @@ button {
     border: 30px;
   }
 }
+
+.modal-view {
+  .modal-background {
+    background-color: rgba(0, 0, 0, 0.3);
+  }
+  .modal-card {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    .modal-card-head {
+      border-radius: 0;
+      border-bottom: 0;
+      background-color: #fff;
+    }
+    .modal-card-body {
+      min-height: 200px;
+    }
+    .modal-card-foot {
+      border-radius: 0;
+      border-top: 0;
+      justify-content: space-between;
+    }
+  }
+}
+
+.modal-close-btn {
+  cursor: pointer;
+}
+
+.input {
+  box-shadow: none;
+}
+
+.help.is-danger {
+  min-height: 18px;
+}

@@ -9,12 +9,17 @@ import searchIcon from '../../assets/icons/icons-search-white.png';
 import UKFlag from '../../assets/icons/gbr.png';
 import { setDepartmentId } from '../../actions/itemActions';
 import { setCartModal } from '../../actions/cartActions';
+import { setAuthModal, signout } from '../../actions/currentUserActions';
+import userAvatar from '../../assets/icons/avatar.svg';
 
 export class Header extends Component {
+  state = {
+    avatarDropdown: false,
+  };
+
   renderAuthNav = () => {
-    const { isAuth, user, cartCount, _setCartModal } = this.props;
-    if (isAuth)
-      return <img className="user-avatar" src={user.image} alt="User avatar" />;
+    const { isAuth, cartCount, _setCartModal } = this.props;
+    if (isAuth) return this._renderAvatar();
     return (
       <div className="buttons">
         <div className="nav-cart" onClick={_setCartModal}>
@@ -27,16 +32,77 @@ export class Header extends Component {
     );
   };
 
+  _toggleAvatarDropdown = e => {
+    e.stopPropagation();
+    const { avatarDropdown } = this.state;
+    this.setState({
+      avatarDropdown: !avatarDropdown,
+    });
+  };
+
+  _renderAvatar = () => {
+    const { user, _signout } = this.props;
+    const { avatarDropdown } = this.state;
+    return (
+      <div className="user">
+        <img
+          className="user-avatar"
+          src={user && user.image ? user.image : userAvatar}
+          alt="User avatar"
+          onClick={this._toggleAvatarDropdown}
+        />
+        <div className={`drop-down ${avatarDropdown ? 'active' : ''}`}>
+          <ul>
+            <li>
+              <Link to="/settings">
+                <i className="fa fa-cog" /> My Account
+              </Link>
+              <Link onClick={_signout} to="#">
+                <i className="fa fa-sign-out-alt" /> Signout
+              </Link>
+            </li>
+          </ul>
+        </div>
+      </div>
+    );
+  };
+
   renderTop = () => {
-    const { cartCount, _setCartModal, cartTotalAmount } = this.props;
+    const {
+      cartCount,
+      _setCartModal,
+      _setAuthModal,
+      cartTotalAmount,
+      isAuth,
+      user,
+    } = this.props;
     return (
       <div className="nav-top">
         <div className="container">
           <div className="is-flex content-space-between">
             <div className="is-flex items-center">
-              Hi! <button className="auth-btn mr-10 ml-10">Sign in</button> or
-              <button className="auth-btn ml-10">Register</button>
+              Hi!
+              {!isAuth ? (
+                <React.Fragment>
+                  <button
+                    onClick={() => _setAuthModal('Sign In')}
+                    className="auth-btn mr-10 ml-10"
+                  >
+                    Sign in
+                  </button>{' '}
+                  or
+                  <button
+                    onClick={() => _setAuthModal('Register')}
+                    className="auth-btn ml-10"
+                  >
+                    Register
+                  </button>
+                </React.Fragment>
+              ) : (
+                <span className="color-red ml-10">{user.name}</span>
+              )}
             </div>
+
             <div className="is-flex items-center">
               <Link to="/items" className="navbar-item">
                 Daily Deals
@@ -159,11 +225,12 @@ export class Header extends Component {
 }
 
 export const mapStateToProps = ({
-  currentUser: { isAuth },
+  currentUser: { isAuth, user },
   item: { departments },
   cart: { cartProducts, cartTotalAmount },
 }) => ({
   isAuth,
+  user,
   departments,
   cartCount: cartProducts.length || 0,
   cartTotalAmount,
@@ -172,6 +239,8 @@ export const mapStateToProps = ({
 export const mapDispatchToProps = disptach => ({
   setDepartment: payload => disptach(setDepartmentId(payload)),
   _setCartModal: () => disptach(setCartModal(true)),
+  _setAuthModal: payload => disptach(setAuthModal(payload)),
+  _signout: payload => disptach(signout()),
 });
 
 export default connect(
