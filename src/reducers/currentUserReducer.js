@@ -57,6 +57,32 @@ const reducer = (state = initialState, { type, payload }) => {
         ...state,
         user: payload,
       };
+    case types.UPDATE_CURRENT_USER:
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          ...payload,
+        },
+      };
+    case types.SET_CURRENT_USER_FIELD:
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          [payload.name]: payload.value,
+        },
+      };
+    case types.SET_UPDATING_CURRENT_USER:
+      return {
+        ...state,
+        updatingUser: payload,
+      };
+    case types.SET_UPDATING_CURRENT_USER_ADDRESS:
+      return {
+        ...state,
+        updatingUserAddress: payload,
+      };
 
     default:
       return state;

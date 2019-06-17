@@ -11,10 +11,10 @@ import { PropTypes } from 'prop-types';
 
 import Home from '../pages/Home/Home';
 import SingleItem from '../pages/SingleItem/SingleItem';
-import Login from '../pages/Home/Home';
 import MyCartModal from './MyCartModal/MyCartModal';
 import AuthModal from './AuthModal/AuthModal';
 import NotFound from '../pages/NotFound/NotFound';
+import Settings from '../pages/Settings/Settings';
 
 export const Routes = ({ isAuth, cartModal, authModal }) => (
   <Router>
@@ -26,8 +26,10 @@ export const Routes = ({ isAuth, cartModal, authModal }) => (
       <Route exact path="/products/:productId" component={SingleItem} />
       <Route
         exact
-        path="/login"
-        render={props => (!isAuth ? <Login {...props} /> : <Redirect to="/" />)}
+        path="/settings"
+        render={props =>
+          isAuth ? <Settings {...props} /> : <Redirect to="/" />
+        }
       />
       <Route path="*" component={NotFound} />
     </Switch>

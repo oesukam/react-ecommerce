@@ -61,4 +61,11 @@ module.exports = {
       color: '',
     },
   },
+  shipping: {
+    error: { message: '', field: '' },
+    loadingRegion: false,
+    loadingRegions: false,
+    region: false,
+    regions: [],
+  },
 };

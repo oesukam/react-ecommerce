@@ -7,9 +7,9 @@ const { accessToken } = store.getState().currentUser;
 const http = axios.create({
   baseURL: process.env.API_URL,
   headers: {
-    Authorization:
-      accessToken || localStorage.getItem('accessToken') || undefined,
+    'USER-KEY': accessToken || localStorage.getItem('accessToken') || undefined,
   },
 });
+console.log();
 
 export default http;
