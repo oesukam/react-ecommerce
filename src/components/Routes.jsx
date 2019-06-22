@@ -15,11 +15,13 @@ import MyCartModal from './MyCartModal/MyCartModal';
 import AuthModal from './AuthModal/AuthModal';
 import NotFound from '../pages/NotFound/NotFound';
 import Settings from '../pages/Settings/Settings';
+import OrderModal from './OrderModal/OrderModal';
 
-export const Routes = ({ isAuth, cartModal, authModal }) => (
+export const Routes = ({ isAuth, cartModal, authModal, orderModal }) => (
   <Router>
-    {authModal && !isAuth ? <AuthModal title={authModal} /> : null}
+    {authModal ? <AuthModal title={authModal} /> : null}
     {cartModal ? <MyCartModal /> : null}
+    {orderModal && isAuth ? <OrderModal /> : null}
     <Switch>
       <Route exact path="/" component={Home} />
       <Route exact path="/departments/:departmentId" component={Home} />
@@ -51,10 +53,12 @@ Routes.defaultProps = {
 export const mapStateToProps = ({
   currentUser: { isAuth, authModal },
   cart: { cartModal },
+  order: { orderModal },
 }) => ({
   isAuth,
   cartModal,
   authModal,
+  orderModal,
 });
 
 export default connect(mapStateToProps)(Routes);

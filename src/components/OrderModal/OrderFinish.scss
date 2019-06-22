@@ -1,0 +1,11 @@
+@import '../../styles/colors';
+
+.back-btn {
+  margin-top: 30px;
+  background-color: $color-red;
+  color: #fff;
+  padding: 15px 40px;
+  font-size: 1.5rem;
+  border-radius: 40px;
+  display: inline-block;
+}

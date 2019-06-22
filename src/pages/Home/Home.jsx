@@ -6,10 +6,15 @@ import Layout from '../../containers/Layout/Layout';
 import HomeShow from './HomeShow';
 import './Home.scss';
 import HomeSideFilter from './HomeSideFilter';
-import { fetchItems, setCategoryId } from '../../actions/itemActions';
+import {
+  fetchItems,
+  setCategoryId,
+  addItemToCart,
+} from '../../actions/itemActions';
 import ItemCard from '../../components/ItemCard/ItemCard';
 import Pagination from '../../components/Pagination/Pagination';
 import ItemsLoader from '../../components/ContentLoader/ItemsLoader';
+import { generateCartId } from '../../actions/cartActions';
 
 export class Home extends Component {
   componentDidMount() {
@@ -26,12 +31,23 @@ export class Home extends Component {
     getItems({ page, categoryId, type });
   }
 
+  _addToCart = itemId => {
+    const { cartId, _generateCartId, _addItemToCart } = this.props;
+    if (!cartId) {
+      _generateCartId().then(({ cart_id: cartId }) => {
+        _addItemToCart({ cartId, itemId });
+      });
+      return;
+    }
+    _addItemToCart({ cartId, itemId });
+  };
+
   renderItems = () => {
     const { items = [], loadingItems } = this.props;
     return !loadingItems
       ? items.map(item => (
           <div className="column is-4" key={item.product_id}>
-            <ItemCard item={item} />
+            <ItemCard addToCart={this._addToCart} item={item} />
           </div>
         ))
       : null;
@@ -104,17 +120,23 @@ Home.defaultProps = {
 
 export const mapStateToProps = ({
   item: { items, loadingItems, categoryId, departmentId, meta },
+  cart: {
+    cartProductForm: { cart_id: cartId },
+  },
 }) => ({
   items,
   loadingItems,
   categoryId,
   departmentId,
   meta,
+  cartId,
 });
 
 export const mapDisptachToProps = dispatch => ({
   getItems: payload => dispatch(fetchItems(payload)),
   setCategory: payload => dispatch(setCategoryId(payload)),
+  _addItemToCart: payload => dispatch(addItemToCart(payload)),
+  _generateCartId: () => dispatch(generateCartId()),
 });
 
 export default connect(

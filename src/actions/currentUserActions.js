@@ -67,6 +67,7 @@ export const submitLogin = credential => dispatch => {
       axios.defaults.headers.common['USER-KEY'] = data.accessToken;
       dispatch(setIsAuth(true));
       dispatch(setLoggingIn(false));
+      dispatch(setAuthModal(''));
     })
     .catch(({ response }) => {
       const { error } = response.data;
@@ -85,6 +86,7 @@ export const submitRegister = credential => dispatch => {
       axios.defaults.headers.common['USER-KEY'] = data.accessToken;
       dispatch(setIsAuth(true));
       dispatch(setSigningUp(false));
+      dispatch(setAuthModal(''));
     })
     .catch(({ response }) => {
       const { error } = response.data;
@@ -122,6 +124,10 @@ export const fetchCurrentUser = token => dispatch => {
       const error =
         err.response && err.response.data ? err.response.data.error : err;
       dispatch(setUserError(error));
+      if (error === 'TokenExpiredError: jwt expired') {
+        dispatch(signout())
+        dispatch(setAuthModal('Sign In'));
+      }
     });
 };
 

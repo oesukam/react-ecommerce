@@ -1,4 +1,4 @@
-import * as types from '../../actions-types/currentUserTypes';
+import * as types from '../../actions-types/currentUserActionsTypes';
 import reducer from '../../reducers/currentUserReducer';
 import { currentUser as initialState } from '../../store/initialState';
 

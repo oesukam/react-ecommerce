@@ -3,13 +3,19 @@ import propTypes from 'prop-types';
 import Routes from './Routes';
 import { connect } from 'react-redux';
 import { fetchCategories, fetchDepartments } from '../actions/itemActions';
+import { fetchShippingRegions } from '../actions/shippingActions';
+import { fetchCurrentUser } from '../actions/currentUserActions';
 import './App.scss';
+import { fetchAllTax, fetchOrders } from '../actions/orderActions';
 
 export class App extends Component {
   componentDidMount() {
-    const { getCategories, getDepartments } = this.props;
-    getCategories();
-    getDepartments();
+    this.props._fetchCategories();
+    this.props._fetchDepartments();
+    this.props._fetchCurrentUser();
+    this.props._fetchAllTax();
+    this.props._fetchShippingRegions();
+    this.props._fetchOrders();
   }
   render() {
     return <Routes />;
@@ -22,8 +28,12 @@ App.propTypes = {
 };
 
 export const mapDispatchToProps = dispatch => ({
-  getCategories: () => dispatch(fetchCategories()),
-  getDepartments: () => dispatch(fetchDepartments()),
+  _fetchCategories: () => dispatch(fetchCategories()),
+  _fetchDepartments: () => dispatch(fetchDepartments()),
+  _fetchCurrentUser: () => dispatch(fetchCurrentUser()),
+  _fetchAllTax: () => dispatch(fetchAllTax()),
+  _fetchShippingRegions: () => dispatch(fetchShippingRegions()),
+  _fetchOrders: () => dispatch(fetchOrders()),
 });
 
 export default connect(

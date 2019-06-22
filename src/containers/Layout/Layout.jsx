@@ -4,9 +4,9 @@ import Header from '../../components/Header/Header';
 import Footer from '../../components/Footer/Footer';
 import './Layout.scss';
 
-const Layout = ({ children, match }) => (
+const Layout = ({ children, match, history }) => (
   <React.Fragment>
-    <Header match={match} />
+    <Header match={match} history={history} />
     <div className="main-content">{children}</div>
     <Footer />
   </React.Fragment>

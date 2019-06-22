@@ -1,0 +1,15 @@
+node_modules
+npm-debug.log
+node_modules
+build
+package-lock.json
+yarn.lock
+
+Dockerfile*
+docker-compose*
+.dockerignore
+.git
+.gitignore
+README.md
+LICENSE
+.vscode

@@ -3,13 +3,17 @@ import 'dotenv/config';
 import { store } from '../store';
 
 const { accessToken } = store.getState().currentUser;
-
+const testUrl = 'http://localhost';
+const baseURL = process.env.NODE_ENV === 'test' ? testUrl : process.env.API_URL;
+const userKey =
+  process.env.NODE_ENV === 'test'
+    ? 'user-key'
+    : accessToken || localStorage.getItem('accessToken') || undefined;
 const http = axios.create({
-  baseURL: process.env.API_URL,
+  baseURL,
   headers: {
-    'USER-KEY': accessToken || localStorage.getItem('accessToken') || undefined,
+    'user-key': userKey,
   },
 });
-console.log();
 
 export default http;

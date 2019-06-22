@@ -2,6 +2,7 @@ import * as types from '../actions-types/itemActionsTypes';
 import axios from '../utils/axios';
 import groupArray from '../utils/groupArray';
 import getMetaData from '../utils/getMetaData';
+import { fetchCartProduct, submitCartProduct } from './cartActions';
 
 export const setItem = payload => ({
   type: types.SET_ITEM,
@@ -73,10 +74,10 @@ export const fetchItems = ({
   // Set the corresponding endpoint
   switch (type) {
     case 'department':
-      endpoint = `${endpoint}/inDepartment/${departmentId}${query}`;
+      endpoint = `${endpoint}/inDepartment/${departmentId||''}${query}`;
       break;
     case 'category':
-      endpoint = `${endpoint}/inCategory/${categoryId}${query}`;
+      endpoint = `${endpoint}/inCategory/${categoryId||''}${query}`;
       break;
     default:
       endpoint = endpoint + query;
@@ -146,5 +147,29 @@ export const fetchItemAttributes = id => dispatch => {
     })
     .catch(err => {
       dispatch(setItemError(err));
+    });
+};
+
+export const addingItemToCart = payload => ({
+  type: types.ADDING_ITEM_TO_CART,
+  payload,
+});
+
+export const addItemToCart = ({ itemId, cartId }) => dispatch => {
+  const cart = {
+    cart_id: cartId,
+    product_id: itemId,
+    quantity: 1,
+    attributes: '',
+  };
+
+  dispatch(addingItemToCart({ itemId, adding: true }));
+  return dispatch(submitCartProduct(cart))
+    .then(() => {
+      dispatch(addingItemToCart({ itemId, adding: false }));
+      dispatch(fetchCartProduct(cartId));
+    })
+    .catch(() => {
+      dispatch(addingItemToCart({ itemId, adding: false }));
     });
 };

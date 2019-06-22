@@ -79,6 +79,7 @@
     border: none;
     padding: 0.4rem 0.5rem;
     color: $color-white;
+    flex: 1;
     &::placeholder {
       color: $color-white;
     }
@@ -154,5 +155,31 @@
         color: $color-gray-light;
       }
     }
+  }
+}
+
+.currency-icon {
+  height: 20px;
+  width: 30px;
+  margin-right: 10px;
+}
+
+.navbar-burger {
+  color: $color-red !important;
+  height: auto !important;
+  margin-right: 15px;
+  background-color: transparent;
+  span {
+    height: 2px !important;
+    width: 20px !important;
+  }
+  .burger {
+    color: $color-red;
+  }
+}
+
+.navbar-menu {
+  &.is-active {
+    background-color: $color-black;
   }
 }

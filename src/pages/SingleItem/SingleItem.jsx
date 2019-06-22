@@ -165,7 +165,7 @@ export class SingleItem extends Component {
     return (
       <div className="product">
         <h3 className="product__name">{item.name}</h3>
-        <h3 className="product__price">£ {item.price}</h3>
+        <h3 className="product__price">$ {item.price}</h3>
 
         {this._renderColors()}
 

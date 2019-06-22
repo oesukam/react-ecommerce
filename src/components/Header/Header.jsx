@@ -6,16 +6,23 @@ import bagWhiteIcon from '../../assets/icons/icons-bag-white.png';
 import bagBlackIcon from '../../assets/icons/icons-bag.png';
 import closeSmallIcon from '../../assets/icons/icons-close-small-white.png';
 import searchIcon from '../../assets/icons/icons-search-white.png';
-import UKFlag from '../../assets/icons/gbr.png';
+import USAFlag from '../../assets/images/usa-flag.png';
 import { setDepartmentId } from '../../actions/itemActions';
 import { setCartModal } from '../../actions/cartActions';
 import { setAuthModal, signout } from '../../actions/currentUserActions';
 import userAvatar from '../../assets/icons/avatar.svg';
+import backIcon from '../../assets/icons/icons-back-big-red.png';
 
 export class Header extends Component {
   state = {
     avatarDropdown: false,
+    hamburger: false,
   };
+
+  componentWillReceiveProps() {
+    this.setState({ hamburger: false });
+    return true;
+  }
 
   renderAuthNav = () => {
     const { isAuth, cartCount, _setCartModal } = this.props;
@@ -37,6 +44,15 @@ export class Header extends Component {
     const { avatarDropdown } = this.state;
     this.setState({
       avatarDropdown: !avatarDropdown,
+    });
+  };
+
+  _toggleHamburger = e => {
+    e.stopPropagation();
+
+    const { hamburger } = this.state;
+    this.setState({
+      hamburger: !hamburger,
     });
   };
 
@@ -103,7 +119,7 @@ export class Header extends Component {
               )}
             </div>
 
-            <div className="is-flex items-center">
+            <div className="is-flex items-center is-hidden-mobile">
               <Link to="/items" className="navbar-item">
                 Daily Deals
               </Link>
@@ -115,7 +131,7 @@ export class Header extends Component {
               </Link>
             </div>
             <div className="is-flex items-center mr-20">
-              <img src={UKFlag} alt="UK Flag" className="mr-10" />£ GBP
+              <img src={USAFlag} alt="UK Flag" className="currency-icon" />$ USD
             </div>
             <div className="is-flex content-flex-end items-center">
               <div>
@@ -129,7 +145,7 @@ export class Header extends Component {
                     {cartCount}
                   </div>
                 </div>
-                <span className="ml-10">Your bag: £{cartTotalAmount}</span>
+                <span className="ml-10">Your bag: ${cartTotalAmount}</span>
               </div>
             </div>
           </div>
@@ -160,18 +176,29 @@ export class Header extends Component {
     ));
   };
   renderBottom = () => {
+    const { hamburger } = this.state;
+    const { history } = this.props;
     return (
       <div className="nav-bottom">
         <div className="container">
           <div className="navbar">
             <div className="navbar-brand">
+              <img
+                src={backIcon}
+                onClick={history.goBack}
+                alt="Back icon"
+                className="is-hidden-desktop"
+              />
               <Link to="/" className="navbar-item">
                 <div className="brand-name">SHOPMATE</div>
               </Link>
               <button
-                className="navbar-burger burger"
+                className={`navbar-burger burger ${
+                  hamburger ? 'is-active' : ''
+                }`}
                 aria-label="menu"
                 aria-expanded="false"
+                onClick={this._toggleHamburger}
               >
                 <span aria-hidden="true" />
                 <span aria-hidden="true" />
@@ -179,7 +206,7 @@ export class Header extends Component {
               </button>
             </div>
 
-            <div className="navbar-menu">
+            <div className={`navbar-menu ${hamburger ? 'is-active' : ''}`}>
               <div className="navbar-start">{this.renderDepartments()}</div>
               <div className="navbar-end">
                 <div className="navbar-item">

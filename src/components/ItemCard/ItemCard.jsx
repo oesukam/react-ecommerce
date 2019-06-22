@@ -12,7 +12,10 @@ const ItemCard = ({ item, addToCart }) => (
     />
     <div className="item-card__name">{item.name}</div>
     <div className="item-card__bottom">
-      <button className="item-card__bottom__buy-btn" onClick={addToCart}>
+      <button
+        className={`item-card__bottom__buy-btn ${item.adding ? 'loading' : ''}`}
+        onClick={() => addToCart(item.product_id)}
+      >
         Buy now
       </button>
     </div>
@@ -20,7 +23,6 @@ const ItemCard = ({ item, addToCart }) => (
       <Link
         to={`/products/${item.product_id}`}
         className="item-card__hover__view-btn"
-        onClick={addToCart}
       >
         View Product
       </Link>
