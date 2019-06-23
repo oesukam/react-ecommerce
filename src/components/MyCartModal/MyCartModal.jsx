@@ -12,6 +12,7 @@ import {
 import { setOrderModal } from '../../actions/orderActions';
 import Quantity from '../Quantity/Quantity';
 import closeIcon from '../../assets/icons/icons-close-big-black.png';
+import { setAuthModal } from '../../actions/currentUserActions';
 
 export class MyCartModal extends Component {
   componentDidMount() {
@@ -94,6 +95,9 @@ export class MyCartModal extends Component {
   _checkout = () => {
     this.props._setCartModal();
     this.props._setOrderModal('Delivery');
+    if (!this.props.isAuth) {
+      this.props._setAuthModal('Sign In');
+    }
   };
 
   _empty = () => {
@@ -167,11 +171,15 @@ export const mapStateToProps = ({
     cartProductForm: { cart_id: cartId },
     clearingCart,
   },
+  currentUser: {
+    isAuth
+  }
 }) => ({
   cartProducts,
   cartProductsCount: cartProducts.length || 0,
   cartId,
   clearingCart,
+  isAuth,
 });
 
 export const mapDispatchToProps = dispatch => ({
@@ -181,6 +189,7 @@ export const mapDispatchToProps = dispatch => ({
   _submitDeleteCartItem: payload => dispatch(submitDeleteCartItem(payload)),
   _submitEmptyCart: payload => dispatch(submitEmptyCart(payload)),
   _setOrderModal: payload => dispatch(setOrderModal(payload)),
+  _setAuthModal: payload => dispatch(setAuthModal(payload)),
 });
 
 export default connect(

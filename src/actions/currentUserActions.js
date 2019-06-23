@@ -72,8 +72,8 @@ export const setUpdatingCurrentUserAddress = payload => ({
 
 export const signout = () => dispatch => {
   localStorage.removeItem('accessToken');
+  dispatch(clearCurrentUser());
   return new Promise((resolve) => {
-    dispatch(clearCurrentUser());
     resolve()
   })
 };
@@ -88,16 +88,14 @@ export const submitLogin = credential => dispatch => {
       dispatch(setCurrentUser(data.customer));
       dispatch(setAccessToken(data.accessToken));
       localStorage.setItem('accessToken', data.accessToken);
+      window.location.reload(false);
       dispatch(setIsAuth(true));
       dispatch(setLoggingIn(false));
       dispatch(setAuthModal(''));
     })
-    .catch(({
-      response
-    }) => {
-      const {
-        error
-      } = response.data;
+    .catch(err => {
+      const error =
+        err.response && err.response.data ? err.response.data.error : err;
       dispatch(setUserError(error));
       dispatch(setLoggingIn(false));
     });
@@ -112,16 +110,15 @@ export const submitRegister = credential => dispatch => {
     }) => {
       dispatch(setCurrentUser(data.customer));
       dispatch(setAccessToken(data.accessToken));
+      localStorage.setItem('accessToken', data.accessToken);
+      window.location.reload(false);
       dispatch(setIsAuth(true));
       dispatch(setSigningUp(false));
       dispatch(setAuthModal(''));
     })
-    .catch(({
-      response
-    }) => {
-      const {
-        error
-      } = response.data;
+    .catch(err => {
+      const error =
+        err.response && err.response.data ? err.response.data.error : err;
       dispatch(setUserError(error));
       dispatch(setSigningUp(false));
     });
@@ -176,12 +173,9 @@ export const submitUpdateUserAddress = address => dispatch => {
     }) => {
       dispatch(setUpdatingCurrentUserAddress(false));
     })
-    .catch(({
-      response
-    }) => {
-      const {
-        error
-      } = response.data;
+    .catch(err => {
+      const error =
+        err.response && err.response.data ? err.response.data.error : err;
       dispatch(setUserError(error));
       dispatch(setUpdatingCurrentUserAddress(false));
     });
