@@ -11,6 +11,11 @@ const localStorageMock = {
   clear: jest.fn(),
 };
 
+const locationMock = {
+  reload: jest.fn(),
+};
+
+global.location = locationMock
 global.localStorage = localStorageMock;
 global.Stripe = jest.fn(() => ({
   elements: jest.fn(() => ({ create: jest.fn() })),

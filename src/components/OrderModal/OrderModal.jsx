@@ -20,7 +20,17 @@ import OrderFinish from './OrderFinish';
 import { generateStripToken } from '../../actions/orderActions';
 import stripe from '../../utils/stripe';
 const elements = stripe.elements();
-const card = elements.create('card');
+
+const style = {
+  base: {
+    // base Strip input styles
+    fontSize: '16px',
+    color: '#32325d',
+  }
+};
+
+const card = elements.create('card', { style });
+
 
 export class OrderModal extends Component {
   state = {

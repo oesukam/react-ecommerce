@@ -9,7 +9,11 @@ const reducer = (state = initialState, { type, payload }) => {
         accessToken: payload,
       };
     case types.CLEAR_CURRENT_USER:
-      return initialState;
+      return {
+        ...initialState,
+        isAuth: false,
+        accessToken: '',
+      };
     case types.SET_USER_ERROR:
       return {
         ...state,
