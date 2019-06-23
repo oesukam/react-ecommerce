@@ -41,9 +41,11 @@
   left: 0;
   right: 0;
   max-height: 50vh;
+  overflow: scroll;
   &__item {
     border: 1px soldid $color-gray;
     padding: 10px;
+    overflow: hidden;
     a {
       color: #fff;
       &:hover {
