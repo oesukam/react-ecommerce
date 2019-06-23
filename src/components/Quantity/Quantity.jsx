@@ -18,6 +18,7 @@ class Quantity extends Component {
     return (
       <div className="product-quantity">
         <button
+          data-test="quantity-sub-btn"
           className="product-quantity--icon"
           onClick={() =>
             this._onQuantityChange(
@@ -31,6 +32,7 @@ class Quantity extends Component {
         </button>
         <span className="product-quantity--count">{quantity}</span>
         <button
+          data-test="quantity-add-btn"
           className="product-quantity--icon"
           onClick={() =>
             this._onQuantityChange(

@@ -5,7 +5,9 @@
   "scripts": {
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
-    "test": "node scripts/test.js"
+    "tests": "node scripts/test.js",
+    "test": "NODE_ENV=test",
+    "test:watch": "NODE_ENV=test jest --watchAll"
   },
   "dependencies": {
     "@babel/core": "7.4.3",
@@ -101,9 +103,10 @@
     "verbose": true,
     "collectCoverage": true,
     "collectCoverageFrom": [
-      "src/**/*.(js|jsx,ts,tsx}",
+      "src/**/*.{js,jsx}",
       "!src/**/*.d.ts",
-      "!src/index.js"
+      "!src/index.js",
+      "!src/serviceWorker.js"
     ],
     "setupFiles": [
       "react-app-polyfill/jsdom"

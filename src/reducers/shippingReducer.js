@@ -1,7 +1,12 @@
 import * as types from '../actions-types/shippingActionsTypes';
-import { item as initialState } from '../store/initialState';
+import {
+  shipping as initialState
+} from '../store/initialState';
 
-const reducer = (state = initialState, { type, payload }) => {
+const reducer = (state = initialState, {
+  type,
+  payload
+}) => {
   switch (type) {
     case types.SET_LOADING_SHIPPING_REGION:
       return {
@@ -11,7 +16,7 @@ const reducer = (state = initialState, { type, payload }) => {
     case types.SET_LOADING_SHIPPING_REGIONS:
       return {
         ...state,
-        loadingRegionS: payload,
+        loadingRegions: payload,
       };
     case types.SET_SHIPPING_REGION:
       return {

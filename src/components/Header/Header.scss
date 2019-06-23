@@ -10,8 +10,8 @@
   right: 0;
   display: flex;
   flex-direction: column;
-  font-size: 1.3rem;
-  font-family: Montserrat-Bold;
+  font-size: 1.2rem;
+  font-family: Montserrat;
   .nav-top,
   .nav-bottom {
     width: 100%;
@@ -92,6 +92,7 @@
 .nav-cart {
   position: relative;
   display: inline-block;
+  font-size: 1.5rem;
   &__image {
     margin-right: 10px;
     margin-bottom: -3px;

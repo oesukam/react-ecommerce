@@ -23,8 +23,12 @@ export class App extends Component {
 }
 
 App.propTypes = {
-  getCategories: propTypes.func,
-  getDepartments: propTypes.func,
+  _fetchCategories: propTypes.func.isRequired,
+  _fetchDepartments: propTypes.func.isRequired,
+  _fetchCurrentUser: propTypes.func.isRequired,
+  _fetchAllTax: propTypes.func.isRequired,
+  _fetchShippingRegions: propTypes.func.isRequired,
+  _fetchOrders: propTypes.func.isRequired,
 };
 
 export const mapDispatchToProps = dispatch => ({

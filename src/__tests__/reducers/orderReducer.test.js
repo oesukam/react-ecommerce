@@ -1,6 +1,8 @@
 import * as types from '../../actions-types/orderActionsTypes';
 import reducer from '../../reducers/orderReducer';
-import { order as initialState } from '../../store/initialState';
+import {
+  order as initialState
+} from '../../store/initialState';
 
 describe('orderReducer', () => {
   test('should return the initial state', () => {
@@ -116,7 +118,9 @@ describe('orderReducer', () => {
       payload,
     };
     expect(reducer({}, action)).toEqual({
-      orderForm: { [payload.name]: payload.value },
+      orderForm: {
+        [payload.name]: payload.value
+      },
     });
   });
 
@@ -124,7 +128,9 @@ describe('orderReducer', () => {
     const action = {
       type: types.CLEAR_ORDER_FORM,
     };
-    expect(reducer({ orderForm: {} }, action)).toEqual({
+    expect(reducer({
+      orderForm: {}
+    }, action)).toEqual({
       orderForm: {
         order_id: undefined,
         shipping_id: '',
@@ -169,6 +175,17 @@ describe('orderReducer', () => {
     expect(reducer({}, action)).toEqual({
       orderStep: payload,
       submittingOrder: false,
+    });
+  });
+
+  test(`should handle ${types.SET_STRIPE_TOKEN}`, () => {
+    const payload = 'token';
+    const action = {
+      type: types.SET_STRIPE_TOKEN,
+      payload,
+    };
+    expect(reducer({}, action)).toEqual({
+      stripeToken: payload,
     });
   });
 });

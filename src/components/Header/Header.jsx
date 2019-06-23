@@ -20,7 +20,7 @@ export class Header extends Component {
   };
 
   componentWillReceiveProps() {
-    this.setState({ hamburger: false });
+    this.setState({ hamburger: false, avatarDropdown: false });
     return true;
   }
 
