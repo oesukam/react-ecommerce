@@ -24,7 +24,7 @@ describe('currentReducer', () => {
     const action = {
       type: types.CLEAR_CURRENT_USER,
     };
-    expect(reducer({}, action)).toEqual(initialState);
+    expect(reducer({}, action)).toEqual({ ...initialState, accessToken: "" });
   });
 
   test(`should handle ${types.SET_USER_ERROR}`, () => {

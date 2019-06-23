@@ -23,7 +23,7 @@ const elements = stripe.elements();
 
 const style = {
   base: {
-    // Add your base input styles here. For example:
+    // base Strip input styles
     fontSize: '16px',
     color: '#32325d',
   }
