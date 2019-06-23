@@ -20,13 +20,4 @@ const http = axios.create({
   },
 });
 
-http.interceptors.request.use((config) => {
-  if (userKey) {
-    config.headers['user-key'] = userKey;
-  }
-  return config;
-}, (err) => {
-  return Promise.reject(err);
-});
-
 export default http;

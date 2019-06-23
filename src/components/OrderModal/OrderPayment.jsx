@@ -48,6 +48,7 @@ export class OrderPayment extends Component {
             Pay ${cartTotalAmount} with credit card
           </h4>
         </div>
+        <br/>
         <div id="cc-form" />
         <br />
         <div className="columns">
