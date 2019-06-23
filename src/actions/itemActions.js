@@ -39,6 +39,48 @@ export const setCategories = payload => ({
   payload,
 });
 
+export const setSearchingItems = payload => ({
+  type: types.SET_SEARCHING_ITEMS,
+  payload,
+});
+
+export const setSearchedItems = payload => ({
+  type: types.SET_SEARCHED_ITEMS,
+  payload,
+});
+
+
+export const setDepartmentId = payload => ({
+  type: types.SET_DEPARTMENT_ID,
+  payload,
+});
+
+export const setCategoryId = payload => ({
+  type: types.SET_CATEGORY_ID,
+  payload,
+});
+
+export const setItemForm = payload => ({
+  type: types.SET_ITEM_FORM,
+  payload,
+});
+
+export const setItemFormField = payload => ({
+  type: types.SET_ITEM_FORM_FIELD,
+  payload,
+});
+
+export const setItemAttributes = payload => ({
+  type: types.SET_ITEM_ATTRIBUTES,
+  payload,
+});
+
+
+export const addingItemToCart = payload => ({
+  type: types.ADDING_ITEM_TO_CART,
+  payload,
+});
+
 export const fetchDepartments = () => dispatch => {
   return axios
     .get('/departments')
@@ -97,30 +139,6 @@ export const fetchItems = ({
     });
 };
 
-export const setDepartmentId = payload => ({
-  type: types.SET_DEPARTMENT_ID,
-  payload,
-});
-
-export const setCategoryId = payload => ({
-  type: types.SET_CATEGORY_ID,
-  payload,
-});
-
-export const setItemForm = payload => ({
-  type: types.SET_ITEM_FORM,
-  payload,
-});
-
-export const setItemFormField = payload => ({
-  type: types.SET_ITEM_FORM_FIELD,
-  payload,
-});
-
-export const setItemAttributes = payload => ({
-  type: types.SET_ITEM_ATTRIBUTES,
-  payload,
-});
 
 export const fetchItem = id => dispatch => {
   dispatch(setLoadingItem(true));
@@ -150,10 +168,6 @@ export const fetchItemAttributes = id => dispatch => {
     });
 };
 
-export const addingItemToCart = payload => ({
-  type: types.ADDING_ITEM_TO_CART,
-  payload,
-});
 
 export const addItemToCart = ({ itemId, cartId }) => dispatch => {
   const cart = {
@@ -171,5 +185,21 @@ export const addItemToCart = ({ itemId, cartId }) => dispatch => {
     })
     .catch(() => {
       dispatch(addingItemToCart({ itemId, adding: false }));
+    });
+};
+
+export const searchProducts = keywords => dispatch => {
+  dispatch(setSearchingItems(true));
+  dispatch(setSearchedItems([]));
+  return axios
+    .get(`/products/search?limit=20&query_string=${keywords}`)
+    .then(({ data }) => {
+      dispatch(setSearchedItems(data.rows || []));
+      dispatch(setSearchingItems(false));
+      return data;
+    })
+    .catch(err => {
+      dispatch(setSearchingItems(false));
+      dispatch(setSearchedItems([]));
     });
 };
