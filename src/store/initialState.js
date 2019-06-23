@@ -25,8 +25,10 @@ module.exports = {
   item: {
     loadingItems: false,
     loadingItem: false,
+    searchingItems: false,
     error: { message: '', field: '' },
     items: [],
+    searchedItems: [],
     item: {},
     itemAttributes: {
       Color: [],

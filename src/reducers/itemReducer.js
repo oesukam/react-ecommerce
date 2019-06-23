@@ -82,6 +82,16 @@ const reducer = (state = initialState, { type, payload }) => {
         ...state,
         categoryId: parseInt(payload, 10),
       };
+    case types.SET_SEARCHING_ITEMS:
+      return {
+        ...state,
+        searchingItems: payload,
+      };
+    case types.SET_SEARCHED_ITEMS:
+      return {
+        ...state,
+        searchedItems: payload,
+      };
 
     default:
       return state;

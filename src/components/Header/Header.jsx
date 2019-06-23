@@ -4,14 +4,13 @@ import { Link } from 'react-router-dom';
 import './Header.scss';
 import bagWhiteIcon from '../../assets/icons/icons-bag-white.png';
 import bagBlackIcon from '../../assets/icons/icons-bag.png';
-import closeSmallIcon from '../../assets/icons/icons-close-small-white.png';
-import searchIcon from '../../assets/icons/icons-search-white.png';
 import USAFlag from '../../assets/images/usa-flag.png';
 import { setDepartmentId } from '../../actions/itemActions';
 import { setCartModal } from '../../actions/cartActions';
 import { setAuthModal, signout } from '../../actions/currentUserActions';
 import userAvatar from '../../assets/icons/avatar.svg';
 import backIcon from '../../assets/icons/icons-back-big-red.png';
+import HeaderSearchInput from './HeaderSearchInput';
 
 export class Header extends Component {
   state = {
@@ -210,22 +209,7 @@ export class Header extends Component {
               <div className="navbar-start">{this.renderDepartments()}</div>
               <div className="navbar-end">
                 <div className="navbar-item">
-                  <div className="nav-search">
-                    <img
-                      src={searchIcon}
-                      className="nav-search__loop"
-                      alt="Search loop icon"
-                    />
-                    <input
-                      className="nav-search__input"
-                      placeholder="search anything"
-                    />
-                    <img
-                      src={closeSmallIcon}
-                      className="nav-search__close"
-                      alt="Search close icon"
-                    />
-                  </div>
+                  <HeaderSearchInput />
                 </div>
                 <div className="navbar-item">{this.renderAuthNav()}</div>
               </div>

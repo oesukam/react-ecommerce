@@ -1,0 +1,54 @@
+@import '../../styles/colors';
+
+.nav-search {
+  display: flex;
+  align-items: center;
+  padding: 5px 10px;
+  border-radius: 30px;
+  background-color: $color-gray;
+  &__input {
+    font-size: 1.4rem;
+    line-height: 1.5rem;
+    background-color: transparent;
+    border: none;
+    padding: 0.4rem 0.5rem;
+    color: $color-white;
+    flex: 1;
+    &::placeholder {
+      color: $color-white;
+    }
+    &:focus {
+      outline: none;
+    }
+  }
+  &__close {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    &:focus {
+      border: none;
+      outline: none;
+    }
+  }
+}
+
+.search-items {
+  background-color: $color-black;
+  border-top: 1px solid $color-gray;
+  position: absolute;
+  top: 100%;
+  margin-top: 12px;
+  left: 0;
+  right: 0;
+  max-height: 50vh;
+  &__item {
+    border: 1px soldid $color-gray;
+    padding: 10px;
+    a {
+      color: #fff;
+      &:hover {
+        color: $color-red;
+      }
+    }
+  }
+}
