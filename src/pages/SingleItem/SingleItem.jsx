@@ -18,32 +18,32 @@ export class SingleItem extends Component {
 
   componentDidMount() {
     const {
-      getItem,
-      getItemAttributes,
+      _getItem,
+      _getItemAttributes,
       match: {
         params: { productId },
       },
     } = this.props;
 
-    getItem(productId).then(data => {
+    _getItem(productId).then(data => {
       this.setState({
         selectedImage: (data && data.image) || '',
       });
     });
-    getItemAttributes(productId);
+    _getItemAttributes(productId);
   }
 
   _onQuantityChange = value => {
-    const { setCartField } = this.props;
-    setCartField({ name: 'quantity', value });
+    const { _setCartField } = this.props;
+    _setCartField({ name: 'quantity', value });
   };
 
   _setSelecteedImage = selectedImage => {
     this.setState({ selectedImage });
   };
 
-  _addToCart = () => {
-    const { cartProductForm, item, getCartId, addToCart } = this.props;
+  __addToCart = () => {
+    const { cartProductForm, item, _getCartId, _addToCart } = this.props;
     const data = {
       cart_id: cartProductForm.cart_id,
       product_id: item.product_id,
@@ -51,12 +51,12 @@ export class SingleItem extends Component {
       quantity: cartProductForm.quantity,
     };
     if (!data.cart_id) {
-      getCartId().then(() => {
-        addToCart(cartProductForm);
+      _getCartId().then(() => {
+        _addToCart(cartProductForm);
       });
       return;
     }
-    addToCart(data);
+    _addToCart(data);
   };
 
   _renderItemImages = () => {
@@ -91,7 +91,7 @@ export class SingleItem extends Component {
     const {
       itemAttributes: { Color = [] },
       cartProductForm: { color: selectedColor },
-      setCartField,
+      _setCartField,
     } = this.props;
 
     if (Color.length === 0) return;
@@ -108,7 +108,7 @@ export class SingleItem extends Component {
               }`}
               style={{ backgroundColor: c.attribute_value }}
               onClick={() =>
-                setCartField({ name: 'color', value: c.attribute_value })
+                _setCartField({ name: 'color', value: c.attribute_value })
               }
             />
           ))}
@@ -121,7 +121,7 @@ export class SingleItem extends Component {
     const {
       itemAttributes: { Size = [] },
       cartProductForm: { size: selectedSize },
-      setCartField,
+      _setCartField,
     } = this.props;
 
     if (Size.length === 0) return;
@@ -149,7 +149,7 @@ export class SingleItem extends Component {
                 s.attribute_value === selectedSize ? 'selected' : ''
               }`}
               onClick={() =>
-                setCartField({ name: 'size', value: s.attribute_value })
+                _setCartField({ name: 'size', value: s.attribute_value })
               }
             >
               {s.attribute_value}
@@ -165,7 +165,7 @@ export class SingleItem extends Component {
     return (
       <div className="product">
         <h3 className="product__name">{item.name}</h3>
-        <h3 className="product__price">£ {item.price}</h3>
+        <h3 className="product__price">$ {item.price}</h3>
 
         {this._renderColors()}
 
@@ -180,7 +180,7 @@ export class SingleItem extends Component {
           <div className="level-left">
             <div className="level-item">
               <button
-                onClick={this._addToCart}
+                onClick={this.__addToCart}
                 className={`product__add-btn ${
                   submittingCartProduct ? 'loading' : ''
                 }`}
@@ -237,10 +237,18 @@ export class SingleItem extends Component {
 }
 
 SingleItem.propTypes = {
-  item: propTypes.object,
-  loadingItem: propTypes.bool,
-  cartProductForm: propTypes.object,
+  item: propTypes.object.isRequired,
+  loadingItem: propTypes.bool.isRequired,
+  cartProductForm: propTypes.object.isRequired,
+  submittingCartProduct: propTypes.bool.isRequired,
+  itemAttributes: propTypes.object.isRequired,
+  _getItem: propTypes.func.isRequired,
+  _getCartId: propTypes.func.isRequired,
+  _setCartField: propTypes.func.isRequired,
+  _addToCart: propTypes.func.isRequired,
+  _getItemAttributes: propTypes.func.isRequired,
 };
+
 export const mapStateToProps = ({
   item: { loadingItem, item, itemAttributes },
   cart: { cartProductForm, submittingCartProduct },
@@ -252,15 +260,15 @@ export const mapStateToProps = ({
   itemAttributes,
 });
 
-export const mapDispactToProps = dispatch => ({
-  getItem: payload => dispatch(fetchItem(payload)),
-  getCartId: () => dispatch(generateCartId()),
-  setCartField: payload => dispatch(setCartProductFormField(payload)),
-  addToCart: payload => dispatch(submitCartProduct(payload)),
-  getItemAttributes: payload => dispatch(fetchItemAttributes(payload)),
+export const mapDispatchToProps = dispatch => ({
+  _getItem: payload => dispatch(fetchItem(payload)),
+  _getCartId: () => dispatch(generateCartId()),
+  _setCartField: payload => dispatch(setCartProductFormField(payload)),
+  _addToCart: payload => dispatch(submitCartProduct(payload)),
+  _getItemAttributes: payload => dispatch(fetchItemAttributes(payload)),
 });
 
 export default connect(
   mapStateToProps,
-  mapDispactToProps,
+  mapDispatchToProps,
 )(SingleItem);

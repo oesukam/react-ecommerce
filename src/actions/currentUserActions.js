@@ -21,9 +21,8 @@ export const setAuthFormField = payload => ({
   payload,
 });
 
-export const clearAuthForm = payload => ({
+export const clearAuthForm = () => ({
   type: types.CLEAR_AUTH_FORM,
-  payload,
 });
 
 export const setIsAuth = payload => ({
@@ -37,7 +36,7 @@ export const setLoggingIn = payload => ({
 });
 
 export const setSigningUp = payload => ({
-  type: types.SET_LOGGING_IN,
+  type: types.SET_SIGNING_UP,
   payload,
 });
 
@@ -56,51 +55,10 @@ export const setCurrentUserField = payload => ({
   payload,
 });
 
-export const submitLogin = credential => dispatch => {
-  dispatch(setLoggingIn(true));
-  return axios
-    .post('/customers/login', credential)
-    .then(({ data }) => {
-      dispatch(setCurrentUser(data.customer));
-      dispatch(setAccessToken(data.accessToken));
-      localStorage.setItem('accessToken', data.accessToken);
-      axios.defaults.headers.common['USER-KEY'] = data.accessToken;
-      dispatch(setIsAuth(true));
-      dispatch(setLoggingIn(false));
-    })
-    .catch(({ response }) => {
-      const { error } = response.data;
-      dispatch(setUserError(error));
-      dispatch(setLoggingIn(false));
-    });
-};
-
-export const submitRegister = credential => dispatch => {
-  dispatch(setSigningUp(true));
-  return axios
-    .post('/customers', credential)
-    .then(({ data }) => {
-      dispatch(setCurrentUser(data.customer));
-      dispatch(setAccessToken(data.accessToken));
-      axios.defaults.headers.common['USER-KEY'] = data.accessToken;
-      dispatch(setIsAuth(true));
-      dispatch(setSigningUp(false));
-    })
-    .catch(({ response }) => {
-      const { error } = response.data;
-      dispatch(setUserError(error));
-      dispatch(setSigningUp(false));
-    });
-};
 
 export const clearCurrentUser = () => ({
   type: types.CLEAR_CURRENT_USER,
 });
-
-export const signout = () => dispatch => {
-  localStorage.removeItem('accessToken');
-  dispatch(clearCurrentUser());
-};
 
 export const setUpdatingCurrentUser = payload => ({
   type: types.SET_UPDATING_CURRENT_USER,
@@ -112,16 +70,79 @@ export const setUpdatingCurrentUserAddress = payload => ({
   payload,
 });
 
+export const signout = () => dispatch => {
+  localStorage.removeItem('accessToken');
+  return new Promise((resolve) => {
+    dispatch(clearCurrentUser());
+    resolve()
+  })
+};
+
+export const submitLogin = credential => dispatch => {
+  dispatch(setLoggingIn(true));
+  return axios
+    .post('/customers/login', credential)
+    .then(({
+      data
+    }) => {
+      dispatch(setCurrentUser(data.customer));
+      dispatch(setAccessToken(data.accessToken));
+      localStorage.setItem('accessToken', data.accessToken);
+      dispatch(setIsAuth(true));
+      dispatch(setLoggingIn(false));
+      dispatch(setAuthModal(''));
+    })
+    .catch(({
+      response
+    }) => {
+      const {
+        error
+      } = response.data;
+      dispatch(setUserError(error));
+      dispatch(setLoggingIn(false));
+    });
+};
+
+export const submitRegister = credential => dispatch => {
+  dispatch(setSigningUp(true));
+  return axios
+    .post('/customers', credential)
+    .then(({
+      data
+    }) => {
+      dispatch(setCurrentUser(data.customer));
+      dispatch(setAccessToken(data.accessToken));
+      dispatch(setIsAuth(true));
+      dispatch(setSigningUp(false));
+      dispatch(setAuthModal(''));
+    })
+    .catch(({
+      response
+    }) => {
+      const {
+        error
+      } = response.data;
+      dispatch(setUserError(error));
+      dispatch(setSigningUp(false));
+    });
+};
+
 export const fetchCurrentUser = token => dispatch => {
   return axios
     .get('/customer')
-    .then(({ data }) => {
+    .then(({
+      data
+    }) => {
       dispatch(setCurrentUser(data));
     })
     .catch(err => {
       const error =
         err.response && err.response.data ? err.response.data.error : err;
       dispatch(setUserError(error));
+      if (error === 'TokenExpiredError: jwt expired') {
+        dispatch(signout())
+        dispatch(setAuthModal('Sign In'));
+      }
     });
 };
 
@@ -129,12 +150,18 @@ export const submitUpdateUser = user => dispatch => {
   dispatch(setUpdatingCurrentUser(true));
   return axios
     .put('/customer', user)
-    .then(({ data }) => {
+    .then(({
+      data
+    }) => {
       dispatch(updateCurrentUser(data));
       dispatch(setUpdatingCurrentUser(false));
     })
-    .catch(({ response }) => {
-      const { error } = response.data;
+    .catch(({
+      response
+    }) => {
+      const {
+        error
+      } = response.data;
       dispatch(setUserError(error));
       dispatch(setUpdatingCurrentUser(false));
     });
@@ -144,11 +171,17 @@ export const submitUpdateUserAddress = address => dispatch => {
   dispatch(setUpdatingCurrentUserAddress(true));
   return axios
     .put('/customers/address', address)
-    .then(({ data }) => {
+    .then(({
+      data
+    }) => {
       dispatch(setUpdatingCurrentUserAddress(false));
     })
-    .catch(({ response }) => {
-      const { error } = response.data;
+    .catch(({
+      response
+    }) => {
+      const {
+        error
+      } = response.data;
       dispatch(setUserError(error));
       dispatch(setUpdatingCurrentUserAddress(false));
     });

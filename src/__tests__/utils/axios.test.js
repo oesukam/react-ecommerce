@@ -1,4 +1,4 @@
-import axios from '../../helpers/axios';
+import axios from '../../utils/axios';
 
 describe('axios', () => {
   test('should return axios instance', () => {

@@ -7,7 +7,7 @@ import instagramIcon from '../../assets/icons/icons-instagram-grey.png';
 import pinterestIcon from '../../assets/icons/icons-pinterest-grey.png';
 import { connect } from 'react-redux';
 
-const Footer = ({ departments }) => (
+export const Footer = ({ departments }) => (
   <footer className="page-footer">
     <div className="container">
       <div className="columns">

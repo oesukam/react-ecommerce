@@ -1,8 +1,7 @@
-import store from '../../store';
-import initialState from '../../store/initialState';
+import { store } from '../../store';
 
 describe('store', () => {
   test('should return the initial store', () => {
-    expect(store.getState()).toEqual(initialState);
+    expect(store.getState()._persist.rehydrated).toBeTruthy();
   });
 });

@@ -104,6 +104,7 @@ export class AuthModal extends Component {
         </div>
 
         <button
+          data-test="login-btn"
           type="submit"
           onClick={this._login}
           disabled={!authForm.email.value || !authForm.password.value}
@@ -114,7 +115,7 @@ export class AuthModal extends Component {
 
         <div className="level">
           <div className="level-left">
-            <button onClick={this._toGoShop} className="bottom-btn">
+            <button className="bottom-btn">
               Forgot password
             </button>
           </div>
@@ -196,6 +197,7 @@ export class AuthModal extends Component {
 
         <button
           type="submit"
+          data-test="register-btn"
           onClick={this._register}
           disabled={!authForm.email.value || !authForm.password.value}
           className={`auth-btn ${signingUp ? 'loading' : ''}`}
@@ -214,22 +216,6 @@ export class AuthModal extends Component {
         </div>
       </form>
     );
-  };
-
-  _toGoShop = () => {
-    const { _setCartModal } = this.props;
-    _setCartModal();
-  };
-
-  _checkout = () => {
-    console.log('checkout');
-  };
-
-  _empty = () => {
-    const { _submitEmptyCart, cartId, _setCartModal } = this.props;
-    _submitEmptyCart(cartId).then(() => {
-      _setCartModal();
-    });
   };
 
   render() {
@@ -258,13 +244,16 @@ export class AuthModal extends Component {
 }
 
 AuthModal.propTypes = {
-  cartProducts: propTypes.array,
-  title: propTypes.string,
-};
-
-AuthModal.defaultProps = {
-  cartProducts: [],
-  title: '',
+  title: propTypes.string.isRequired,
+  authForm: propTypes.object.isRequired,
+  userError: propTypes.object.isRequired,
+  loggingIn: propTypes.bool.isRequired,
+  signingUp: propTypes.bool.isRequired,
+  _setAuthModal: propTypes.func.isRequired,
+  _handleInput: propTypes.func.isRequired,
+  _submitLogin: propTypes.func.isRequired,
+  _submitRegister: propTypes.func.isRequired,
+  _clearAuthForm: propTypes.func.isRequired,
 };
 
 export const mapStateToProps = ({

@@ -12,3 +12,6 @@ const localStorageMock = {
 };
 
 global.localStorage = localStorageMock;
+global.Stripe = jest.fn(() => ({
+  elements: jest.fn(() => ({ create: jest.fn() })),
+}));

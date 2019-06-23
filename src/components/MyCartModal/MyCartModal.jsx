@@ -9,6 +9,7 @@ import {
   submitDeleteCartItem,
   submitEmptyCart,
 } from '../../actions/cartActions';
+import { setOrderModal } from '../../actions/orderActions';
 import Quantity from '../Quantity/Quantity';
 import closeIcon from '../../assets/icons/icons-close-big-black.png';
 
@@ -20,14 +21,13 @@ export class MyCartModal extends Component {
     }
   }
 
-  _onQuantityChange = (quantity, itemId) => {
+  _onQuantityChange = (quantity, itemId, price) => {
     const { _updateCartProduct, cartId } = this.props;
-    _updateCartProduct({ cartId, itemId, item: { quantity } });
+    _updateCartProduct({ cartId, itemId, item: { quantity, price } });
   };
 
   _renderItems = () => {
-    const { cartProducts, _submitDeleteCartItem } = this.props;
-
+    const { cartProducts, _submitDeleteCartItem, cartId } = this.props;
     return (
       <table className="table is-fullwidth">
         <thead>
@@ -53,9 +53,11 @@ export class MyCartModal extends Component {
                     <h1>{item.name}</h1>
                     <button
                       className={`cart-item__delete-btn ${
-                        item.deleting ? 'is-loading' : ''
+                        item.deleting ? 'loading' : ''
                       }`}
-                      onClick={() => _submitDeleteCartItem(item.item_id)}
+                      onClick={() =>
+                        _submitDeleteCartItem({ itemId: item.item_id, cartId })
+                      }
                     >
                       <i className="fa fa-times color-red mr-10" />
                       Delete
@@ -72,12 +74,12 @@ export class MyCartModal extends Component {
                 <Quantity
                   quantity={item.quantity}
                   onQuantityChange={quantity =>
-                    this._onQuantityChange(quantity, item.item_id)
+                    this._onQuantityChange(quantity, item.item_id, item.price)
                   }
                 />
               </td>
-              <td className="price">£{item.price}</td>
-              <td className="price">£{item.subtotal}</td>
+              <td className="price">${item.price}</td>
+              <td className="price">${item.subtotal}</td>
             </tr>
           ))}
         </tbody>
@@ -86,12 +88,12 @@ export class MyCartModal extends Component {
   };
 
   _toGoShop = () => {
-    const { _setCartModal } = this.props;
-    _setCartModal();
+    this.props._setCartModal();
   };
 
   _checkout = () => {
-    console.log('checkout');
+    this.props._setCartModal();
+    this.props._setOrderModal('Delivery');
   };
 
   _empty = () => {
@@ -137,7 +139,11 @@ export class MyCartModal extends Component {
             >
               Empty cart
             </button>
-            <button onClick={this._checkout} className="checkout-btn">
+            <button
+              disabled={cartProductsCount === 0}
+              onClick={this._checkout}
+              className="checkout-btn"
+            >
               Checkout
             </button>
           </footer>
@@ -174,6 +180,7 @@ export const mapDispatchToProps = dispatch => ({
   _fetchCartProducts: payload => dispatch(fetchCartProducts(payload)),
   _submitDeleteCartItem: payload => dispatch(submitDeleteCartItem(payload)),
   _submitEmptyCart: payload => dispatch(submitEmptyCart(payload)),
+  _setOrderModal: payload => dispatch(setOrderModal(payload)),
 });
 
 export default connect(

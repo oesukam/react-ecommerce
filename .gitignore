@@ -25,5 +25,5 @@ yarn-error.log*
 yarn.lock
 package-lock.json
 
-src/__tests/**/__snapshots__
+src/__tests__/**/*/__snapshots__
 .netlify

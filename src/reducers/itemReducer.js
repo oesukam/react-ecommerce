@@ -19,6 +19,16 @@ const reducer = (state = initialState, { type, payload }) => {
         items: payload.rows,
         meta: payload.meta || initialState.meta,
       };
+    case types.ADDING_ITEM_TO_CART:
+      return {
+        ...state,
+        items: state.items.map(item => {
+          if (item.product_id === payload.itemId) {
+            item.adding = payload.adding;
+          }
+          return item;
+        }),
+      };
     case types.SET_ITEM:
       return {
         ...state,
