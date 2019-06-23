@@ -1,10 +1,14 @@
 import React from 'react';
 import { shallow, mount } from 'enzyme';
-import HeaderSearchInput from '../../../components/Header/HeaderSearchInput';
+import {HeaderSearchInput} from '../../components/Header/HeaderSearchInput';
 
 let wrapper;
 const props = {
   onChange: jest.fn(),
+  searchingItems: false,
+  searchedItems: [],
+  _searchProducts: jest.fn(),
+  _setSearchedItems: jest.fn(),
 };
 describe('<HeaderSearchInput />', () => {
   beforeEach(() => {
