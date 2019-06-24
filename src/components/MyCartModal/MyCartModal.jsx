@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import propTypes from 'prop-types';
 import { connect } from 'react-redux';
+import Notification from 'react-bulma-notification';
 import './MyCartModal.scss';
 import {
   setCartModal,
@@ -96,6 +97,7 @@ export class MyCartModal extends Component {
     this.props._setCartModal();
     this.props._setOrderModal('Delivery');
     if (!this.props.isAuth) {
+      Notification.warn('Please login before proceeding', { duration: 5 })
       this.props._setAuthModal('Sign In');
     }
   };
@@ -104,6 +106,7 @@ export class MyCartModal extends Component {
     const { _submitEmptyCart, cartId, _setCartModal } = this.props;
     _submitEmptyCart(cartId).then(() => {
       _setCartModal();
+      Notification.success('Your cart has been emptied successfully', { duration: 5 })
     });
   };
 

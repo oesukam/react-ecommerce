@@ -183,7 +183,12 @@ export class AuthModal extends Component {
             <input
               name="password"
               onChange={_handleInput}
-              className={`input ${!authForm.password.valid ? 'is-danger' : ''}`}
+              className={`input ${
+                !authForm.password.valid ||
+                (authForm.password.valid && authForm.password.value.lenth < 6)
+                  ? 'is-danger' : ''
+                }
+              `}
               type="password"
               placeholder="password"
               value={authForm.password.value}
@@ -199,7 +204,7 @@ export class AuthModal extends Component {
           type="submit"
           data-test="register-btn"
           onClick={this._register}
-          disabled={!authForm.email.value || !authForm.password.value}
+          disabled={!authForm.email.value || authForm.password.value.length < 6}
           className={`auth-btn ${signingUp ? 'loading' : ''}`}
         >
           {title}
