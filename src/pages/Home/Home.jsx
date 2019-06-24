@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import propTypes from 'prop-types';
 import queryString from 'query-string';
+import Notification from 'react-bulma-notification';
 import Layout from '../../containers/Layout/Layout';
 import HomeShow from './HomeShow';
 import './Home.scss';
@@ -31,15 +32,21 @@ export class Home extends Component {
     getItems({ page, categoryId, type });
   }
 
-  _addToCart = itemId => {
+  _addToCart = (itemId, item) => {
     const { cartId, _generateCartId, _addItemToCart } = this.props;
+    const message = `${item.name} was added to your cart`;
     if (!cartId) {
       _generateCartId().then(({ cart_id: cartId }) => {
         _addItemToCart({ cartId, itemId });
+        Notification.success(message, { duration: 5 })
       });
       return;
     }
-    _addItemToCart({ cartId, itemId });
+    _addItemToCart({ cartId, itemId })
+    .then(() => {
+      Notification.success(message, { duration: 5 })
+    })
+   
   };
 
   renderItems = () => {
@@ -79,11 +86,12 @@ export class Home extends Component {
       match,
       history,
       meta: { page, pages },
+      departmentId,
     } = this.props;
     return (
       <Layout match={match} history={history}>
         <div className="container">
-          <HomeShow />
+          { !departmentId ? <HomeShow /> : null}
           <Pagination goToPage={this.goToPage} page={page} pages={pages} />
           <div className="columns">
             <div className="column is-3">

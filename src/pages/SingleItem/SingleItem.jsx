@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import propTypes from 'prop-types';
+import Notification from 'react-bulma-notification';
 import './SingleItem.scss';
 import Layout from '../../containers/Layout/Layout';
 import { fetchItem, fetchItemAttributes } from '../../actions/itemActions';
@@ -44,6 +45,7 @@ export class SingleItem extends Component {
 
   __addToCart = () => {
     const { cartProductForm, item, _getCartId, _addToCart } = this.props;
+    const message = `${item.name} was added to your cart`
     const data = {
       cart_id: cartProductForm.cart_id,
       product_id: item.product_id,
@@ -53,10 +55,13 @@ export class SingleItem extends Component {
     if (!data.cart_id) {
       _getCartId().then(() => {
         _addToCart(cartProductForm);
+        Notification.success(message, { duration: 5 })
       });
       return;
     }
-    _addToCart(data);
+    _addToCart(data).then(() => {
+      Notification.success(message, { duration: 5 })
+    })
   };
 
   _renderItemImages = () => {

@@ -15,7 +15,7 @@ const ItemCard = ({ item, addToCart }) => (
       <button
         data-test="buy-btn"
         className={`item-card__bottom__buy-btn ${item.adding ? 'loading' : ''}`}
-        onClick={() => addToCart(item.product_id)}
+        onClick={() => addToCart(item.product_id, item)}
       >
         Buy now
       </button>

@@ -161,6 +161,7 @@ export class OrderModal extends Component {
       orderStep,
       clearingOrder,
       submittingOrder,
+      user,
     } = this.props;
     return (
       <div className="modal is-active modal-view">
@@ -205,7 +206,10 @@ export class OrderModal extends Component {
             </button>
             <button
               onClick={this._submitNext}
-              disabled={orderStep === 'Payment' && !this.state.validCreditCard}
+              disabled={
+                (orderStep === 'Payment' && !this.state.validCreditCard) ||
+                (orderStep === 'Delivery' && (!user.country || !user.address_1 || !user.city || !user.region))
+              }
               className={`next-btn ${submittingOrder ? 'loading' : ''}`}
             >
               {orderStep === 'Payment'

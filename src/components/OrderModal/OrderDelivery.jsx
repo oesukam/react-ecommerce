@@ -153,7 +153,7 @@ export class OrderDelivery extends Component {
                 <input
                   name="postal_code"
                   onChange={_handleUserInput}
-                  className={`input ${!user.postal_code ? 'is-danger' : ''}`}
+                  className="input"
                   type="text"
                   placeholder="Postal Code"
                   value={user.postal_code || ''}
