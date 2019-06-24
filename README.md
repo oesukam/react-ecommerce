@@ -33,4 +33,4 @@ Testing Credit Card Number: `4242 4242 4242 4242`
 1. Users can checkout with 3rd party payment gateways: Stripe.
 
 ## Author
-- Olivier Esuka [Ogilo](https://github.com/oesukam)
+- Olivier Esuka [Oesukam](https://github.com/oesukam)
