@@ -29,7 +29,7 @@ export class MyCartModal extends Component {
   };
 
   _renderItems = () => {
-    const { cartProducts, _submitDeleteCartItem, cartId } = this.props;
+    const { cartProducts, _submitDeleteCartItem, cartId, cartTotalAmount } = this.props;
     return (
       <table className="table is-fullwidth">
         <thead>
@@ -85,6 +85,17 @@ export class MyCartModal extends Component {
             </tr>
           ))}
         </tbody>
+        {
+          cartProducts.length > 0 ?
+          (<tfoot>
+            <tr>
+              <td colSpan="3"><h4 className="title is-4">Total</h4></td>
+              <td colSpan="2"><h4 className="title is-4 color-red has-text-right">${cartTotalAmount}</h4></td>
+            </tr>
+          </tfoot>)
+          : null
+        }
+        
       </table>
     );
   };
@@ -173,6 +184,7 @@ export const mapStateToProps = ({
     cartProducts,
     cartProductForm: { cart_id: cartId },
     clearingCart,
+    cartTotalAmount,
   },
   currentUser: {
     isAuth
@@ -183,6 +195,7 @@ export const mapStateToProps = ({
   cartId,
   clearingCart,
   isAuth,
+  cartTotalAmount,
 });
 
 export const mapDispatchToProps = dispatch => ({

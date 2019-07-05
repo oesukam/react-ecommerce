@@ -38,13 +38,13 @@ export class Home extends Component {
     if (!cartId) {
       _generateCartId().then(({ cart_id: cartId }) => {
         _addItemToCart({ cartId, itemId });
-        Notification.success(message, { duration: 5 })
+        Notification.success(message, { duration: 3 })
       });
       return;
     }
     _addItemToCart({ cartId, itemId })
     .then(() => {
-      Notification.success(message, { duration: 5 })
+      Notification.success(message, { duration: 3 })
     })
    
   };
