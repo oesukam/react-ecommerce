@@ -49,9 +49,22 @@
     text-overflow: ellipsis;
   }
   &__bottom {
-    height: 60px;
+    height: 100px;
     display: flex;
     align-items: center;
+    flex-direction: column;
+    &__prices {
+      font-size: 1.8rem;
+      color: $color-red;
+      margin-bottom: 10px;
+    }
+    &__price {
+      &.has-discount {
+        text-decoration: line-through;
+        font-size: 1.5rem;
+        margin-right: 10px;
+      }
+    }
     &__buy-btn {
       @include item-button;
     }
@@ -63,7 +76,7 @@
     top: 0;
     left: 0;
     right: 0;
-    bottom: 80px;
+    bottom: 110px;
     display: flex;
     justify-content: center;
     align-items: center;

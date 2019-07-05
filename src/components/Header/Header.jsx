@@ -119,13 +119,13 @@ export class Header extends Component {
             </div>
 
             <div className="is-flex items-center is-hidden-mobile">
-              <Link to="/items" className="navbar-item">
+              <Link to="#" className="navbar-item">
                 Daily Deals
               </Link>
-              <Link to="/items" className="navbar-item">
+              <Link to="#" className="navbar-item">
                 Sell
               </Link>
-              <Link to="/items" className="navbar-item">
+              <Link to="#" className="navbar-item">
                 Help & Contact
               </Link>
             </div>

@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import propTypes from 'prop-types';
 import { connect } from 'react-redux';
+import Notification from 'react-bulma-notification';
 import './Settings.scss';
 import Layout from '../../containers/Layout/Layout';
-
 import {
   setCurrentUserField,
   submitUpdateUser,
@@ -37,7 +37,11 @@ export class Settings extends Component {
       eve_phone: user.eve_phone,
       mob_phone: user.mob_phone,
       password: user.password || undefined,
-    });
+    }).then((res) => {
+      if (res && res.email) {
+        Notification.success('Information updated', { duration: 3 })
+      }
+    })
   };
 
   _submitAddress = e => {
@@ -60,7 +64,11 @@ export class Settings extends Component {
       postal_code: user.postal_code,
       country: user.country,
       shipping_region_id: user.shipping_region_id,
-    });
+    }).then((res) => {
+      if (res && res.email) {
+        Notification.success('Address updated', { duration: 3 })
+      }
+    })
   };
 
   _renderProfile = () => {

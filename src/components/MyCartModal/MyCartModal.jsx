@@ -85,17 +85,12 @@ export class MyCartModal extends Component {
             </tr>
           ))}
         </tbody>
-        {
-          cartProducts.length > 0 ?
-          (<tfoot>
-            <tr>
-              <td colSpan="3"><h4 className="title is-4">Total</h4></td>
-              <td colSpan="2"><h4 className="title is-4 color-red has-text-right">${cartTotalAmount}</h4></td>
-            </tr>
-          </tfoot>)
-          : null
-        }
-        
+        <tfoot>
+          <tr>
+            <td colSpan="3"><h4 className="title is-4">Total</h4></td>
+            <td colSpan="2"><h4 className="title is-4 color-red has-text-right">${cartProducts.length === 0 ? 0 : cartTotalAmount}</h4></td>
+          </tr>
+        </tfoot>
       </table>
     );
   };

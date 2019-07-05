@@ -12,12 +12,22 @@ const ItemCard = ({ item, addToCart }) => (
     />
     <div className="item-card__name">{item.name}</div>
     <div className="item-card__bottom">
+      
+      <p className="item-card__bottom__prices">
+        <span className={`item-card__bottom__price ${item.discounted_price > 0 && 'has-discount'}`}>${item.price}</span>
+        { item.discounted_price > 0 ?
+            <span className="item-card__bottom__discount">
+              ${item.discounted_price}
+            </span>
+          : null
+        }
+      </p>
       <button
         data-test="buy-btn"
         className={`item-card__bottom__buy-btn ${item.adding ? 'loading' : ''}`}
         onClick={() => addToCart(item.product_id, item)}
       >
-        Add to cart
+        Buy now
       </button>
     </div>
     <div className="item-card__hover">

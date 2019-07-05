@@ -170,7 +170,14 @@ export class SingleItem extends Component {
     return (
       <div className="product">
         <h3 className="product__name">{item.name}</h3>
-        <h3 className="product__price">$ {item.price}</h3>
+        <h3 className={`product__price ${item.discounted_price > 0 && 'has-discount'}`}>$ {item.price}</h3>
+        {
+          item.discounted_price > 0 ?
+            <h3 className="product__price">
+              $ {item.discounted_price}
+            </h3>
+          : null
+        }
 
         {this._renderColors()}
 

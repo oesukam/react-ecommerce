@@ -18,7 +18,7 @@ export class OrderDelivery extends Component {
   };
 
   render = () => {
-    const { cartProducts, user } = this.props;
+    const { cartProducts, user, cartTotalAmount } = this.props;
     return (
       <div className="columns">
         <div className="column is-8">
@@ -44,6 +44,14 @@ export class OrderDelivery extends Component {
                 </tr>
               ))}
             </tbody>
+            <tfoot>
+              <tr>
+                <td><h5 className="title is-5">Total</h5></td>
+                <td colSpan="2">
+                  <h5 className="title is-5 has-text-right color-red">${cartTotalAmount}</h5>
+                </td>
+              </tr>
+            </tfoot>
           </table>
         </div>
         <div className="column is-4">
@@ -74,7 +82,7 @@ export const mapStateToProps = ({
     submittingOrder,
   },
   shipping: { regions, region },
-  cart: { cartProducts },
+  cart: { cartProducts, cartTotalAmount  },
 }) => ({
   orders,
   cartId,
@@ -86,6 +94,7 @@ export const mapStateToProps = ({
   regions,
   region,
   cartProducts,
+  cartTotalAmount
 });
 
 export const mapDispatchToProps = dispatch => ({

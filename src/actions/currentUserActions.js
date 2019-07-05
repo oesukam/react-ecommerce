@@ -152,15 +152,14 @@ export const submitUpdateUser = user => dispatch => {
     }) => {
       dispatch(updateCurrentUser(data));
       dispatch(setUpdatingCurrentUser(false));
+      return data;
     })
-    .catch(({
-      response
-    }) => {
-      const {
-        error
-      } = response.data;
+    .catch((err) => {
+      const error =
+        err.response && err.response.data ? err.response.data.error : err;
       dispatch(setUserError(error));
       dispatch(setUpdatingCurrentUser(false));
+      return error;
     });
 };
 
@@ -172,11 +171,13 @@ export const submitUpdateUserAddress = address => dispatch => {
       data
     }) => {
       dispatch(setUpdatingCurrentUserAddress(false));
+      return data;
     })
     .catch(err => {
       const error =
         err.response && err.response.data ? err.response.data.error : err;
       dispatch(setUserError(error));
       dispatch(setUpdatingCurrentUserAddress(false));
+      return error
     });
 };
