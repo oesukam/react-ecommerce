@@ -1,6 +1,4 @@
 version: 2.1
-orbs:
-  codecov: codecov/codecov@1.0.2
 jobs:
   build:
     docker:
@@ -30,6 +28,3 @@ jobs:
       - run: yarn test
 
       - run: curl -s https://codecov.io/bash | bash
-      
-      # - codecov/upload:
-      #    file: coverage/*.json
