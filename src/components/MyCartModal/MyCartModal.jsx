@@ -36,6 +36,7 @@ export class MyCartModal extends Component {
           <tr>
             <th>Item</th>
             <th className="has-text-centered">Size</th>
+            <th className="has-text-centered">Color</th>
             <th className="has-text-centered">Quantity</th>
             <th className="has-text-centered">Price</th>
             <th className="has-text-centered">Sub Total</th>
@@ -70,7 +71,12 @@ export class MyCartModal extends Component {
               <td>
                 {item.attributes.split(',').length > 0
                   ? item.attributes.split(',')[0]
-                  : ''}
+                  : '-'}
+              </td>
+              <td>
+                {item.attributes.split(',').length > 1
+                  ? item.attributes.split(',')[1]
+                  : '-'}
               </td>
               <td className="quantity">
                 <Quantity
@@ -81,7 +87,7 @@ export class MyCartModal extends Component {
                 />
               </td>
               <td className="price">${item.price}</td>
-              <td className="price">${item.subtotal}</td>
+              <td className="price">${Number(item.subtotal).toFixed(2)}</td>
             </tr>
           ))}
         </tbody>
@@ -167,11 +173,19 @@ export class MyCartModal extends Component {
 }
 
 MyCartModal.propTypes = {
-  cartProducts: propTypes.array,
-};
-
-MyCartModal.defaultProps = {
-  cartProducts: [],
+  cartProducts: propTypes.array.isRequired,
+  cartProductsCount: propTypes.number.isRequired,
+  cartId: propTypes.any.isRequired,
+  clearingCart: propTypes.bool.isRequired,
+  isAuth: propTypes.bool.isRequired,
+  cartTotalAmount: propTypes.number.isRequired,
+  _setCartModal: propTypes.func.isRequired,
+  _updateCartProduct: propTypes.func.isRequired,
+  _fetchCartProducts: propTypes.func.isRequired,
+  _submitDeleteCartItem: propTypes.func.isRequired,
+  _submitEmptyCart: propTypes.func.isRequired,
+  _setOrderModal: propTypes.func.isRequired,
+  _setAuthModal: propTypes.func.isRequired,
 };
 
 export const mapStateToProps = ({
@@ -186,7 +200,7 @@ export const mapStateToProps = ({
   }
 }) => ({
   cartProducts,
-  cartProductsCount: cartProducts.length || 0,
+  cartProductsCount: cartProducts.length,
   cartId,
   clearingCart,
   isAuth,

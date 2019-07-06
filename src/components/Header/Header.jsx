@@ -11,6 +11,7 @@ import { setAuthModal, signout } from '../../actions/currentUserActions';
 import userAvatar from '../../assets/icons/avatar.svg';
 import backIcon from '../../assets/icons/icons-back-big-red.png';
 import HeaderSearchInput from './HeaderSearchInput';
+import propTypes from 'prop-types';
 
 export class Header extends Component {
   state = {
@@ -101,14 +102,14 @@ export class Header extends Component {
                 <React.Fragment>
                   <button
                     onClick={() => _setAuthModal('Sign In')}
-                    className="auth-btn mr-10 ml-10"
+                    className="auth-btn mr-10 ml-10 signin-btn"
                   >
                     Sign in
-                  </button>{' '}
+                  </button>
                   or
                   <button
                     onClick={() => _setAuthModal('Sign Up')}
-                    className="auth-btn ml-10"
+                    className="auth-btn ml-10 signup-btn"
                   >
                     Register
                   </button>
@@ -159,10 +160,10 @@ export class Header extends Component {
       match: {
         params: { departmentId },
       },
-      setDepartment,
+      _setDepartment,
     } = this.props;
     const id = parseInt(departmentId, 10);
-    setDepartment(id || '');
+    _setDepartment(id);
 
     return departments.map(dep => (
       <Link
@@ -235,6 +236,16 @@ export class Header extends Component {
   }
 }
 
+Header.propTypes = {
+  history: propTypes.any.isRequired,
+  match: propTypes.any.isRequired,
+  isAuth: propTypes.bool.isRequired,
+  user: propTypes.object.isRequired,
+  departments: propTypes.array.isRequired,
+  cartCount: propTypes.number.isRequired,
+  cartTotalAmount: propTypes.number.isRequired,
+}
+
 export const mapStateToProps = ({
   currentUser: { isAuth, user },
   item: { departments },
@@ -243,12 +254,12 @@ export const mapStateToProps = ({
   isAuth,
   user,
   departments,
-  cartCount: cartProducts.length || 0,
+  cartCount: cartProducts.length,
   cartTotalAmount,
 });
 
 export const mapDispatchToProps = disptach => ({
-  setDepartment: payload => disptach(setDepartmentId(payload)),
+  _setDepartment: payload => disptach(setDepartmentId(payload)),
   _setCartModal: () => disptach(setCartModal(true)),
   _setAuthModal: payload => disptach(setAuthModal(payload)),
   _signout: payload => disptach(signout()),

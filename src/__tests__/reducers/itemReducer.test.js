@@ -220,4 +220,26 @@ describe('itemReducer', () => {
       categoryId: payload,
     });
   });
+
+  test(`should handle ${types.SET_SEARCHING_ITEMS}`, () => {
+    const payload = true;
+    const action = {
+      type: types.SET_SEARCHING_ITEMS,
+      payload,
+    };
+    expect(reducer({}, action)).toEqual({
+      searchingItems: payload,
+    });
+  });
+
+  test(`should handle ${types.SET_SEARCHED_ITEMS}`, () => {
+    const payload = [];
+    const action = {
+      type: types.SET_SEARCHED_ITEMS,
+      payload,
+    };
+    expect(reducer({}, action)).toEqual({
+      searchedItems: payload,
+    });
+  });
 });

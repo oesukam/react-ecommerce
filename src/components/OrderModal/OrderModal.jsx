@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import propTypes from 'prop-types';
 import { connect } from 'react-redux';
+import Notification from 'react-bulma-notification';
 import './OrderModal.scss';
 import {
   setOrderModal,
@@ -30,7 +31,6 @@ const style = {
 };
 
 const card = elements.create('card', { style });
-
 
 export class OrderModal extends Component {
   state = {
@@ -129,6 +129,7 @@ export class OrderModal extends Component {
         const stripeResponse = await this.props._generateStripToken(card);
         if (!stripeResponse || !stripeResponse.token) {
           nextStep = 'Payment';
+          Notification.error('Could not connect to stripe. Please try again later', { duration: 4 })
           break;
         }
 
@@ -138,8 +139,9 @@ export class OrderModal extends Component {
           description: "Ecommnerce items' payment ",
           stripeToken: stripeResponse.token.id,
         });
-        if (!paid) {
+        if (!paid && paid.orderId) {
           nextStep = 'Payment';
+          Notification.error('Could not make the order. Please try again later', { duration: 4 })
           break;
         }
         await this.props._submitEmptyCart(cartId);
@@ -226,11 +228,22 @@ export class OrderModal extends Component {
 }
 
 OrderModal.propTypes = {
-  orders: propTypes.array,
-};
-
-OrderModal.defaultProps = {
-  orders: [],
+  orders: propTypes.array.isRequired,
+  cartId: propTypes.any.isRequired,
+  clearingOrder: propTypes.bool.isRequired,
+  orderStep: propTypes.string.isRequired,
+  orderSteps: propTypes.array.isRequired,
+  submittingOrder: propTypes.bool.isRequired,
+  userError: propTypes.any.isRequired,
+  user: propTypes.object.isRequired,
+  updatingUser: propTypes.bool.isRequired,
+  updatingUserAddress: propTypes.bool.isRequired,
+  regions: propTypes.array.isRequired,
+  region: propTypes.string.isRequired,
+  cartProducts: propTypes.array.isRequired,
+  allTax: propTypes.array.isRequired,
+  cartTotalAmount: propTypes.number.isRequired,
+  stripeToken: propTypes.object.isRequired,
 };
 
 export const mapStateToProps = ({
@@ -277,9 +290,9 @@ export const mapStateToProps = ({
 });
 
 export const mapDispatchToProps = dispatch => ({
+  _setOrderModal: () => dispatch(setOrderModal(false)),
   _handleUserInput: ({ target: { value, name } }) =>
     dispatch(setCurrentUserField({ name, value })),
-  _setOrderModal: () => dispatch(setOrderModal(false)),
   _fetchOrders: payload => dispatch(fetchOrders(payload)),
   _setOrderStep: payload => dispatch(setOrderStep(payload)),
   _submitOrder: payload => dispatch(submitOrder(payload)),

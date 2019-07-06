@@ -1,6 +1,7 @@
 Ecommerce using React
 
 [![Netlify Status](https://api.netlify.com/api/v1/badges/0b970d29-3fe7-4939-b6cf-3d5fcd51ee12/deploy-status)](https://app.netlify.com/sites/react-ecommerce-oem/deploys)
+[![CircleCI](https://circleci.com/gh/oesukam/turing-react/tree/develop.svg?style=svg)](https://circleci.com/gh/oesukam/turing-react/tree/develop)
 
 ## Technologies
 

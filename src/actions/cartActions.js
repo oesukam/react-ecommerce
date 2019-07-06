@@ -1,5 +1,6 @@
 import * as types from '../actions-types/cartActionsTypes';
 import axios from '../utils/axios';
+import getError from '../utils/getError';
 
 export const setCartModal = payload => ({
   type: types.SET_CART_MODAL,
@@ -85,7 +86,8 @@ export const fetchCartProducts = cartId => dispatch => {
       dispatch(setLoadingCartProducts(false));
     })
     .catch(err => {
-      dispatch(setCartProductError(err));
+      const error = getError(err);
+      dispatch(setCartProductError(error));
       dispatch(setLoadingCartProducts(false));
     });
 };
@@ -101,7 +103,8 @@ export const generateCartId = () => dispatch => {
       return data;
     })
     .catch(err => {
-      dispatch(setCartProductError(err));
+      const error = getError(err);
+      dispatch(setCartProductError(error));
     });
 };
 
@@ -116,7 +119,8 @@ export const fetchCartProduct = cartId => dispatch => {
       return data;
     })
     .catch(err => {
-      dispatch(setCartProductError(err));
+      const error = getError(err);
+      dispatch(setCartProductError(error));
       dispatch(setLoadingCartProduct(false));
     });
 };
@@ -125,11 +129,12 @@ export const fetchCartTotalAmount = cartId => dispatch => {
   return axios
     .get(`/shoppingcart/totalAmount/${cartId}`)
     .then(({ data }) => {
-      dispatch(setCartTotalAmount(data.total_amount || 0));
+      dispatch(setCartTotalAmount(data.total_amount));
       return data;
     })
     .catch(err => {
-      dispatch(setCartProductError(err));
+      const error = getError(err);
+      dispatch(setCartProductError(error));
       dispatch(setCartTotalAmount(0));
     });
 };
@@ -146,7 +151,8 @@ export const submitCartProduct = cart => dispatch => {
       return data;
     })
     .catch(err => {
-      dispatch(setCartProductError(err));
+      const error = getError(err);
+      dispatch(setCartProductError(error));
       dispatch(setSubmittingCartProduct(false));
     });
 };
@@ -157,7 +163,7 @@ export const submitCartProductUpdate = ({
   item,
 }) => dispatch => {
   return axios
-    .put(`/shoppingcart/update/${itemId}/`, { ...item, price: undefined })
+    .put(`/shoppingcart/update/${itemId}`, { ...item, price: undefined })
     .then(({ data }) => {
       item.subtotal = item.quantity * item.price;
       dispatch(updateCartProduct({ itemId, item }));
@@ -165,7 +171,8 @@ export const submitCartProductUpdate = ({
       return data;
     })
     .catch(err => {
-      dispatch(setCartProductError(err));
+      const error = getError(err);
+      dispatch(setCartProductError(error));
     });
 };
 
@@ -183,7 +190,7 @@ export const submitEmptyCart = cartId => dispatch => {
     .delete(`/shoppingcart/empty/${cartId}`)
     .then(({ data }) => {
       dispatch(setCartProducts([]));
-      dispatch(setCartTotalAmount(0));
+      dispatch(setCartTotalAmount(0))
       dispatch(clearingCart(false));
     })
     .catch(() => {

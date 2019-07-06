@@ -70,6 +70,7 @@ export class HeaderSearchInput extends Component {
           onKeyDown={this.handleKeyDown}
         />
         <button
+          data-test="clear-search-input"
           className={`nav-search__close ${typing || searchingItems ? 'loading': ''}`}
           onClick={this.clearInput}
         >
@@ -83,7 +84,7 @@ export class HeaderSearchInput extends Component {
           (<div className="search-items">
             <ul>
               { searchedItems.map((item) => (
-              <li className="search-items__item">
+              <li key={item.product_id} className="search-items__item">
                 <Link to={`/products/${item.product_id}`}>{item.name}</Link>
               </li>
               ))

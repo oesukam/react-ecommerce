@@ -2,6 +2,7 @@ import * as types from '../actions-types/itemActionsTypes';
 import axios from '../utils/axios';
 import groupArray from '../utils/groupArray';
 import getMetaData from '../utils/getMetaData';
+import getError from '../utils/getError';
 import { fetchCartProduct, submitCartProduct } from './cartActions';
 
 export const setItem = payload => ({
@@ -85,10 +86,11 @@ export const fetchDepartments = () => dispatch => {
   return axios
     .get('/departments')
     .then(({ data }) => {
-      dispatch(setDepartments(data || [])); // Dispatch with an empty in case there is no data
+      dispatch(setDepartments(data));
     })
     .catch(err => {
-      dispatch(setItemError(err));
+      const error = getError(err);
+      dispatch(setItemError(error));
     });
 };
 
@@ -96,49 +98,13 @@ export const fetchCategories = () => dispatch => {
   return axios
     .get('/categories')
     .then(({ data }) => {
-      const { rows = [] } = data;
-      dispatch(setCategories(rows)); // Dispatch with an empty in case there is no data
+      dispatch(setCategories(data.rows)); // Dispatch with an empty in case there is no data
     })
     .catch(err => {
-      dispatch(setItemError(err));
+      const error = getError(err);
+      dispatch(setItemError(error));
     });
 };
-
-export const fetchItems = ({
-  categoryId,
-  departmentId,
-  type,
-  page = 1,
-} = {}) => dispatch => {
-  dispatch(setLoadingItems(true));
-  let endpoint = '/products';
-  let query = `?limit=20&page=${page}`;
-  // Set the corresponding endpoint
-  switch (type) {
-    case 'department':
-      endpoint = `${endpoint}/inDepartment/${departmentId||''}${query}`;
-      break;
-    case 'category':
-      endpoint = `${endpoint}/inCategory/${categoryId||''}${query}`;
-      break;
-    default:
-      endpoint = endpoint + query;
-      break;
-  }
-  return axios
-    .get(endpoint)
-    .then(({ data }) => {
-      const { rows = [], count = 0 } = data;
-      const meta = getMetaData({ page, count });
-      dispatch(setItems({ rows, meta }));
-      dispatch(setLoadingItems(false));
-    })
-    .catch(err => {
-      dispatch(setItemError(err));
-      dispatch(setLoadingItems(false));
-    });
-};
-
 
 export const fetchItem = id => dispatch => {
   dispatch(setLoadingItem(true));
@@ -150,7 +116,7 @@ export const fetchItem = id => dispatch => {
       return data;
     })
     .catch(err => {
-      dispatch(setItemError(err));
+      dispatch(setItemError(getError(err)));
       dispatch(setLoadingItem(false));
     });
 };
@@ -164,7 +130,8 @@ export const fetchItemAttributes = id => dispatch => {
       return data;
     })
     .catch(err => {
-      dispatch(setItemError(err));
+      const error = getError(err);
+      dispatch(setItemError(error));
     });
 };
 
@@ -183,23 +150,57 @@ export const addItemToCart = ({ itemId, cartId }) => dispatch => {
       dispatch(addingItemToCart({ itemId, adding: false }));
       dispatch(fetchCartProduct(cartId));
     })
-    .catch(() => {
-      dispatch(addingItemToCart({ itemId, adding: false }));
-    });
 };
 
 export const searchProducts = keywords => dispatch => {
   dispatch(setSearchingItems(true));
   dispatch(setSearchedItems([]));
   return axios
-    .get(`/products/search?limit=20&query_string=${keywords}`)
+    .get(`/products/search?limit=5&query_string=${keywords}`)
     .then(({ data }) => {
-      dispatch(setSearchedItems(data.rows || []));
+      dispatch(setSearchedItems(data.rows));
       dispatch(setSearchingItems(false));
       return data;
     })
     .catch(err => {
       dispatch(setSearchingItems(false));
       dispatch(setSearchedItems([]));
+    });
+};
+
+
+export const fetchItems = ({
+  categoryId,
+  departmentId,
+  type,
+  page = 1,
+} = {}) => dispatch => {
+  dispatch(setLoadingItems(true));
+  let endpoint = '/products';
+  let query = `?limit=20&page=${page}`;
+  // Set the corresponding endpoint
+  switch (type) {
+    case 'department':
+      endpoint = `${endpoint}/inDepartment/${departmentId}${query}`;
+      break;
+    case 'category':
+      endpoint = `${endpoint}/inCategory/${categoryId}${query}`;
+      break;
+    default:
+      endpoint = endpoint + query;
+      break;
+  }
+  return axios
+    .get(endpoint)
+    .then(({ data }) => {
+      const { rows, count } = data;
+      const meta = getMetaData({ page, count });
+      dispatch(setItems({ rows, meta }));
+      dispatch(setLoadingItems(false));
+    })
+    .catch(err => {
+      const error = getError(err);
+      dispatch(setItemError(error));
+      dispatch(setLoadingItems(false));
     });
 };

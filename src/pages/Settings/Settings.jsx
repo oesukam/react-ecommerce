@@ -31,8 +31,8 @@ export class Settings extends Component {
       return;
     }
     _updateUser({
-      name: user.name || undefined,
-      email: user.email || undefined,
+      name: user.name,
+      email: user.email,
       day_phone: user.day_phone,
       eve_phone: user.eve_phone,
       mob_phone: user.mob_phone,
@@ -205,6 +205,7 @@ export class Settings extends Component {
 
         <div className="mb-20">
           <button
+            data-test="update-profile"
             onClick={this._submitUser}
             className={`action-btn ${updatingUser ? 'loading' : ''}`}
           >
@@ -219,7 +220,7 @@ export class Settings extends Component {
     const { _handleInput, regions } = this.props;
     const regiondId = parseInt(target.value, 10);
     const region =
-      regions.find(reg => reg.shipping_region_id === regiondId) || {};
+      regions.find(reg => reg.shipping_region_id === regiondId);
     _handleInput({ target: { name: 'region', value: region.shipping_region } });
     _handleInput({
       target: { name: 'shipping_region_id', value: region.shipping_region_id },
@@ -287,6 +288,7 @@ export class Settings extends Component {
                 <label className="label">Region</label>
                 <div className={`select ${!user.region ? 'is-danger' : ''}`}>
                   <select
+                    id="region-select"
                     value={user.shipping_region_id}
                     onChange={this._onSelectRegion}
                   >
@@ -373,6 +375,7 @@ export class Settings extends Component {
 
         <div className="mt-20 mb-20">
           <button
+            data-test="update-address"
             onClick={this._submitAddress}
             className={`action-btn ${updatingUserAddress ? 'loading' : ''}`}
             disabled={!user.country || !user.city}
@@ -384,21 +387,6 @@ export class Settings extends Component {
     );
   };
 
-  _toGoShop = () => {
-    const { _setCartModal } = this.props;
-    _setCartModal();
-  };
-
-  _checkout = () => {
-    console.log('checkout');
-  };
-
-  _empty = () => {
-    const { _submitEmptyCart, cartId, _setCartModal } = this.props;
-    _submitEmptyCart(cartId).then(() => {
-      _setCartModal();
-    });
-  };
 
   render() {
     const { match, history } = this.props;
@@ -421,11 +409,12 @@ export class Settings extends Component {
 }
 
 Settings.propTypes = {
-  user: propTypes.object,
-};
-
-Settings.defaultProps = {
-  user: {},
+  user: propTypes.object.isRequired,
+  loggingIn: propTypes.bool.isRequired,
+  updatingUser: propTypes.bool.isRequired,
+  updatingUserAddress: propTypes.bool.isRequired,
+  userError: propTypes.object.isRequired,
+  regions: propTypes.array.isRequired,
 };
 
 export const mapStateToProps = ({

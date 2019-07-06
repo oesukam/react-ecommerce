@@ -52,6 +52,10 @@ export class SingleItem extends Component {
       attributes: [cartProductForm.size, cartProductForm.color].join(', '),
       quantity: cartProductForm.quantity,
     };
+    if (!cartProductForm.size || !cartProductForm.color) {
+      Notification.error('Please choose your color and size', { duration: 4 })
+      return;
+    }
     if (!data.cart_id) {
       _getCartId().then(() => {
         _addToCart(cartProductForm);

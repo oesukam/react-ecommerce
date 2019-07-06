@@ -121,6 +121,7 @@ export class AuthModal extends Component {
           </div>
           <div className="level-right">
             <button
+              id="create-account"
               onClick={() => _setAuthModal('Sign Up')}
               className="bottom-btn"
             >
@@ -213,6 +214,7 @@ export class AuthModal extends Component {
         <div className="has-text-centered mt-20 mb-20">
           Already a member?
           <button
+            id="signin-btn"
             onClick={() => _setAuthModal('Sign In')}
             className="bottom-btn"
           >

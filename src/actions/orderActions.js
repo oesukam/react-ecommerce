@@ -1,6 +1,7 @@
 import * as types from '../actions-types/orderActionsTypes';
 import axios from '../utils/axios';
 import stripe from '../utils/stripe';
+import getError from '../utils/getError';
 
 export const setOrderModal = payload => ({
   type: types.SET_ORDER_MODAL,
@@ -87,17 +88,12 @@ export const fetchOrders = () => dispatch => {
       dispatch(setLoadingOrders(false));
     })
     .catch(err => {
-      dispatch(setOrderError(err));
+      const error = getError(err);
+      dispatch(setOrderError(error));
       dispatch(setLoadingOrders(false));
     });
 };
 
-/**
-  * @summary Retrieve the cart items
-  * @param {Numner} cartId
-  * @return {Promise} data
-  * @return {Promise} Error
- */
 export const fetchOrder = cartId => dispatch => {
   dispatch(setLoadingOrder(true));
   return axios
@@ -108,20 +104,13 @@ export const fetchOrder = cartId => dispatch => {
       return data;
     })
     .catch(err => {
-      dispatch(setOrderError(err));
+      const error = getError(err);
+      dispatch(setOrderError(error));
       dispatch(setLoadingOrder(false));
     });
 };
 
-/**
-  * @summary Submit the order after a successful checkout
-  * @param {Object} order
-  * @param {Number} order.cart_id
-  * @param {Number} order.shipping_id
-  * @param {Number} order.tax_id
-  * @return {Promise} data
-  * @return {Promise} Error
- */
+
 export const submitOrder = cart => dispatch => {
   dispatch(setSubmittingOrder(true));
   return axios
@@ -132,7 +121,8 @@ export const submitOrder = cart => dispatch => {
       return data;
     })
     .catch(err => {
-      dispatch(setOrderError(err));
+      const error = getError(err);
+      dispatch(setOrderError(error));
       dispatch(setSubmittingOrder(false));
     });
 };
@@ -147,30 +137,18 @@ export const fetchAllTax = () => dispatch => {
     .catch(err => err);
 };
 
-
-/**
-  * @summary Submit the payment after an order has been made
-  * @param {Object} payment
-  * @param {String} payment.stripeToken
-  * @param {String} payment.descripion
-  * @param {Number} payment.order_id
-  * @param {Number} payment.amount
-  * @param {String} payment.currency
-  * @return {Promise} data
-  * @return {Promise} Error
- */
 export const submitOrderPayment = payment => dispatch => {
   return axios
-    .post('/stripe/charge', { ...payment, amount: payment.amount * 100 })
+    .post('/stripe/charge', { ...payment, amount: Math.round(payment.amount * 100) })
     .then(({ data }) => {
       return data;
     })
     .catch(err => {
-      dispatch(setOrderError(err));
+      const error = getError(err);
+      dispatch(setOrderError(error));
       return err;
     });
 };
-
 
 export const generateStripToken = card => dispatch => {
   return stripe.createToken(card)
@@ -178,5 +156,5 @@ export const generateStripToken = card => dispatch => {
     dispatch(setStripeToken(data));
     return data;
   })
-  .catch(err => err);
+  .catch(err => getError(err));
 }

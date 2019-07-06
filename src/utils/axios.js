@@ -7,12 +7,10 @@ import {
 const {
   accessToken
 } = store.getState().currentUser;
-const testUrl = 'http://localhost';
-const baseURL = process.env.NODE_ENV === 'test' ? testUrl : process.env.API_URL;
-const userKey =
-  process.env.NODE_ENV === 'test' ?
-  'user-key' :
-  accessToken || localStorage.getItem('accessToken') || undefined;
+const { API_URL_TEST = 'http://localhost' } = process.env;
+const baseURL = process.env.NODE_ENV === 'test' ? API_URL_TEST : process.env.API_URL;
+const userKey = process.env.NODE_ENV === 'test' ? 'user-key' : accessToken;
+
 const http = axios.create({
   baseURL,
   headers: {

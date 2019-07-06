@@ -16,10 +16,11 @@ import ItemCard from '../../components/ItemCard/ItemCard';
 import Pagination from '../../components/Pagination/Pagination';
 import ItemsLoader from '../../components/ContentLoader/ItemsLoader';
 import { generateCartId } from '../../actions/cartActions';
+import { setOrderModal } from '../../actions/orderActions';
 
 export class Home extends Component {
   componentDidMount() {
-    const { getItems, location, setCategory } = this.props;
+    const { getItems, location, setCategory, _setOrderModal } = this.props;
     const { category: categoryId, page = 1 } = queryString.parse(
       location.search,
     );
@@ -30,6 +31,7 @@ export class Home extends Component {
 
     setCategory(categoryId || '');
     getItems({ page, categoryId, type });
+    _setOrderModal()
   }
 
   _addToCart = (itemId, item) => {
@@ -145,6 +147,7 @@ export const mapDisptachToProps = dispatch => ({
   setCategory: payload => dispatch(setCategoryId(payload)),
   _addItemToCart: payload => dispatch(addItemToCart(payload)),
   _generateCartId: () => dispatch(generateCartId()),
+  _setOrderModal: () => dispatch(setOrderModal('')),
 });
 
 export default connect(

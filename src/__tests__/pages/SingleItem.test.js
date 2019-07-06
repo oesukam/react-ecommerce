@@ -12,7 +12,8 @@ const props = {
   item: {},
   loadingItem: false,
   cartProductForm: {
-    cart_id: 222
+    cart_id: 222,
+    quantity: 1
   },
   submittingCartProduct: false,
   itemAttributes: {

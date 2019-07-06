@@ -42,12 +42,14 @@ Routes.propTypes = {
   isAuth: PropTypes.bool,
   authModal: PropTypes.string,
   cartModal: PropTypes.bool,
+  orderModal: PropTypes.string,
 };
 
 Routes.defaultProps = {
   isAuth: false,
   authModal: '',
   cartModal: false,
+  orderModal: '',
 };
 
 export const mapStateToProps = ({
