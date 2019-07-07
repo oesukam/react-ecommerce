@@ -66,7 +66,7 @@ const reducer = (state = initialState, { type, payload }) => {
     case types.SET_CART_TOTAL_AMOUNT:
       return {
         ...state,
-        cartTotalAmount: payload,
+        cartTotalAmount: Number(payload),
       };
     case types.SET_CART_PRODUCT_FORM:
       return {

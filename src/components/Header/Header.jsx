@@ -145,7 +145,9 @@ export class Header extends Component {
                     {cartCount}
                   </div>
                 </div>
-                <span className="ml-10">Your bag: ${cartTotalAmount}</span>
+                <div className="nav-cart__amount">
+                  Your bag: <span>${cartTotalAmount}</span>
+                </div>
               </div>
             </div>
           </div>
@@ -243,7 +245,10 @@ Header.propTypes = {
   user: propTypes.object.isRequired,
   departments: propTypes.array.isRequired,
   cartCount: propTypes.number.isRequired,
-  cartTotalAmount: propTypes.number.isRequired,
+  cartTotalAmount: propTypes.oneOfType([
+    propTypes.number.isRequired,
+    propTypes.string.isRequired,
+  ])
 }
 
 export const mapStateToProps = ({
@@ -262,7 +267,7 @@ export const mapDispatchToProps = disptach => ({
   _setDepartment: payload => disptach(setDepartmentId(payload)),
   _setCartModal: () => disptach(setCartModal(true)),
   _setAuthModal: payload => disptach(setAuthModal(payload)),
-  _signout: payload => disptach(signout()),
+  _signout: () => disptach(signout()),
 });
 
 export default connect(

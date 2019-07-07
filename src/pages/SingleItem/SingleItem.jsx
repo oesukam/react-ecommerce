@@ -39,11 +39,11 @@ export class SingleItem extends Component {
     _setCartField({ name: 'quantity', value });
   };
 
-  _setSelecteedImage = selectedImage => {
+  _setSelectedImage = selectedImage => {
     this.setState({ selectedImage });
   };
 
-  __addToCart = () => {
+  addToCart = () => {
     const { cartProductForm, item, _getCartId, _addToCart } = this.props;
     const message = `${item.name} was added to your cart`
     const data = {
@@ -56,10 +56,15 @@ export class SingleItem extends Component {
       Notification.error('Please choose your color and size', { duration: 4 })
       return;
     }
+
     if (!data.cart_id) {
-      _getCartId().then(() => {
-        _addToCart(cartProductForm);
-        Notification.success(message, { duration: 5 })
+      _getCartId().then((res) => {
+        if(res.cart_id) {
+          _addToCart(cartProductForm);
+          Notification.success(message, { duration: 5 })
+          return
+        }
+        Notification.error('Could not add to the cart. Please try again', { duration: 4 })
       });
       return;
     }
@@ -81,13 +86,13 @@ export class SingleItem extends Component {
         <div className="images__views">
           <img
             src={`${folder}/${item.image}`}
-            className={selectedImage === item.image ? 'active' : ''}
+            className={`images__views__img ${selectedImage === item.image ? 'active' : ''}`}
             alt="Item cover"
-            onClick={() => this._setSelecteedImage(item.image)}
+            onClick={() => this._setSelectedImage(item.image)}
           />
           <img
-            onClick={() => this._setSelecteedImage(item.image_2)}
-            className={selectedImage === item.image_2 ? 'active' : ''}
+            onClick={() => this._setSelectedImage(item.image_2)}
+            className={`images__views__img ${selectedImage === item.image_2 ? 'active' : ''}`}
             src={`${folder}/${item.image_2}`}
             alt="Item cover"
           />
@@ -98,12 +103,12 @@ export class SingleItem extends Component {
 
   _renderColors = () => {
     const {
-      itemAttributes: { Color = [] },
+      itemAttributes: { Color },
       cartProductForm: { color: selectedColor },
       _setCartField,
     } = this.props;
 
-    if (Color.length === 0) return;
+    if (!Color.length) return;
 
     return (
       <React.Fragment>
@@ -128,12 +133,12 @@ export class SingleItem extends Component {
 
   _renderSize = () => {
     const {
-      itemAttributes: { Size = [] },
+      itemAttributes: { Size },
       cartProductForm: { size: selectedSize },
       _setCartField,
     } = this.props;
 
-    if (Size.length === 0) return;
+    if (!Size.length) return;
 
     return (
       <React.Fragment>
@@ -196,7 +201,7 @@ export class SingleItem extends Component {
           <div className="level-left">
             <div className="level-item">
               <button
-                onClick={this.__addToCart}
+                onClick={this.addToCart}
                 className={`product__add-btn ${
                   submittingCartProduct ? 'loading' : ''
                 }`}

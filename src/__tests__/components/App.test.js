@@ -21,6 +21,16 @@ describe('App.jsx', () => {
     expect(wrapper).toMatchSnapshot();
   });
 
+  test('should render App.jx for authenticated user', () => {
+    const newProps = {...props};
+    newProps.isAuth = true;
+    wrapper = shallow(
+      <App {...newProps} />
+    );
+    expect(newProps._fetchCurrentUser).toHaveBeenCalled();
+    expect(newProps._fetchOrders).toHaveBeenCalled();
+  });
+
   describe('actions creators', () => {
     test('should call _fetchCategories action', () => {
       const dispatch = jest.fn();

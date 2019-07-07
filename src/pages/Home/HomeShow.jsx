@@ -5,7 +5,7 @@ import './HomeShow.scss';
 
 const renderCategories = (departmentId, categories) =>
   categories.map(cat =>
-    cat.departmentId === departmentId ? (
+    cat.department_id === departmentId ? (
       <li key={cat.category_id}>{cat.name}</li>
     ) : null,
   );
@@ -15,12 +15,12 @@ const renderDepartments = (departments, categories) =>
     <div key={dep.department_id} className="column is-4">
       <h1 className="show-title">{dep.name}</h1>
       <ul className="show-categories">
-        {renderCategories(dep.departmentId, categories)}
+        {renderCategories(dep.department_id, categories)}
       </ul>
     </div>
   ));
 
-const HomeShow = ({ departments, categories }) => (
+export const HomeShow = ({ departments, categories }) => (
   <div className="show-container">
     <div>
       <div className="columns is-multiline">
@@ -31,13 +31,8 @@ const HomeShow = ({ departments, categories }) => (
 );
 
 HomeShow.propTypes = {
-  categories: propTypes.array,
-  departments: propTypes.array,
-};
-
-HomeShow.defaultProps = {
-  categories: [],
-  departments: [],
+  categories: propTypes.array.isRequired,
+  departments: propTypes.array.isRequired,
 };
 
 export const mapStateToProps = ({ item: { categories, departments } }) => ({

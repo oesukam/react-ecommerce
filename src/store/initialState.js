@@ -6,6 +6,8 @@ module.exports = {
     isAuth: localStorage.getItem('accessToken') !== null,
     loggingIn: false,
     signingUp: false,
+    updatingUser: false,
+    updatingUserAddress: false,
     user: {},
     authForm: {
       email: {
@@ -75,7 +77,7 @@ module.exports = {
     loadingOrder: false,
     submittingOrder: false,
     clearingOrder: false,
-    orderModal: false,
+    orderModal: '',
     orderStep: 'Delivery',
     orderSteps: ['Delivery', 'Confirmation', 'Payment', 'Finish'],
     error: { message: '', field: '' },

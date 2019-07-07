@@ -297,10 +297,6 @@ describe('orderActions', () => {
             type: types.SET_ORDER_ERROR,
             payload: response,
           },
-          {
-            type: types.SET_SUBMITTING_ORDER,
-            payload: false,
-          },
         ];
         await store.dispatch(actions.submitOrder(cart))
         const dispatchedActions = store.getActions();
@@ -320,10 +316,6 @@ describe('orderActions', () => {
           {
             type: types.SET_ORDER,
             payload,
-          },
-          {
-            type: types.SET_SUBMITTING_ORDER,
-            payload: false,
           },
         ];
         await store.dispatch(actions.submitOrder(cart))

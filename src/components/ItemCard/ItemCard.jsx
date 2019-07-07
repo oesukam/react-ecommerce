@@ -42,12 +42,11 @@ const ItemCard = ({ item, addToCart }) => (
 );
 
 ItemCard.propTypes = {
-  item: propTypes.object,
+  item: propTypes.object.isRequired,
   addToCart: propTypes.func,
 };
 
 ItemCard.defaultProps = {
-  item: {},
   addToCart: () => '',
 };
 

@@ -21,7 +21,7 @@ global.Stripe = jest.fn(() => ({
   elements: jest.fn(() => ({
     create: jest.fn(() => ({
       addEventListener: jest.fn((event, cb) => ({ complete: true})),
-      setState: jest.fn()
+      mount: jest.fn()
     })),
   })),
 }));

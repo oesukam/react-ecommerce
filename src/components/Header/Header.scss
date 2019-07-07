@@ -91,6 +91,15 @@
     -ms-border-radius: 50%;
     -o-border-radius: 50%;
   }
+  &__amount {
+    display: inline-block;
+    margin-left: 15px;
+    span {
+      min-width: 50px;
+      display: inline-block;
+      text-align: right;
+    }
+  }
 }
 
 @media screen and (max-width: $desktop) {

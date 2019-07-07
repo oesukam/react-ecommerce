@@ -413,7 +413,10 @@ Settings.propTypes = {
   loggingIn: propTypes.bool.isRequired,
   updatingUser: propTypes.bool.isRequired,
   updatingUserAddress: propTypes.bool.isRequired,
-  userError: propTypes.object.isRequired,
+  userError: propTypes.oneOfType([
+    propTypes.object.isRequired,
+    propTypes.string.isRequired,
+  ]),
   regions: propTypes.array.isRequired,
 };
 

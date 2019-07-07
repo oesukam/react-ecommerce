@@ -117,13 +117,11 @@ export const submitOrder = cart => dispatch => {
     .post('/orders', cart)
     .then(({ data }) => {
       dispatch(setOrder(data));
-      dispatch(setSubmittingOrder(false));
       return data;
     })
     .catch(err => {
       const error = getError(err);
       dispatch(setOrderError(error));
-      dispatch(setSubmittingOrder(false));
     });
 };
 

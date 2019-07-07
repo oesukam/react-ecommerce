@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import propTypes from 'prop-types';
 import { connect } from 'react-redux';
-import checkCreditCard from '../../utils/checkCreditCard';
 import visaCardIcon from '../../assets/icons/logos-visa.png';
 import masterCardIcon from '../../assets/icons/logos-mastercard.png';
 import './OrderPayment.scss';
@@ -19,21 +18,6 @@ export class OrderPayment extends Component {
   componentDidMount() {
     this.props.card.mount('#cc-form');
   }
-
-  _handleValidPeriod = ({ target: { value } }) => {
-    const validPeriod = value.replace(/\D/g, '').substring(0, 5);
-    this.setState({
-      validPeriod,
-    });
-  };
-
-  _handleValidCreditCart = e => {
-    const validCreditCard = checkCreditCard(e.target.value);
-    this.setState({
-      validCreditCard,
-    });
-    this.props._handleUserInput(e);
-  };
 
   render = () => {
     const { cartTotalAmount } = this.props;
@@ -65,11 +49,11 @@ export class OrderPayment extends Component {
 }
 
 OrderPayment.propTypes = {
-  orders: propTypes.array,
-};
-
-OrderPayment.defaultProps = {
-  orders: [],
+  cartTotalAmount: propTypes.oneOfType([
+    propTypes.number.isRequired,
+    propTypes.string.isRequired,
+  ]),
+  card: propTypes.any.isRequired
 };
 
 export const mapStateToProps = ({ cart: { cartTotalAmount } }) => ({

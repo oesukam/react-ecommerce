@@ -8,8 +8,8 @@ import { Routes, mapStateToProps } from '../../components/Routes';
 import initialState from '../../store/initialState';
 
 let store;
-
 const mockStore = configureMockStore([thunk]);
+
 describe('<Routes />', () => {
   test('should render the Routes', () => {
     const routes = shallow(<Routes />);
@@ -89,7 +89,7 @@ describe('<Routes />', () => {
         isAuth: false,
         cartModal: false,
         authModal: '',
-        orderModal: false,
+        orderModal: '',
       });
     });
   });

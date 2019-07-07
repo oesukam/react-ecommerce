@@ -12,10 +12,12 @@ export class App extends Component {
   componentDidMount() {
     this.props._fetchCategories();
     this.props._fetchDepartments();
-    this.props._fetchCurrentUser();
     this.props._fetchAllTax();
     this.props._fetchShippingRegions();
-    this.props._fetchOrders();
+    if (this.props.isAuth) {
+      this.props._fetchCurrentUser();
+      this.props._fetchOrders();
+    }
   }
   render() {
     return <Routes />;

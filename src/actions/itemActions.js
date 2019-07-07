@@ -98,7 +98,7 @@ export const fetchCategories = () => dispatch => {
   return axios
     .get('/categories')
     .then(({ data }) => {
-      dispatch(setCategories(data.rows)); // Dispatch with an empty in case there is no data
+      dispatch(setCategories(data.rows));
     })
     .catch(err => {
       const error = getError(err);
@@ -146,9 +146,10 @@ export const addItemToCart = ({ itemId, cartId }) => dispatch => {
 
   dispatch(addingItemToCart({ itemId, adding: true }));
   return dispatch(submitCartProduct(cart))
-    .then(() => {
+    .then((res) => {
       dispatch(addingItemToCart({ itemId, adding: false }));
       dispatch(fetchCartProduct(cartId));
+      return res;
     })
 };
 

@@ -68,15 +68,11 @@ export class MyCartModal extends Component {
                   </div>
                 </div>
               </td>
-              <td>
-                {item.attributes.split(',').length > 0
-                  ? item.attributes.split(',')[0]
-                  : '-'}
+              <td className="has-text-centered">
+                {item.attributes.split(',')[0] || '-'}
               </td>
-              <td>
-                {item.attributes.split(',').length > 1
-                  ? item.attributes.split(',')[1]
-                  : '-'}
+              <td className="has-text-centered">
+                {item.attributes.split(',')[1] || '-'}
               </td>
               <td className="quantity">
                 <Quantity
@@ -93,8 +89,8 @@ export class MyCartModal extends Component {
         </tbody>
         <tfoot>
           <tr>
-            <td colSpan="3"><h4 className="title is-4">Total</h4></td>
-            <td colSpan="2"><h4 className="title is-4 color-red has-text-right">${cartProducts.length === 0 ? 0 : cartTotalAmount}</h4></td>
+            <td colSpan="5"><h4 className="title is-4">Total</h4></td>
+            <td><h4 className="title is-4 color-red has-text-centered">${cartTotalAmount}</h4></td>
           </tr>
         </tfoot>
       </table>
@@ -178,7 +174,10 @@ MyCartModal.propTypes = {
   cartId: propTypes.any.isRequired,
   clearingCart: propTypes.bool.isRequired,
   isAuth: propTypes.bool.isRequired,
-  cartTotalAmount: propTypes.number.isRequired,
+  cartTotalAmount: propTypes.oneOfType([
+    propTypes.number.isRequired,
+    propTypes.string.isRequired,
+  ]),
   _setCartModal: propTypes.func.isRequired,
   _updateCartProduct: propTypes.func.isRequired,
   _fetchCartProducts: propTypes.func.isRequired,

@@ -20,7 +20,7 @@ import { setOrderModal } from '../../actions/orderActions';
 
 export class Home extends Component {
   componentDidMount() {
-    const { getItems, location, setCategory, _setOrderModal } = this.props;
+    const { _fetchItems, location, _setCategoryId, _setOrderModal } = this.props;
     const { category: categoryId, page = 1 } = queryString.parse(
       location.search,
     );
@@ -29,8 +29,8 @@ export class Home extends Component {
       type = 'category';
     }
 
-    setCategory(categoryId || '');
-    getItems({ page, categoryId, type });
+    _setCategoryId(categoryId || '');
+    _fetchItems({ page, categoryId, type });
     _setOrderModal()
   }
 
@@ -39,20 +39,21 @@ export class Home extends Component {
     const message = `${item.name} was added to your cart`;
     if (!cartId) {
       _generateCartId().then(({ cart_id: cartId }) => {
-        _addItemToCart({ cartId, itemId });
-        Notification.success(message, { duration: 3 })
+        _addItemToCart({ cartId, itemId })
+          .then((res) => {
+            if (res) Notification.success(message, { duration: 3 });
+          });
       });
       return;
     }
     _addItemToCart({ cartId, itemId })
-    .then(() => {
-      Notification.success(message, { duration: 3 })
-    })
-   
+      .then((res) => {
+        if (res) Notification.success(message, { duration: 3 });
+      });
   };
 
   renderItems = () => {
-    const { items = [], loadingItems } = this.props;
+    const { items, loadingItems } = this.props;
     return !loadingItems
       ? items.map(item => (
           <div className="column is-4" key={item.product_id}>
@@ -68,7 +69,7 @@ export class Home extends Component {
   };
 
   goToPage = page => {
-    const { getItems, categoryId, departmentId, history } = this.props;
+    const { _fetchItems, categoryId, departmentId, history } = this.props;
     let url = `/?page=${page}`;
     let type;
     if (categoryId) {
@@ -80,7 +81,7 @@ export class Home extends Component {
       type = 'department';
     }
     history.push(url);
-    getItems({ page, categoryId, type });
+    _fetchItems({ page, categoryId, type });
   };
 
   render() {
@@ -111,21 +112,16 @@ export class Home extends Component {
 }
 
 Home.propTypes = {
-  items: propTypes.array,
-  loadingItems: propTypes.bool,
-  meta: propTypes.object,
+  items: propTypes.array.isRequired,
+  loadingItems: propTypes.bool.isRequired,
+  meta: propTypes.object.isRequired,
   categoryId: propTypes.oneOfType([propTypes.number, propTypes.string]),
   departmentId: propTypes.oneOfType([propTypes.number, propTypes.string]),
-};
-
-Home.defaultProps = {
-  items: [],
-  loadingItems: true,
-  meta: {
-    page: 1,
-    pages: 1,
-    total: 0,
-  },
+  _fetchItems: propTypes.func.isRequired,
+  _setCategoryId: propTypes.func.isRequired,
+  _addItemToCart: propTypes.func.isRequired,
+  _generateCartId: propTypes.func.isRequired,
+  _setOrderModal: propTypes.func.isRequired,
 };
 
 export const mapStateToProps = ({
@@ -142,9 +138,9 @@ export const mapStateToProps = ({
   cartId,
 });
 
-export const mapDisptachToProps = dispatch => ({
-  getItems: payload => dispatch(fetchItems(payload)),
-  setCategory: payload => dispatch(setCategoryId(payload)),
+export const mapDispatchToProps = dispatch => ({
+  _fetchItems: payload => dispatch(fetchItems(payload)),
+  _setCategoryId: payload => dispatch(setCategoryId(payload)),
   _addItemToCart: payload => dispatch(addItemToCart(payload)),
   _generateCartId: () => dispatch(generateCartId()),
   _setOrderModal: () => dispatch(setOrderModal('')),
@@ -152,5 +148,5 @@ export const mapDisptachToProps = dispatch => ({
 
 export default connect(
   mapStateToProps,
-  mapDisptachToProps,
+  mapDispatchToProps,
 )(Home);

@@ -253,7 +253,10 @@ export class AuthModal extends Component {
 AuthModal.propTypes = {
   title: propTypes.string.isRequired,
   authForm: propTypes.object.isRequired,
-  userError: propTypes.object.isRequired,
+  userError: propTypes.oneOfType([
+    propTypes.object.isRequired,
+    propTypes.string.isRequired,
+  ]),
   loggingIn: propTypes.bool.isRequired,
   signingUp: propTypes.bool.isRequired,
   _setAuthModal: propTypes.func.isRequired,
