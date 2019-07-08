@@ -1,19 +1,26 @@
 import React from 'react';
 import {
-  shallow,
+  shallow, mount
 } from 'enzyme';
 import Quantity from '../../components/Quantity/Quantity';
 
 let wrapper;
 const props = {
-  quanity: 1,
+  quantity: 1,
   onQuantityChange: jest.fn()
 }
 
 describe('Quantity.jsx', () => {
   test('should render Quantity.jx', () => {
-    wrapper = shallow(<Quantity />);
+    wrapper = shallow(<Quantity {...props} />);
     expect(wrapper).toMatchSnapshot();
+  });
+
+  test('should render Quantity.jx with 0', () => {
+    const newProps = { ...props };
+    newProps.quantity = 0;
+    wrapper = mount(<Quantity { ...newProps } />);
+    expect(wrapper.props().quantity).toBe(0);
   });
 
   describe('when clicking on `Buy now` button', () => {

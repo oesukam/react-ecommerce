@@ -47,6 +47,10 @@
   &__price {
     color: $color-red;
     font-size: 2rem;
+    &.has-discount {
+      text-decoration: line-through;
+      font-size: 1.5rem;
+    }
   }
   &__info {
     font-size: 1.3rem;

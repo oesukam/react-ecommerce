@@ -1,5 +1,6 @@
 import * as types from '../actions-types/currentUserActionsTypes';
 import axios from '../utils/axios';
+import getError from '../utils/getError';
 
 export const setAccessToken = payload => ({
   type: types.SET_ACCESS_TOKEN,
@@ -94,8 +95,7 @@ export const submitLogin = credential => dispatch => {
       dispatch(setAuthModal(''));
     })
     .catch(err => {
-      const error =
-        err.response && err.response.data ? err.response.data.error : err;
+      const error = getError(err);
       dispatch(setUserError(error));
       dispatch(setLoggingIn(false));
     });
@@ -117,8 +117,7 @@ export const submitRegister = credential => dispatch => {
       dispatch(setAuthModal(''));
     })
     .catch(err => {
-      const error =
-        err.response && err.response.data ? err.response.data.error : err;
+      const error = getError(err);
       dispatch(setUserError(error));
       dispatch(setSigningUp(false));
     });
@@ -133,8 +132,7 @@ export const fetchCurrentUser = token => dispatch => {
       dispatch(setCurrentUser(data));
     })
     .catch(err => {
-      const error =
-        err.response && err.response.data ? err.response.data.error : err;
+      const error = getError(err);
       dispatch(setUserError(error));
       if (error === 'TokenExpiredError: jwt expired') {
         dispatch(signout())
@@ -152,15 +150,13 @@ export const submitUpdateUser = user => dispatch => {
     }) => {
       dispatch(updateCurrentUser(data));
       dispatch(setUpdatingCurrentUser(false));
+      return data;
     })
-    .catch(({
-      response
-    }) => {
-      const {
-        error
-      } = response.data;
+    .catch((err) => {
+      const error = getError(err);
       dispatch(setUserError(error));
       dispatch(setUpdatingCurrentUser(false));
+      return error;
     });
 };
 
@@ -172,11 +168,12 @@ export const submitUpdateUserAddress = address => dispatch => {
       data
     }) => {
       dispatch(setUpdatingCurrentUserAddress(false));
+      return data;
     })
     .catch(err => {
-      const error =
-        err.response && err.response.data ? err.response.data.error : err;
+      const error = getError(err);
       dispatch(setUserError(error));
       dispatch(setUpdatingCurrentUserAddress(false));
+      return error
     });
 };

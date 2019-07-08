@@ -39,27 +39,54 @@ export class SingleItem extends Component {
     _setCartField({ name: 'quantity', value });
   };
 
-  _setSelecteedImage = selectedImage => {
+  _setSelectedImage = selectedImage => {
     this.setState({ selectedImage });
   };
 
-  __addToCart = () => {
-    const { cartProductForm, item, _getCartId, _addToCart } = this.props;
-    const message = `${item.name} was added to your cart`
+  addToCart = () => {
+    const { cartProductForm, item, _getCartId, _addToCart, cartProducts, } = this.props;
+    const message = `${item.name} was added to your cart`;
+    const attributes = [cartProductForm.size, cartProductForm.color].join(', ');
+
     const data = {
       cart_id: cartProductForm.cart_id,
       product_id: item.product_id,
-      attributes: [cartProductForm.size, cartProductForm.color].join(', '),
       quantity: cartProductForm.quantity,
+      attributes,
+      item: cartProducts.find(product => {
+        return product.product_id === item.product_id &&
+        product.attributes === attributes
+      }),
     };
+
+    if (!cartProductForm.size || !cartProductForm.color) {
+      Notification.error('Please choose your color and size', { duration: 4 })
+      return;
+    }
+
+    const failedError = 'Could not add to the cart. Please try again';
     if (!data.cart_id) {
-      _getCartId().then(() => {
-        _addToCart(cartProductForm);
-        Notification.success(message, { duration: 5 })
+      _getCartId().then((res) => {
+        if(!res.cart_id) {
+          Notification.error(failedError, { duration: 4 })
+          return;
+        }
+        _addToCart(data)
+          .then((res) => {
+            if (!res) {
+              Notification.error(failedError, { duration: 4 })
+              return;
+            }
+            Notification.success(message, { duration: 5 })
+          });
       });
       return;
     }
-    _addToCart(data).then(() => {
+    _addToCart(data).then((res) => {
+      if (!res) {
+        Notification.error(failedError, { duration: 4 })
+        return;
+      }
       Notification.success(message, { duration: 5 })
     })
   };
@@ -77,13 +104,13 @@ export class SingleItem extends Component {
         <div className="images__views">
           <img
             src={`${folder}/${item.image}`}
-            className={selectedImage === item.image ? 'active' : ''}
+            className={`images__views__img ${selectedImage === item.image ? 'active' : ''}`}
             alt="Item cover"
-            onClick={() => this._setSelecteedImage(item.image)}
+            onClick={() => this._setSelectedImage(item.image)}
           />
           <img
-            onClick={() => this._setSelecteedImage(item.image_2)}
-            className={selectedImage === item.image_2 ? 'active' : ''}
+            onClick={() => this._setSelectedImage(item.image_2)}
+            className={`images__views__img ${selectedImage === item.image_2 ? 'active' : ''}`}
             src={`${folder}/${item.image_2}`}
             alt="Item cover"
           />
@@ -94,12 +121,12 @@ export class SingleItem extends Component {
 
   _renderColors = () => {
     const {
-      itemAttributes: { Color = [] },
+      itemAttributes: { Color },
       cartProductForm: { color: selectedColor },
       _setCartField,
     } = this.props;
 
-    if (Color.length === 0) return;
+    if (!Color.length) return;
 
     return (
       <React.Fragment>
@@ -124,12 +151,12 @@ export class SingleItem extends Component {
 
   _renderSize = () => {
     const {
-      itemAttributes: { Size = [] },
+      itemAttributes: { Size },
       cartProductForm: { size: selectedSize },
       _setCartField,
     } = this.props;
 
-    if (Size.length === 0) return;
+    if (!Size.length) return;
 
     return (
       <React.Fragment>
@@ -170,7 +197,14 @@ export class SingleItem extends Component {
     return (
       <div className="product">
         <h3 className="product__name">{item.name}</h3>
-        <h3 className="product__price">$ {item.price}</h3>
+        <h3 className={`product__price ${item.discounted_price > 0 && 'has-discount'}`}>$ {item.price}</h3>
+        {
+          item.discounted_price > 0 ?
+            <h3 className="product__price">
+              $ {item.discounted_price}
+            </h3>
+          : null
+        }
 
         {this._renderColors()}
 
@@ -185,7 +219,7 @@ export class SingleItem extends Component {
           <div className="level-left">
             <div className="level-item">
               <button
-                onClick={this.__addToCart}
+                onClick={this.addToCart}
                 className={`product__add-btn ${
                   submittingCartProduct ? 'loading' : ''
                 }`}
@@ -247,6 +281,7 @@ SingleItem.propTypes = {
   cartProductForm: propTypes.object.isRequired,
   submittingCartProduct: propTypes.bool.isRequired,
   itemAttributes: propTypes.object.isRequired,
+  cartProducts: propTypes.array.isRequired,
   _getItem: propTypes.func.isRequired,
   _getCartId: propTypes.func.isRequired,
   _setCartField: propTypes.func.isRequired,
@@ -256,13 +291,14 @@ SingleItem.propTypes = {
 
 export const mapStateToProps = ({
   item: { loadingItem, item, itemAttributes },
-  cart: { cartProductForm, submittingCartProduct },
+  cart: { cartProductForm, submittingCartProduct, cartProducts },
 }) => ({
   item,
   loadingItem,
   cartProductForm,
   submittingCartProduct,
   itemAttributes,
+  cartProducts,
 });
 
 export const mapDispatchToProps = dispatch => ({

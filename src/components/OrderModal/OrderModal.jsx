@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import propTypes from 'prop-types';
 import { connect } from 'react-redux';
+import Notification from 'react-bulma-notification';
 import './OrderModal.scss';
 import {
   setOrderModal,
@@ -8,6 +9,7 @@ import {
   setOrderStep,
   submitOrder,
   submitOrderPayment,
+  setSubmittingOrder
 } from '../../actions/orderActions';
 import { submitEmptyCart } from '../../actions/cartActions';
 import { setCurrentUserField } from '../../actions/currentUserActions';
@@ -29,14 +31,14 @@ const style = {
   }
 };
 
-const card = elements.create('card', { style });
-
+export const card = elements.create('card', { style });
 
 export class OrderModal extends Component {
   state = {
     validPeriod: '',
     validCreditCard: false,
   };
+
 
   componentDidMount() {
     const { cartId, _fetchOrders, _generateCartId } = this.props;
@@ -74,9 +76,6 @@ export class OrderModal extends Component {
     const { orderStep, _setOrderStep } = this.props;
     let nextStep = '';
     switch (orderStep) {
-      case 'Delivery':
-        nextStep = 'Delivery';
-        break;
       case 'Confirmation':
         nextStep = 'Delivery';
         break;
@@ -96,11 +95,9 @@ export class OrderModal extends Component {
   _submitNext = async () => {
     const {
       orderStep,
-      _setOrderStep,
       cartTotalAmount,
       cartId,
       user,
-      allTax,
     } = this.props;
     let nextStep = '';
     switch (orderStep) {
@@ -115,7 +112,7 @@ export class OrderModal extends Component {
           nextStep = 'Payment';
           break;
         }
-        const taxId = allTax[0] ? allTax[0].tax_id : 1;
+        const taxId = 1;
         const res = await this.props._submitOrder({
           cart_id: cartId,
           shipping_id: user.shipping_region_id,
@@ -124,11 +121,13 @@ export class OrderModal extends Component {
 
         if (!res || !res.orderId) {
           nextStep = 'Payment';
+          Notification.error('Could not connect to stripe. Please try again later', { duration: 4 })
           break;
         }
         const stripeResponse = await this.props._generateStripToken(card);
         if (!stripeResponse || !stripeResponse.token) {
           nextStep = 'Payment';
+          Notification.error('Could not connect to stripe. Please try again later', { duration: 4 })
           break;
         }
 
@@ -138,28 +137,29 @@ export class OrderModal extends Component {
           description: "Ecommnerce items' payment ",
           stripeToken: stripeResponse.token.id,
         });
-        if (!paid) {
+        if (!paid || !paid.paid) {
           nextStep = 'Payment';
+          Notification.error('Could not make the order. Please try again later', { duration: 4 })
           break;
         }
         await this.props._submitEmptyCart(cartId);
         nextStep = 'Finish';
         break;
       case 'Finish':
-        this.props._setOrderModal(false);
+        this.props._setOrderModal('');
         break;
       default:
         nextStep = 'Delivery';
         break;
     }
-    _setOrderStep(nextStep);
+    this.props._setOrderStep(nextStep);
+    this.props._setSubmittingOrder(false);
   };
 
   render() {
     const {
       _setOrderModal,
       orderStep,
-      clearingOrder,
       submittingOrder,
       user,
     } = this.props;
@@ -200,7 +200,7 @@ export class OrderModal extends Component {
             <button
               disabled={orderStep === 'Delivery' || orderStep === 'Finish'}
               onClick={this._submitPrevious}
-              className={`previous-btn ${clearingOrder ? 'loading' : ''}`}
+              className="previous-btn"
             >
               Back
             </button>
@@ -226,24 +226,32 @@ export class OrderModal extends Component {
 }
 
 OrderModal.propTypes = {
-  orders: propTypes.array,
-};
-
-OrderModal.defaultProps = {
-  orders: [],
+  orders: propTypes.array.isRequired,
+  cartId: propTypes.any.isRequired,
+  orderStep: propTypes.string.isRequired,
+  orderSteps: propTypes.array.isRequired,
+  submittingOrder: propTypes.bool.isRequired,
+  user: propTypes.object.isRequired,
+  updatingUser: propTypes.bool.isRequired,
+  updatingUserAddress: propTypes.bool.isRequired,
+  regions: propTypes.array.isRequired,
+  region: propTypes.object.isRequired,
+  allTax: propTypes.array.isRequired,
+  cartTotalAmount: propTypes.oneOfType([
+    propTypes.number.isRequired,
+    propTypes.string.isRequired,
+  ]),
+  stripeToken: propTypes.object.isRequired,
 };
 
 export const mapStateToProps = ({
   currentUser: {
-    userError,
     user,
-    loggingIn,
     updatingUser,
     updatingUserAddress,
   },
   order: {
     orders,
-    clearingOrder,
     orderStep,
     orderSteps,
     submittingOrder,
@@ -252,36 +260,32 @@ export const mapStateToProps = ({
   },
   shipping: { regions, region },
   cart: {
-    cartProducts,
     cartProductForm: { cart_id: cartId },
     cartTotalAmount,
   },
 }) => ({
   orders,
   cartId,
-  clearingOrder,
   orderStep,
   orderSteps,
   submittingOrder,
-  userError,
   user,
-  loggingIn,
   updatingUser,
   updatingUserAddress,
   regions,
   region,
-  cartProducts,
   allTax,
   cartTotalAmount,
   stripeToken,
 });
 
 export const mapDispatchToProps = dispatch => ({
+  _setOrderModal: () => dispatch(setOrderModal('')),
   _handleUserInput: ({ target: { value, name } }) =>
     dispatch(setCurrentUserField({ name, value })),
-  _setOrderModal: () => dispatch(setOrderModal(false)),
   _fetchOrders: payload => dispatch(fetchOrders(payload)),
   _setOrderStep: payload => dispatch(setOrderStep(payload)),
+  _setSubmittingOrder: payload => dispatch(setSubmittingOrder(payload)),
   _submitOrder: payload => dispatch(submitOrder(payload)),
   _submitOrderPayment: payload => dispatch(submitOrderPayment(payload)),
   _generateCartId: payload => dispatch(generateCartId()),

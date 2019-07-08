@@ -48,7 +48,7 @@ export const Footer = ({ departments }) => (
       <div className="columns">
         <div className="column has-text-center">
           <h1 className="footer-copyright">
-            ©2016 shopmate Ltd • Contact • Privacy policy
+            ©{new Date().getFullYear()} shopmate Ltd • Contact • Privacy policy
           </h1>
         </div>
       </div>

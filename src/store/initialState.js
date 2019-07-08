@@ -6,6 +6,8 @@ module.exports = {
     isAuth: localStorage.getItem('accessToken') !== null,
     loggingIn: false,
     signingUp: false,
+    updatingUser: false,
+    updatingUserAddress: false,
     user: {},
     authForm: {
       email: {
@@ -26,9 +28,16 @@ module.exports = {
     loadingItems: false,
     loadingItem: false,
     searchingItems: false,
+    itemsNotFound: false,
     error: { message: '', field: '' },
     items: [],
     searchedItems: [],
+    searchedItemsMeta: {
+      page: 1,
+      pages: 1,
+      total: 0,
+    },
+    searchKeywords: '',
     item: {},
     itemAttributes: {
       Color: [],
@@ -75,7 +84,7 @@ module.exports = {
     loadingOrder: false,
     submittingOrder: false,
     clearingOrder: false,
-    orderModal: false,
+    orderModal: '',
     orderStep: 'Delivery',
     orderSteps: ['Delivery', 'Confirmation', 'Payment', 'Finish'],
     error: { message: '', field: '' },

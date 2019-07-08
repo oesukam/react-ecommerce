@@ -7,26 +7,26 @@ import { setCategoryId, fetchItems } from '../../actions/itemActions';
 
 export class HomeSideFilter extends Component {
   clearFilter = () => {
-    const { categoryChange, getItems } = this.props;
-    categoryChange('');
-    getItems();
+    const { _setCategoryId, _fetchItems } = this.props;
+    _setCategoryId('');
+    _fetchItems();
   };
 
   filterByCategory = categoryId => {
     const {
-      categoryChange,
-      getItems,
+      _setCategoryId,
+      _fetchItems,
       history,
-      meta: { page = 1 },
+      meta: { page },
       departmentId,
     } = this.props;
     let url = `/?page=${page}&category=${categoryId}`;
     if (departmentId) {
       url = `/departments/${departmentId}${url}`;
     }
-    categoryChange(categoryId);
+    _setCategoryId(categoryId);
     history.push(url);
-    getItems({ categoryId, type: 'category' });
+    _fetchItems({ categoryId, type: 'category' });
   };
 
   renderFilterCategories = () => {
@@ -35,6 +35,7 @@ export class HomeSideFilter extends Component {
       cat.category_id === categoryId ? (
         <li key={cat.category_id} className="selected-category">
           <img
+            className="clear-filter-btn"
             src={closeSmallIcon}
             onClick={this.clearFilter}
             alt="Close icon"
@@ -51,6 +52,7 @@ export class HomeSideFilter extends Component {
       !departmentId || departmentId === cat.department_id ? (
         <li key={cat.category_id} className="radio-category">
           <input
+            className="filter-category-input"
             type="radio"
             name="categoryId"
             checked={categoryId === cat.category_id}
@@ -60,6 +62,7 @@ export class HomeSideFilter extends Component {
             }
           />
           <label
+            className="filter-category-label"
             onClick={() =>
               this.filterByCategory(cat.category_id, cat.department_id)
             }
@@ -73,7 +76,7 @@ export class HomeSideFilter extends Component {
 
   render() {
     const {
-      meta: { total = 0 },
+      meta: { total },
       loadingItems,
     } = this.props;
     return (
@@ -92,29 +95,13 @@ export class HomeSideFilter extends Component {
 }
 
 HomeSideFilter.propTypes = {
-  categories: propTypes.array,
+  categories: propTypes.array.isRequired,
   departmentId: propTypes.oneOfType([propTypes.number, propTypes.string]),
   categoryId: propTypes.oneOfType([propTypes.number, propTypes.string]),
-  itemsCount: propTypes.number,
-  categoryChange: propTypes.func,
-  getItems: propTypes.func,
-  meta: propTypes.object,
-  loadingItems: propTypes.bool,
-};
-
-HomeSideFilter.defaultProps = {
-  categories: [],
-  departmentId: '',
-  categoryId: '',
-  itemsCount: 0,
-  categoryChange: () => '',
-  getItems: () => '',
-  meta: {
-    total: 0,
-    page: 1,
-    pages: 1,
-  },
-  loadingItems: true,
+  meta: propTypes.object.isRequired,
+  loadingItems: propTypes.bool.isRequired,
+  _setCategoryId: propTypes.func.isRequired,
+  _fetchItems: propTypes.func.isRequired,
 };
 
 export const mapStateToProps = ({
@@ -128,8 +115,8 @@ export const mapStateToProps = ({
 });
 
 export const mapDispatchToProps = dispatch => ({
-  categoryChange: categoryId => dispatch(setCategoryId(categoryId)),
-  getItems: paylaod => dispatch(fetchItems(paylaod)),
+  _setCategoryId: categoryId => dispatch(setCategoryId(categoryId)),
+  _fetchItems: paylaod => dispatch(fetchItems(paylaod)),
 });
 
 export default connect(

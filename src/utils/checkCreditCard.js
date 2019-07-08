@@ -4,9 +4,6 @@ const luhnCheck = val => {
     var intVal = parseInt(val.substr(i, 1));
     if (i % 2 === 0) {
       intVal *= 2;
-      if (intVal > 9) {
-        intVal = 1 + (intVal % 10);
-      }
     }
     sum += intVal;
   }

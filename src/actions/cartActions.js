@@ -1,5 +1,6 @@
 import * as types from '../actions-types/cartActionsTypes';
 import axios from '../utils/axios';
+import getError from '../utils/getError';
 
 export const setCartModal = payload => ({
   type: types.SET_CART_MODAL,
@@ -36,9 +37,8 @@ export const setCartProductError = payload => ({
   payload,
 });
 
-export const clearCartProductForm = payload => ({
+export const clearCartProductForm = () => ({
   type: types.CLEAR_CART_PRODUCT_FORM,
-  payload,
 });
 
 export const setCartProductForm = payload => ({
@@ -85,7 +85,8 @@ export const fetchCartProducts = cartId => dispatch => {
       dispatch(setLoadingCartProducts(false));
     })
     .catch(err => {
-      dispatch(setCartProductError(err));
+      const error = getError(err);
+      dispatch(setCartProductError(error));
       dispatch(setLoadingCartProducts(false));
     });
 };
@@ -101,7 +102,8 @@ export const generateCartId = () => dispatch => {
       return data;
     })
     .catch(err => {
-      dispatch(setCartProductError(err));
+      const error = getError(err);
+      dispatch(setCartProductError(error));
     });
 };
 
@@ -116,7 +118,8 @@ export const fetchCartProduct = cartId => dispatch => {
       return data;
     })
     .catch(err => {
-      dispatch(setCartProductError(err));
+      const error = getError(err);
+      dispatch(setCartProductError(error));
       dispatch(setLoadingCartProduct(false));
     });
 };
@@ -125,29 +128,44 @@ export const fetchCartTotalAmount = cartId => dispatch => {
   return axios
     .get(`/shoppingcart/totalAmount/${cartId}`)
     .then(({ data }) => {
-      dispatch(setCartTotalAmount(data.total_amount || 0));
+      dispatch(setCartTotalAmount(data.total_amount));
       return data;
     })
     .catch(err => {
-      dispatch(setCartProductError(err));
+      const error = getError(err);
+      dispatch(setCartProductError(error));
       dispatch(setCartTotalAmount(0));
     });
 };
 
 export const submitCartProduct = cart => dispatch => {
   dispatch(setSubmittingCartProduct(true));
+  if (cart.item) {
+    return dispatch(submitCartProductUpdate({
+      cartId: cart.cart_id,
+      itemId: cart.item.item_id,
+      item: {
+        quantity: parseInt(cart.quantity) + parseInt(cart.item.quantity)
+      }
+    }))
+  }
   return axios
     .post(`/shoppingcart/add`, cart)
     .then(({ data }) => {
-      dispatch(setCartProducts(data));
-      dispatch(clearCartProductForm());
-      dispatch(setSubmittingCartProduct(false));
-      dispatch(fetchCartTotalAmount(cart.cart_id));
-      return data;
+      const item = data[data.length - 1];
+      return dispatch(submitCartProductUpdate({
+        cartId: cart.cart_id,
+        itemId: item.item_id,
+        item: {
+          quantity: cart.quantity
+        }
+      }));
     })
     .catch(err => {
-      dispatch(setCartProductError(err));
+      const error = getError(err);
+      dispatch(setCartProductError(error));
       dispatch(setSubmittingCartProduct(false));
+      return false;
     });
 };
 
@@ -157,15 +175,19 @@ export const submitCartProductUpdate = ({
   item,
 }) => dispatch => {
   return axios
-    .put(`/shoppingcart/update/${itemId}/`, { ...item, price: undefined })
-    .then(({ data }) => {
-      item.subtotal = item.quantity * item.price;
-      dispatch(updateCartProduct({ itemId, item }));
+    .put(`/shoppingcart/update/${itemId}`, { ...item, price: undefined })
+    .then(() => {
+      dispatch(fetchCartProducts(cartId))
       dispatch(fetchCartTotalAmount(cartId));
-      return data;
+      dispatch(clearCartProductForm());
+      dispatch(setSubmittingCartProduct(false));
+      return true;
     })
     .catch(err => {
-      dispatch(setCartProductError(err));
+      const error = getError(err);
+      dispatch(setCartProductError(error));
+      dispatch(setSubmittingCartProduct(false));
+      return false;
     });
 };
 
@@ -183,7 +205,7 @@ export const submitEmptyCart = cartId => dispatch => {
     .delete(`/shoppingcart/empty/${cartId}`)
     .then(({ data }) => {
       dispatch(setCartProducts([]));
-      dispatch(setCartTotalAmount(0));
+      dispatch(setCartTotalAmount(0))
       dispatch(clearingCart(false));
     })
     .catch(() => {

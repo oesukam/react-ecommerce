@@ -6,7 +6,7 @@ describe('checkCreditCard', () => {
     expect(checkCreditCard(validCreditCard)).toBeTruthy();
   });
 
-  test(`should return true for 4579`, () => {
-    expect(checkCreditCard(123456789)).toBeFalsy();
+  test(`should return false for 123456789`, () => {
+    expect(checkCreditCard('123456789')).toBeFalsy();
   });
 });

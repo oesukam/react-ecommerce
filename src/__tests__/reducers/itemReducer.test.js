@@ -220,4 +220,65 @@ describe('itemReducer', () => {
       categoryId: payload,
     });
   });
+
+  test(`should handle ${types.SET_SEARCHING_ITEMS}`, () => {
+    const payload = true;
+    const action = {
+      type: types.SET_SEARCHING_ITEMS,
+      payload,
+    };
+    expect(reducer({}, action)).toEqual({
+      searchingItems: payload,
+    });
+  });
+
+  test(`should handle ${types.SET_SEARCHED_ITEMS} without payload`, () => {
+    const payload = { };
+    const action = {
+      type: types.SET_SEARCHED_ITEMS,
+      payload,
+    };
+    expect(reducer({}, action)).toEqual({
+      searchedItems: [],
+      searchedItemsMeta: {
+        page: 1,
+        pages: 1,
+        total: 0,
+      },
+    });
+  });
+
+  test(`should handle ${types.SET_SEARCHED_ITEMS}`, () => {
+    const payload = { rows: [], meta: { page: 1, pages: 1 } };
+    const action = {
+      type: types.SET_SEARCHED_ITEMS,
+      payload,
+    };
+    expect(reducer({}, action)).toEqual({
+      searchedItems: payload.rows,
+      searchedItemsMeta: payload.meta,
+    });
+  });
+
+  test(`should handle ${types.SET_ITEMS_NOT_FOUND}`, () => {
+    const payload = false;
+    const action = {
+      type: types.SET_ITEMS_NOT_FOUND,
+      payload,
+    };
+    expect(reducer({}, action)).toEqual({
+      itemsNotFound: payload,
+    });
+  });
+
+  test(`should handle ${types.SET_SEARCH_KEYWORDS}`, () => {
+    const payload = '';
+    const action = {
+      type: types.SET_SEARCH_KEYWORDS,
+      payload,
+    };
+    expect(reducer({}, action)).toEqual({
+      searchKeywords: payload,
+    });
+  });
 });

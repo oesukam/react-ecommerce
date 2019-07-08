@@ -8,7 +8,7 @@ class Quantity extends Component {
     substracting: false,
   };
 
-  _onQuantityChange = (quantity, onQuantityChange, type = 'adding') => {
+  _onQuantityChange = (quantity, onQuantityChange) => {
     const value = quantity < 1 ? 1 : quantity;
     onQuantityChange(value);
   };
@@ -50,13 +50,8 @@ class Quantity extends Component {
 }
 
 Quantity.propTypes = {
-  quantity: propTypes.number,
-  onQuantityChange: propTypes.func,
-};
-
-Quantity.defaultProps = {
-  quantity: 1,
-  onQuantityChange: () => '',
+  quantity: propTypes.number.isRequired,
+  onQuantityChange: propTypes.func.isRequired,
 };
 
 export default Quantity;

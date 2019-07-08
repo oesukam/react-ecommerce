@@ -8,7 +8,7 @@ export class OrderDelivery extends Component {
     const { _handleUserInput, regions } = this.props;
     const regiondId = parseInt(target.value, 10);
     const region =
-      regions.find(reg => reg.shipping_region_id === regiondId) || {};
+      regions.find(reg => reg.shipping_region_id === regiondId);
     _handleUserInput({
       target: { name: 'region', value: region.shipping_region },
     });
@@ -117,6 +117,7 @@ export class OrderDelivery extends Component {
                 <label className="label">Region</label>
                 <div className={`select ${!user.region ? 'is-danger' : ''}`}>
                   <select
+                    id="region-select"
                     value={user.shipping_region_id}
                     onChange={this._onSelectRegion}
                   >
@@ -196,35 +197,22 @@ export class OrderDelivery extends Component {
 }
 
 OrderDelivery.propTypes = {
-  orders: propTypes.array,
-};
-
-OrderDelivery.defaultProps = {
-  orders: [],
+  userError: propTypes.oneOfType([
+    propTypes.object.isRequired,
+    propTypes.string.isRequired,
+  ]),
+  regions: propTypes.array.isRequired,
+  region: propTypes.object.isRequired,
 };
 
 export const mapStateToProps = ({
   currentUser: { userError, user },
-  order: {
-    orders,
-    orderForm: { cart_id: cartId },
-    orderStep,
-    orderSteps,
-    submittingOrder,
-  },
   shipping: { regions, region },
-  cart: { cartProducts },
 }) => ({
-  orders,
-  cartId,
-  orderStep,
-  orderSteps,
-  submittingOrder,
   userError,
   user,
   regions,
   region,
-  cartProducts,
 });
 
 export const mapDispatchToProps = dispatch => ({

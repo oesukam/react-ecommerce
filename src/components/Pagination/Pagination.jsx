@@ -18,7 +18,7 @@ const renderAfterDots = (page, pages) =>
     </li>
   ) : null;
 
-const renderBeforeCurrent = (page, pages, goToPage) => {
+const renderBeforeCurrent = (page, _, goToPage) => {
   const links = [];
   if (page > 3) {
     links.push(page - 2);
@@ -33,7 +33,7 @@ const renderBeforeCurrent = (page, pages, goToPage) => {
       <button
         type="button"
         onClick={() => goToPage(link)}
-        className="pagination-page"
+        className={`pagination-page page-${link}-btn`}
         aria-label={`Goto page ${link}`}
       >
         {link}
@@ -56,7 +56,7 @@ const renderAfterCurrent = (page, pages, goToPage) => {
       <button
         type="button"
         onClick={() => goToPage(link)}
-        className="pagination-page"
+        className={`pagination-page page-${link}-btn`}
         aria-label={`Goto page ${link}`}
       >
         {link}
@@ -75,7 +75,7 @@ const Pagination = ({ page, pages, goToPage }) => (
       disabled={page < 2}
       onClick={() => goToPage(page - 1)}
       type="button"
-      className="pagination-nav"
+      className="pagination-nav prev-btn"
     >
       <img
         src={angleLeft}
@@ -91,7 +91,7 @@ const Pagination = ({ page, pages, goToPage }) => (
           <button
             type="button"
             onClick={() => goToPage(1)}
-            className="pagination-page"
+            className="pagination-page active page-1-btn"
             aria-label="Goto page 1"
           >
             1
@@ -103,7 +103,7 @@ const Pagination = ({ page, pages, goToPage }) => (
       <li>
         <button
           type="button"
-          className="pagination-page active"
+          className={`pagination-page active page-${page}-btn`}
           aria-label={`Goto page ${page}`}
         >
           {page}
@@ -116,7 +116,7 @@ const Pagination = ({ page, pages, goToPage }) => (
           <button
             type="button"
             onClick={() => goToPage(pages)}
-            className="pagination-page"
+            className={`pagination-page page-${pages}-btn`}
             aria-label={`Goto page ${pages}`}
           >
             {pages}
@@ -126,7 +126,7 @@ const Pagination = ({ page, pages, goToPage }) => (
     </ul>
     <button
       type="button"
-      className="pagination-nav"
+      className="pagination-nav next-btn"
       onClick={() => goToPage(page + 1)}
       disabled={page >= pages}
     >
@@ -141,15 +141,9 @@ const Pagination = ({ page, pages, goToPage }) => (
 );
 
 Pagination.propTypes = {
-  page: propTypes.oneOfType([propTypes.number, propTypes.string]),
-  pages: propTypes.oneOfType([propTypes.number, propTypes.string]),
-  goToPage: propTypes.func,
-};
-
-Pagination.defaultProps = {
-  page: 3,
-  pages: 15,
-  goToPage: page => console.log('Page number', page),
+  page: propTypes.oneOfType([propTypes.number, propTypes.string]).isRequired,
+  pages: propTypes.oneOfType([propTypes.number, propTypes.string]).isRequired,
+  goToPage: propTypes.func.isRequired,
 };
 
 export default Pagination;

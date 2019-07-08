@@ -90,9 +90,19 @@ const reducer = (state = initialState, { type, payload }) => {
     case types.SET_SEARCHED_ITEMS:
       return {
         ...state,
-        searchedItems: payload,
+        searchedItems: payload.rows || [],
+        searchedItemsMeta: payload.meta || initialState.searchedItemsMeta,
       };
-
+    case types.SET_ITEMS_NOT_FOUND:
+      return {
+        ...state,
+        itemsNotFound: payload,
+      };
+    case types.SET_SEARCH_KEYWORDS:
+      return {
+        ...state,
+        searchKeywords: payload,
+      };
     default:
       return state;
   }

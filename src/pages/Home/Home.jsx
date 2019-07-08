@@ -10,26 +10,45 @@ import HomeSideFilter from './HomeSideFilter';
 import {
   fetchItems,
   setCategoryId,
+  setDepartmentId,
   addItemToCart,
+  setSearchKeywords,
 } from '../../actions/itemActions';
 import ItemCard from '../../components/ItemCard/ItemCard';
 import Pagination from '../../components/Pagination/Pagination';
 import ItemsLoader from '../../components/ContentLoader/ItemsLoader';
 import { generateCartId } from '../../actions/cartActions';
+import { setOrderModal } from '../../actions/orderActions';
 
 export class Home extends Component {
   componentDidMount() {
-    const { getItems, location, setCategory } = this.props;
+    this._loadItems();
+    this.props._setOrderModal();
+    this.props._setSearchKeywords('');
+  }
+
+  componentWillReceiveProps({ match: { params }}) {
+    const { match: { params: { departmentId }} } = this.props;
+    if (params.departmentId !== departmentId) {
+      this._loadItems();
+    }
+  }
+
+  _loadItems = () => {
+    const { location, match: { params: { departmentId }} } = this.props;
     const { category: categoryId, page = 1 } = queryString.parse(
       location.search,
     );
     let type = '';
+    if (departmentId) {
+      type = 'department';
+    }
     if (categoryId) {
       type = 'category';
     }
-
-    setCategory(categoryId || '');
-    getItems({ page, categoryId, type });
+    this.props._setCategoryId(categoryId || '');
+    this.props._setDepartmentId(departmentId || '');
+    this.props._fetchItems({ page, categoryId, departmentId, type });
   }
 
   _addToCart = (itemId, item) => {
@@ -37,20 +56,21 @@ export class Home extends Component {
     const message = `${item.name} was added to your cart`;
     if (!cartId) {
       _generateCartId().then(({ cart_id: cartId }) => {
-        _addItemToCart({ cartId, itemId });
-        Notification.success(message, { duration: 5 })
+        _addItemToCart({ cartId, itemId })
+          .then((res) => {
+            if (res) Notification.success(message, { duration: 3 });
+          });
       });
       return;
     }
     _addItemToCart({ cartId, itemId })
-    .then(() => {
-      Notification.success(message, { duration: 5 })
-    })
-   
+      .then((res) => {
+        if (res) Notification.success(message, { duration: 3 });
+      });
   };
 
   renderItems = () => {
-    const { items = [], loadingItems } = this.props;
+    const { items, loadingItems } = this.props;
     return !loadingItems
       ? items.map(item => (
           <div className="column is-4" key={item.product_id}>
@@ -66,7 +86,7 @@ export class Home extends Component {
   };
 
   goToPage = page => {
-    const { getItems, categoryId, departmentId, history } = this.props;
+    const { _fetchItems, categoryId, departmentId, history } = this.props;
     let url = `/?page=${page}`;
     let type;
     if (categoryId) {
@@ -78,7 +98,7 @@ export class Home extends Component {
       type = 'department';
     }
     history.push(url);
-    getItems({ page, categoryId, type });
+    _fetchItems({ page, categoryId, type });
   };
 
   render() {
@@ -109,25 +129,28 @@ export class Home extends Component {
 }
 
 Home.propTypes = {
-  items: propTypes.array,
-  loadingItems: propTypes.bool,
-  meta: propTypes.object,
+  items: propTypes.array.isRequired,
+  loadingItems: propTypes.bool.isRequired,
+  meta: propTypes.object.isRequired,
   categoryId: propTypes.oneOfType([propTypes.number, propTypes.string]),
   departmentId: propTypes.oneOfType([propTypes.number, propTypes.string]),
-};
-
-Home.defaultProps = {
-  items: [],
-  loadingItems: true,
-  meta: {
-    page: 1,
-    pages: 1,
-    total: 0,
-  },
+  _fetchItems: propTypes.func.isRequired,
+  _setCategoryId: propTypes.func.isRequired,
+  _addItemToCart: propTypes.func.isRequired,
+  _generateCartId: propTypes.func.isRequired,
+  _setOrderModal: propTypes.func.isRequired,
+  _setSearchKeywords: propTypes.func.isRequired,
+  _setDepartmentId: propTypes.func.isRequired,
 };
 
 export const mapStateToProps = ({
-  item: { items, loadingItems, categoryId, departmentId, meta },
+  item: { 
+    items,
+    loadingItems,
+    categoryId,
+    departmentId,
+    meta,
+  },
   cart: {
     cartProductForm: { cart_id: cartId },
   },
@@ -140,14 +163,17 @@ export const mapStateToProps = ({
   cartId,
 });
 
-export const mapDisptachToProps = dispatch => ({
-  getItems: payload => dispatch(fetchItems(payload)),
-  setCategory: payload => dispatch(setCategoryId(payload)),
+export const mapDispatchToProps = dispatch => ({
+  _fetchItems: payload => dispatch(fetchItems(payload)),
+  _setCategoryId: payload => dispatch(setCategoryId(payload)),
   _addItemToCart: payload => dispatch(addItemToCart(payload)),
   _generateCartId: () => dispatch(generateCartId()),
+  _setOrderModal: () => dispatch(setOrderModal('')),
+  _setSearchKeywords: () => dispatch(setSearchKeywords('')),
+  _setDepartmentId: payload => dispatch(setDepartmentId(payload)),
 });
 
 export default connect(
   mapStateToProps,
-  mapDisptachToProps,
+  mapDispatchToProps,
 )(Home);
