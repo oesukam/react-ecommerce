@@ -44,31 +44,49 @@ export class SingleItem extends Component {
   };
 
   addToCart = () => {
-    const { cartProductForm, item, _getCartId, _addToCart } = this.props;
-    const message = `${item.name} was added to your cart`
+    const { cartProductForm, item, _getCartId, _addToCart, cartProducts, } = this.props;
+    const message = `${item.name} was added to your cart`;
+    const attributes = [cartProductForm.size, cartProductForm.color].join(', ');
+
     const data = {
       cart_id: cartProductForm.cart_id,
       product_id: item.product_id,
-      attributes: [cartProductForm.size, cartProductForm.color].join(', '),
       quantity: cartProductForm.quantity,
+      attributes,
+      item: cartProducts.find(product => {
+        return product.product_id === item.product_id &&
+        product.attributes === attributes
+      }),
     };
+
     if (!cartProductForm.size || !cartProductForm.color) {
       Notification.error('Please choose your color and size', { duration: 4 })
       return;
     }
 
+    const failedError = 'Could not add to the cart. Please try again';
     if (!data.cart_id) {
       _getCartId().then((res) => {
-        if(res.cart_id) {
-          _addToCart(cartProductForm);
-          Notification.success(message, { duration: 5 })
-          return
+        if(!res.cart_id) {
+          Notification.error(failedError, { duration: 4 })
+          return;
         }
-        Notification.error('Could not add to the cart. Please try again', { duration: 4 })
+        _addToCart(data)
+          .then((res) => {
+            if (!res) {
+              Notification.error(failedError, { duration: 4 })
+              return;
+            }
+            Notification.success(message, { duration: 5 })
+          });
       });
       return;
     }
-    _addToCart(data).then(() => {
+    _addToCart(data).then((res) => {
+      if (!res) {
+        Notification.error(failedError, { duration: 4 })
+        return;
+      }
       Notification.success(message, { duration: 5 })
     })
   };
@@ -263,6 +281,7 @@ SingleItem.propTypes = {
   cartProductForm: propTypes.object.isRequired,
   submittingCartProduct: propTypes.bool.isRequired,
   itemAttributes: propTypes.object.isRequired,
+  cartProducts: propTypes.array.isRequired,
   _getItem: propTypes.func.isRequired,
   _getCartId: propTypes.func.isRequired,
   _setCartField: propTypes.func.isRequired,
@@ -272,13 +291,14 @@ SingleItem.propTypes = {
 
 export const mapStateToProps = ({
   item: { loadingItem, item, itemAttributes },
-  cart: { cartProductForm, submittingCartProduct },
+  cart: { cartProductForm, submittingCartProduct, cartProducts },
 }) => ({
   item,
   loadingItem,
   cartProductForm,
   submittingCartProduct,
   itemAttributes,
+  cartProducts,
 });
 
 export const mapDispatchToProps = dispatch => ({

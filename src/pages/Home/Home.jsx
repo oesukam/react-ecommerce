@@ -10,7 +10,9 @@ import HomeSideFilter from './HomeSideFilter';
 import {
   fetchItems,
   setCategoryId,
+  setDepartmentId,
   addItemToCart,
+  setSearchKeywords,
 } from '../../actions/itemActions';
 import ItemCard from '../../components/ItemCard/ItemCard';
 import Pagination from '../../components/Pagination/Pagination';
@@ -20,18 +22,33 @@ import { setOrderModal } from '../../actions/orderActions';
 
 export class Home extends Component {
   componentDidMount() {
-    const { _fetchItems, location, _setCategoryId, _setOrderModal } = this.props;
+    this._loadItems();
+    this.props._setOrderModal();
+    this.props._setSearchKeywords('');
+  }
+
+  componentWillReceiveProps({ match: { params }}) {
+    const { match: { params: { departmentId }} } = this.props;
+    if (params.departmentId !== departmentId) {
+      this._loadItems();
+    }
+  }
+
+  _loadItems = () => {
+    const { location, match: { params: { departmentId }} } = this.props;
     const { category: categoryId, page = 1 } = queryString.parse(
       location.search,
     );
     let type = '';
+    if (departmentId) {
+      type = 'department';
+    }
     if (categoryId) {
       type = 'category';
     }
-
-    _setCategoryId(categoryId || '');
-    _fetchItems({ page, categoryId, type });
-    _setOrderModal()
+    this.props._setCategoryId(categoryId || '');
+    this.props._setDepartmentId(departmentId || '');
+    this.props._fetchItems({ page, categoryId, departmentId, type });
   }
 
   _addToCart = (itemId, item) => {
@@ -122,10 +139,18 @@ Home.propTypes = {
   _addItemToCart: propTypes.func.isRequired,
   _generateCartId: propTypes.func.isRequired,
   _setOrderModal: propTypes.func.isRequired,
+  _setSearchKeywords: propTypes.func.isRequired,
+  _setDepartmentId: propTypes.func.isRequired,
 };
 
 export const mapStateToProps = ({
-  item: { items, loadingItems, categoryId, departmentId, meta },
+  item: { 
+    items,
+    loadingItems,
+    categoryId,
+    departmentId,
+    meta,
+  },
   cart: {
     cartProductForm: { cart_id: cartId },
   },
@@ -144,6 +169,8 @@ export const mapDispatchToProps = dispatch => ({
   _addItemToCart: payload => dispatch(addItemToCart(payload)),
   _generateCartId: () => dispatch(generateCartId()),
   _setOrderModal: () => dispatch(setOrderModal('')),
+  _setSearchKeywords: () => dispatch(setSearchKeywords('')),
+  _setDepartmentId: payload => dispatch(setDepartmentId(payload)),
 });
 
 export default connect(

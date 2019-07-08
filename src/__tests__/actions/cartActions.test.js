@@ -83,7 +83,6 @@ describe('cartActions', () => {
       const payload = true;
       const expectedAction = {
         type: types.CLEAR_CART_PRODUCT_FORM,
-        payload,
       };
       expect(actions.clearCartProductForm(payload)).toEqual(expectedAction);
     });
@@ -375,6 +374,72 @@ describe('cartActions', () => {
       });
     });
 
+    describe('submitCartProduct', () => {
+      const cartId = 100;
+      const itemId = 1;
+      const item = { item_id: itemId, quantity: 1, price: 10 };
+      test('should dispatch action - FAILED', async () => {
+        const payload = {
+          code: 'USR_02',
+          message: 'The field example is empty.',
+          field: 'example',
+          status: 400,
+        };
+        
+        nock(API_URL_TEST)
+          .put(`/shoppingcart/update/${itemId}`)
+          .reply(400, payload);
+        const expectedActions = [
+          {
+            type: types.SET_SUBMITTING_CART_PRODUCT,
+            payload: true,
+          },
+          {
+            type: types.SET_CART_ERROR,
+            payload,
+          },
+          {
+            type: types.SET_SUBMITTING_CART_PRODUCT,
+            payload: false,
+          },
+        ];
+        
+        await store.dispatch(actions.submitCartProduct({ item, cartId, itemId }))
+        const dispatchedActions = store.getActions();
+        expect(dispatchedActions).toEqual(expectedActions);
+      });
+
+      test('should dispatch action - SUCCESS', async () => {
+        const cartId = 100;
+        const response = []
+        nock(API_URL_TEST)
+          .put(`/shoppingcart/update/${itemId}`)
+          .reply(200, response);
+        const expectedActions = [
+          {
+            type: types.SET_SUBMITTING_CART_PRODUCT,
+            payload: true,
+          },
+          {
+            type: types.SET_LOADING_CART_PRODUCTS,
+            payload: true,
+          },
+          {
+            type: types.CLEAR_CART_PRODUCT_FORM,
+          },
+          {
+            type: types.SET_SUBMITTING_CART_PRODUCT,
+            payload: false,
+          }
+        ];
+        await store.dispatch(actions.submitCartProduct({
+          item, cartId, itemId, quantity: 1
+        }))
+        const dispacthedActions = store.getActions();
+        expect(dispacthedActions).toEqual(expectedActions);
+      });
+    });
+
     describe('submitCartProductUpdate', () => {
       const cartId = 100;
       const itemId = 1;
@@ -395,6 +460,10 @@ describe('cartActions', () => {
             type: types.SET_CART_ERROR,
             payload,
           },
+          {
+            type: types.SET_SUBMITTING_CART_PRODUCT,
+            payload: false,
+          },
         ];
         
         await store.dispatch(actions.submitCartProductUpdate({ item, cartId, itemId }))
@@ -405,21 +474,21 @@ describe('cartActions', () => {
       test('should dispatch action - SUCCESS', async () => {
         const cartId = 100;
         const response = []
-        const payload = {
-          item: {
-            ...item,
-            subtotal: item.price * item.quantity
-          },
-          itemId
-        }
         nock(API_URL_TEST)
           .put(`/shoppingcart/update/${itemId}`)
           .reply(200, response);
         const expectedActions = [
           {
-            type: types.UPDATE_CART_ITEM,
-            payload,
+            type: types.SET_LOADING_CART_PRODUCTS,
+            payload: true,
           },
+          {
+            type: types.CLEAR_CART_PRODUCT_FORM,
+          },
+          {
+            type: types.SET_SUBMITTING_CART_PRODUCT,
+            payload: false,
+          }
         ];
         await store.dispatch(actions.submitCartProductUpdate({ item, cartId, itemId }))
         const dispacthedActions = store.getActions();

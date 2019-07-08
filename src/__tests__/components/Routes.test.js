@@ -12,18 +12,8 @@ const mockStore = configureMockStore([thunk]);
 
 describe('<Routes />', () => {
   test('should render the Routes', () => {
-    const routes = shallow(<Routes />);
+    const routes = shallow(<Routes isAuth />);
     expect(routes).toMatchSnapshot();
-  });
-
-  test('should render modals', () => {
-    const props = {
-      isAuth: true,
-      cartModal: true,
-      authModal: 'Sign In',
-      orderModal: 'Delivery',
-    };
-    const wrapper = shallow(<Routes {...props} />);
   });
 
   describe('render routes', () => {
@@ -44,24 +34,14 @@ describe('<Routes />', () => {
         expect(component.find('Home').props().items).toBeDefined();
         expect(component.find('Home').props().meta).toBeDefined();
       });
-  
-      it('should show redirect to `/` for `/auth`', () => {
-        const component = mount(
-          <Provider store={store}>
-            <MemoryRouter initialEntries={['/auth']}>
-              <Routes isAuth />
-            </MemoryRouter>
-          </Provider>,
-        );
-        expect(component.find('Home')).toHaveLength(1);
-      });
     });
+
     describe('/settings - route', () => {
-      it('should show AuthModel for `/settings`', () => {
+      it('should show render `/settings`', () => {
         const component = mount(
           <Provider store={store}>
             <MemoryRouter initialEntries={['/settings']}>
-              <Routes />
+              <Routes isAuth={false} />
             </MemoryRouter>
             ,
           </Provider>,
@@ -69,17 +49,25 @@ describe('<Routes />', () => {
         expect(component.find('Home')).toHaveLength(1);
       });
 
-      // it('should show render `/settings`', () => {
-      //   const component = mount(
-      //     <Provider store={store}>
-      //       <MemoryRouter initialEntries={['/settings']}>
-      //         <Routes isAuth />
-      //       </MemoryRouter>
-      //       ,
-      //     </Provider>,
-      //   );
-      //   expect(component.find('Settings')).toHaveLength(1);
-      // });
+      it('should show AuthModel for `/settings`', () => {
+        const newInitialState = {
+          ...initialState,
+          currentUser: {
+            ...initialState.currentUser,
+            isAuth: true
+          }
+        };
+        store = mockStore(newInitialState);
+        const component = mount(
+          <Provider store={store}>
+            <MemoryRouter initialEntries={['/settings']}>
+              <Routes isAuth/>
+            </MemoryRouter>
+            ,
+          </Provider>,
+        );
+        expect(component.find('Settings')).toHaveLength(1);
+      });
     });
   });
 

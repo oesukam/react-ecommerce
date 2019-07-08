@@ -28,9 +28,16 @@ module.exports = {
     loadingItems: false,
     loadingItem: false,
     searchingItems: false,
+    itemsNotFound: false,
     error: { message: '', field: '' },
     items: [],
     searchedItems: [],
+    searchedItemsMeta: {
+      page: 1,
+      pages: 1,
+      total: 0,
+    },
+    searchKeywords: '',
     item: {},
     itemAttributes: {
       Color: [],

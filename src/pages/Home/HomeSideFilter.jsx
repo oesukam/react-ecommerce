@@ -96,8 +96,8 @@ export class HomeSideFilter extends Component {
 
 HomeSideFilter.propTypes = {
   categories: propTypes.array.isRequired,
-  departmentId: propTypes.oneOfType([propTypes.number, propTypes.string]).isRequired,
-  categoryId: propTypes.oneOfType([propTypes.number, propTypes.string]).isRequired,
+  departmentId: propTypes.oneOfType([propTypes.number, propTypes.string]),
+  categoryId: propTypes.oneOfType([propTypes.number, propTypes.string]),
   meta: propTypes.object.isRequired,
   loadingItems: propTypes.bool.isRequired,
   _setCategoryId: propTypes.func.isRequired,

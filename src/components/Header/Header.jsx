@@ -212,7 +212,7 @@ export class Header extends Component {
               <div className="navbar-start">{this.renderDepartments()}</div>
               <div className="navbar-end">
                 <div className="navbar-item">
-                  <HeaderSearchInput />
+                  <HeaderSearchInput history={history} />
                 </div>
                 <div className="navbar-item">{this.renderAuthNav()}</div>
               </div>
@@ -248,7 +248,11 @@ Header.propTypes = {
   cartTotalAmount: propTypes.oneOfType([
     propTypes.number.isRequired,
     propTypes.string.isRequired,
-  ])
+  ]),
+  _setDepartment: propTypes.func.isRequired,
+  _setCartModal: propTypes.func.isRequired,
+  _setAuthModal: propTypes.func.isRequired,
+  _signout: propTypes.func.isRequired,
 }
 
 export const mapStateToProps = ({

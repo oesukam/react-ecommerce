@@ -4,21 +4,27 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import configureMockStore from 'redux-mock-store';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
-import { Home, mapStateToProps, mapDispatchToProps } from '../../../pages/Home/Home';
-import initialState from '../../../store/initialState';
-import tickAsync from '../../../utils/tickAsync';
+import { Items, mapStateToProps, mapDispatchToProps } from '../../pages/Items/Items';
+import initialState from '../../store/initialState';
+import tickAsync from '../../utils/tickAsync';
 
 let wrapper;
 let store;
 const mockStore = configureMockStore([thunk]);
-
+const searchedItems = [
+  {
+    product_id: 1,
+    name: 'item 1',
+    thumbnail: 'thumbnail 1',
+  },
+  {
+    product_id: 2,
+    name: 'item 2',
+    thumbnail: 'thumbnail 2',
+  }
+];
 const props = {
   loadingItems: false,
-  match: {
-    params: {
-      departmentId: 1
-    }
-  },
   history: {
     goBack: jest.fn(),
     push: jest.fn()
@@ -30,88 +36,40 @@ const props = {
     page: 1,
     pages: 1,
   },
-  items: [
-    {
-      product_id: 1,
-      name: 'item 1',
-      thumbnail: 'thumbnail 1',
-    },
-    {
-      product_id: 2,
-      name: 'item 2',
-      thumbnail: 'thumbnail 2',
-    }
-  ],
-  searchKeywords: '',
-  searchedItems: [],
+  searchedItems,
   searchedItemsMeta: { page: 1, pages: 1 },
-  _fetchItems: jest.fn(),
-  _setCategoryId: jest.fn(),
-  _addItemToCart: jest.fn().mockImplementation(() => Promise.resolve(true)),
+  searchingItems: false,
+  searchKeywords: '',
   _generateCartId: jest.fn().mockImplementation(() => Promise.resolve({ cart_id: 1 })),
+  _addItemToCart: jest.fn().mockImplementation(() => Promise.resolve({ cart_id: 1 })),
+  _setSearchedItems: jest.fn().mockImplementation(() => Promise.resolve({ cart_id: 1 })),
   _setOrderModal: jest.fn(),
   _setSearchKeywords: jest.fn(),
-  _setDepartmentId: jest.fn(),
+  _searchProducts: jest.fn(),
 }
 
-describe('Home.jsx', () => {
-
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-  test('should render Home.jx', () => {
+describe('Items.jsx', () => {
+  test('should render Items.jx', () => {
     wrapper = shallow(
-      <Home {...props}/>
+      <Items {...props}/>
     );
     expect(wrapper).toMatchSnapshot();
   });
 
-  test('should update props with different departmentId ', () => {
-    const newProps = {...props};
-    newProps.location.search = `?`;
-    newProps.loadingItems = true;
+  test('should render Items.jsx with loading content', () => {
+    const newProps = {
+      ...props,
+      searchingItems: true,
+    }
     wrapper = shallow(
-      <Home {...newProps}/>
+      <Items {...newProps}/>
     );
-    wrapper.setProps({
-      match: {
-        params: { departmentId: 2 }
-      }
-    })
-    expect(newProps._fetchItems).toHaveBeenCalled();
-  });
-
-  test('should update props with the same departmentId ', () => {
-    const newProps = {...props};
-    newProps.location.search = `?`;
-    newProps.loadingItems = true;
-    wrapper = shallow(
-      <Home {...newProps}/>
-    );
-    wrapper.setProps({
-      match: {
-        params: { departmentId: 1 }
-      }
-    })
-    expect(newProps._fetchItems).toHaveBeenCalledTimes(1);
-  });
-
-  test('should render Home.js for category', () => {
-    const newProps = {...props};
-    const categoryId = 'category'
-    newProps.location.search = `?category=${categoryId}`;
-    newProps.departmentId = 'departmentId';
-    newProps.loadingItems = true;
-    wrapper = shallow(
-      <Home {...newProps}/>
-    );
-    expect(newProps._fetchItems).toHaveBeenCalledWith({
-      page: 1,
-      categoryId: 'category',
-      departmentId: 1,
-      type: 'category'
+    wrapper.setState({
+      items: searchedItems
     });
-  });
+    expect(wrapper.instance().props.searchingItems).toBeTruthy();
+  })
+
 
   describe('when clicking on next page', () => {
     beforeEach(() => {
@@ -119,19 +77,19 @@ describe('Home.jsx', () => {
     })
     
     test('should call goToPage with category and department filter', () => {
-      const newProps = {...props};
-      newProps.meta = {
-        page: 1,
-        pages: 5,
-        total: 55
+      const newProps = {
+        ...props,
+        searchedItemsMeta: {
+          page: 1,
+          pages: 5,
+          total: 55
+        }
       }
-      newProps.categoryId = 1;
-      newProps.departmentId = 1;
 
       wrapper = mount(
         <Provider store={store}>
           <Router>
-            <Home {...newProps} />
+            <Items {...newProps} />
           </Router>
         </Provider>
       );
@@ -139,25 +97,26 @@ describe('Home.jsx', () => {
       wrapper.find('.pagination-nav.next-btn').simulate('click');
 
       expect(newProps.history.push).toHaveBeenCalled()
-      expect(newProps._fetchItems).toHaveBeenCalledWith({
+      expect(newProps._searchProducts).toHaveBeenCalledWith({
         page: 2,
-        categoryId: 1,
-        type: 'department'
+        searchKeywords: undefined
       });
     });
 
     test('should call goToPage', () => {
-      const newProps = {...props};
-      newProps.meta = {
-        page: 1,
-        pages: 5,
-        total: 55
+      const newProps = {
+        ...props,
+        searchedItemsMeta: {
+          page: 1,
+          pages: 5,
+          total: 55
+        }
       }
 
       wrapper = mount(
         <Provider store={store}>
           <Router>
-            <Home {...newProps} />
+            <Items {...newProps} />
           </Router>
         </Provider>
       );
@@ -165,7 +124,7 @@ describe('Home.jsx', () => {
       wrapper.find('.pagination-nav.next-btn').simulate('click');
 
       expect(newProps.history.push).toHaveBeenCalled()
-      expect(newProps._fetchItems).toHaveBeenCalled();
+      expect(newProps._searchProducts).toHaveBeenCalled();
     });
   });
 
@@ -176,18 +135,17 @@ describe('Home.jsx', () => {
     
     test('should call _generateCartId when cartId not provided', async () => {
       const newProps = {...props};
-      newProps.meta = {
+      newProps.searchedItemsMeta = {
         page: 1,
         pages: 5,
         total: 55
       }
-      newProps.cartId = ''
       newProps._generateCartId = jest.fn().mockImplementation(() => Promise.resolve({ cart_id: 1}))
 
       wrapper = mount(
         <Provider store={store}>
           <Router>
-            <Home {...newProps} />
+            <Items {...newProps} />
           </Router>
         </Provider>
       );
@@ -201,7 +159,7 @@ describe('Home.jsx', () => {
 
     test('should call _addItemToCart when cartId not provided and does not return a cart_id', async () => {
       const newProps = {...props};
-      newProps.meta = {
+      newProps.searchedItemsMeta = {
         page: 1,
         pages: 5,
         total: 55
@@ -212,7 +170,7 @@ describe('Home.jsx', () => {
       wrapper = mount(
         <Provider store={store}>
           <Router>
-            <Home {...newProps} />
+            <Items {...newProps} />
           </Router>
         </Provider>
       );
@@ -227,7 +185,7 @@ describe('Home.jsx', () => {
 
     test('should call _addItemToCart with provided cartId', async () => {
       const newProps = {...props};
-      newProps.meta = {
+      newProps.searchedItemsMeta = {
         page: 1,
         pages: 5,
         total: 55
@@ -238,7 +196,7 @@ describe('Home.jsx', () => {
       wrapper = mount(
         <Provider store={store}>
           <Router>
-            <Home {...newProps} />
+            <Items {...newProps} />
           </Router>
         </Provider>
       );
@@ -252,7 +210,7 @@ describe('Home.jsx', () => {
 
     test('should call _addItemToCart with provided cartId without a response', async () => {
       const newProps = {...props};
-      newProps.meta = {
+      newProps.searchedItemsMeta = {
         page: 1,
         pages: 5,
         total: 55
@@ -263,7 +221,7 @@ describe('Home.jsx', () => {
       wrapper = mount(
         <Provider store={store}>
           <Router>
-            <Home {...newProps} />
+            <Items {...newProps} />
           </Router>
         </Provider>
       );
@@ -283,17 +241,6 @@ describe('Home.jsx', () => {
   });
 
   describe('actions creators', () => {
-    test('should call _fetchItems action', () => {
-      const dispatch = jest.fn().mockImplementation(() => Promise.resolve(true));
-      mapDispatchToProps(dispatch)._fetchItems();
-      expect(dispatch).toHaveBeenCalled();
-    });
-
-    test('should call _setCategoryId action', () => {
-      const dispatch = jest.fn().mockImplementation(() => Promise.resolve(true));
-      mapDispatchToProps(dispatch)._setCategoryId();
-      expect(dispatch).toHaveBeenCalled();
-    });
 
     test('should call _addItemToCart action', () => {
       const dispatch = jest.fn().mockImplementation(() => Promise.resolve(true));
@@ -307,21 +254,21 @@ describe('Home.jsx', () => {
       expect(dispatch).toHaveBeenCalled();
     });
 
-    test('should call _setOrderModal action', () => {
+    test('should call _searchProducts action', () => {
       const dispatch = jest.fn().mockImplementation(() => Promise.resolve(true));
-      mapDispatchToProps(dispatch)._setOrderModal();
+      mapDispatchToProps(dispatch)._searchProducts({ searchKeywords: '', page: 1 });
+      expect(dispatch).toHaveBeenCalled();
+    });
+
+    test('should call _setSearchedItems action', () => {
+      const dispatch = jest.fn().mockImplementation(() => Promise.resolve(true));
+      mapDispatchToProps(dispatch)._setSearchedItems();
       expect(dispatch).toHaveBeenCalled();
     });
 
     test('should call _setSearchKeywords action', () => {
       const dispatch = jest.fn().mockImplementation(() => Promise.resolve(true));
       mapDispatchToProps(dispatch)._setSearchKeywords();
-      expect(dispatch).toHaveBeenCalled();
-    });
-
-    test('should call _setDepartmentId action', () => {
-      const dispatch = jest.fn().mockImplementation(() => Promise.resolve(true));
-      mapDispatchToProps(dispatch)._setDepartmentId();
       expect(dispatch).toHaveBeenCalled();
     });
   });

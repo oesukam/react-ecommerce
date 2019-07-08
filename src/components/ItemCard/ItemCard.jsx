@@ -27,7 +27,7 @@ const ItemCard = ({ item, addToCart }) => (
         className={`item-card__bottom__buy-btn ${item.adding ? 'loading' : ''}`}
         onClick={() => addToCart(item.product_id, item)}
       >
-        Buy now
+        Add to Cart
       </button>
     </div>
     <div className="item-card__hover">

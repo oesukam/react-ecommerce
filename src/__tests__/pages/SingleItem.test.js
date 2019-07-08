@@ -37,6 +37,8 @@ const props = {
   item: {
     image: 'image 1',
     image_2: 'image 2',
+    product_id: 1,
+    attributes: ''
   },
   loadingItem: false,
   cartProductForm: {
@@ -45,6 +47,9 @@ const props = {
   },
   submittingCartProduct: false,
   itemAttributes,
+  cartProducts: [
+    { product_id: 1, attributes: '' }
+  ],
   _getItem: jest.fn().mockImplementation(() => Promise.resolve(true)),
   _getCartId: jest.fn().mockImplementation(() => Promise.resolve({ cart_id: 1 })),
   _setCartField: jest.fn().mockImplementation(() => Promise.resolve(true)),
@@ -170,7 +175,7 @@ describe('SingleItem.jsx', () => {
       expect(newProps._addToCart).not.toHaveBeenCalled();
     });
 
-    test('should call _addToCart by generating cart_id without the response', async () => {
+    test('should call _getCartId by generating cart_id without the response', async () => {
       const newProps = {...props};
       newProps.cartProductForm.cart_id = '';
       newProps.cartProductForm.size = 'M'
@@ -185,11 +190,38 @@ describe('SingleItem.jsx', () => {
       expect(newProps._addToCart).not.toHaveBeenCalled();
     });
 
-    test('should call _addToCart by generating cart_id', async () => {
-      const newProps = {...props};
-      newProps.cartProductForm.cart_id = '';
-      newProps.cartProductForm.size = 'M'
-      newProps.cartProductForm.color = 'White'
+    test('should call _getCartId', async () => {
+      const newProps = {
+        ...props,
+        cartProductForm: {
+          cart_id: '',
+          size: 'M',
+          color: 'White',
+          quantity: 1,
+        },
+        _getCartId: jest.fn().mockImplementation(() => Promise.resolve({ cart_id: 1 }))
+      }
+      wrapper = shallow(<SingleItem {...newProps} />);
+      wrapper.find('.product__add-btn').simulate('click');
+
+      await tickAsync();
+
+      expect(newProps._getCartId).toHaveBeenCalled();
+      expect(newProps._addToCart).toHaveBeenCalled();
+    });
+
+    test('should call _addToCart without response', async () => {
+      const newProps = {
+        ...props,
+        cartProductForm: {
+          cart_id: '',
+          size: 'M',
+          color: 'White',
+          quantity: 1,
+        },
+        _getCartId: jest.fn().mockImplementation(() => Promise.resolve({ cart_id: 1 })),
+        _addToCart: jest.fn().mockImplementation(() => Promise.resolve(false))
+      }
       wrapper = shallow(<SingleItem {...newProps} />);
       wrapper.find('.product__add-btn').simulate('click');
 
@@ -198,12 +230,53 @@ describe('SingleItem.jsx', () => {
       expect(newProps._addToCart).toHaveBeenCalled();
     });
 
+    test('should call _addToCart by generating cart_id', async () => {
+      const newProps = {
+        ...props,
+        cartProductForm: {
+          cart_id: '',
+          size: 'M',
+          color: 'White',
+          quantity: 1,
+        },
+        _getCartId: jest.fn().mockImplementation(() => Promise.resolve({ cart_id: 1 })),
+        _addToCart: jest.fn().mockImplementation(() => Promise.resolve(true))
+      }
+      wrapper = shallow(<SingleItem {...newProps} />);
+      wrapper.find('.product__add-btn').simulate('click');
+
+      await tickAsync();
+
+      expect(newProps._addToCart).toHaveBeenCalled();
+    });
+
+    test('should call _addToCart without response', () => {
+      const newProps = {
+        ...props,
+        cartProductForm: {
+          cart_id: 1,
+          size: 'M',
+          color: 'White',
+          quantity: 1,
+        },
+        _addToCart: jest.fn().mockImplementation(() => Promise.resolve(false))
+      }
+      wrapper = shallow(<SingleItem {...newProps} />);
+      wrapper.find('.product__add-btn').simulate('click');
+      expect(newProps._addToCart).toHaveBeenCalled();
+    });
 
     test('should call _addToCart', () => {
-      const newProps = {...props};
-      newProps.cartProductForm.cart_id = 1;
-      newProps.cartProductForm.size = 'M'
-      newProps.cartProductForm.color = 'White'
+      const newProps = {
+        ...props,
+        cartProductForm: {
+          cart_id: 1,
+          size: 'M',
+          color: 'White',
+          quantity: 1,
+        },
+        _addToCart: jest.fn().mockImplementation(() => Promise.resolve(true))
+      }
       wrapper = shallow(<SingleItem {...newProps} />);
       wrapper.find('.product__add-btn').simulate('click');
       expect(newProps._addToCart).toHaveBeenCalled();

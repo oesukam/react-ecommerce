@@ -197,7 +197,7 @@ export class Settings extends Component {
                 />
               </div>
               <p className="help is-danger">
-                {userError.field === 'password' ? userError.message : ''}
+                {userError.field === 'password' && user.password ? userError.message : ''}
               </p>
             </div>
           </div>

@@ -37,9 +37,8 @@ export const setCartProductError = payload => ({
   payload,
 });
 
-export const clearCartProductForm = payload => ({
+export const clearCartProductForm = () => ({
   type: types.CLEAR_CART_PRODUCT_FORM,
-  payload,
 });
 
 export const setCartProductForm = payload => ({
@@ -141,19 +140,32 @@ export const fetchCartTotalAmount = cartId => dispatch => {
 
 export const submitCartProduct = cart => dispatch => {
   dispatch(setSubmittingCartProduct(true));
+  if (cart.item) {
+    return dispatch(submitCartProductUpdate({
+      cartId: cart.cart_id,
+      itemId: cart.item.item_id,
+      item: {
+        quantity: parseInt(cart.quantity) + parseInt(cart.item.quantity)
+      }
+    }))
+  }
   return axios
     .post(`/shoppingcart/add`, cart)
     .then(({ data }) => {
-      dispatch(setCartProducts(data));
-      dispatch(clearCartProductForm());
-      dispatch(setSubmittingCartProduct(false));
-      dispatch(fetchCartTotalAmount(cart.cart_id));
-      return data;
+      const item = data[data.length - 1];
+      return dispatch(submitCartProductUpdate({
+        cartId: cart.cart_id,
+        itemId: item.item_id,
+        item: {
+          quantity: cart.quantity
+        }
+      }));
     })
     .catch(err => {
       const error = getError(err);
       dispatch(setCartProductError(error));
       dispatch(setSubmittingCartProduct(false));
+      return false;
     });
 };
 
@@ -164,15 +176,18 @@ export const submitCartProductUpdate = ({
 }) => dispatch => {
   return axios
     .put(`/shoppingcart/update/${itemId}`, { ...item, price: undefined })
-    .then(({ data }) => {
-      item.subtotal = item.quantity * item.price;
-      dispatch(updateCartProduct({ itemId, item }));
+    .then(() => {
+      dispatch(fetchCartProducts(cartId))
       dispatch(fetchCartTotalAmount(cartId));
-      return data;
+      dispatch(clearCartProductForm());
+      dispatch(setSubmittingCartProduct(false));
+      return true;
     })
     .catch(err => {
       const error = getError(err);
       dispatch(setCartProductError(error));
+      dispatch(setSubmittingCartProduct(false));
+      return false;
     });
 };
 

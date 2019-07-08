@@ -152,6 +152,24 @@ describe('itemActions', () => {
       };
       expect(actions.addingItemToCart(payload)).toEqual(expectedAction);
     });
+
+    test(`should dispatch ${types.SET_ITEMS_NOT_FOUND}`, () => {
+      const payload = true;
+      const expectedAction = {
+        type: types.SET_ITEMS_NOT_FOUND,
+        payload,
+      };
+      expect(actions.setItemsNotFound(payload)).toEqual(expectedAction);
+    });
+
+    test(`should dispatch ${types.SET_SEARCH_KEYWORDS}`, () => {
+      const payload = '';
+      const expectedAction = {
+        type: types.SET_SEARCH_KEYWORDS,
+        payload,
+      };
+      expect(actions.setSearchKeywords(payload)).toEqual(expectedAction);
+    });
   });
 
   describe('asynchronous actions', () => {
@@ -441,9 +459,9 @@ describe('itemActions', () => {
           field: 'example',
           status: 400,
         }
-        const keywords = 'text'
+        const searchKeywords = 'text'
         nock(API_URL_TEST)
-          .get(`/products/search?limit=5&query_string=${keywords}`)
+          .get(`/products/search?limit=20&page=1&query_string=${searchKeywords}`)
           .reply(400, payload);
         const expectedActions = [
           {
@@ -463,7 +481,7 @@ describe('itemActions', () => {
             payload: [],
           },
         ];
-        return store.dispatch(actions.searchProducts(keywords))
+        return store.dispatch(actions.searchProducts({ searchKeywords }))
           .catch(() => {
             const actions = store.getActions();
             expect(actions).toEqual(expectedActions);
@@ -472,9 +490,9 @@ describe('itemActions', () => {
 
       test('should dispatch action - Success', () => {
         const response = { rows: [] }
-        const keywords = 'text'
+        const searchKeywords = 'text'
         nock(API_URL_TEST)
-          .get(`/products/search?limit=5&query_string=${keywords}`)
+          .get(`/products/search?limit=20&page=1&query_string=${searchKeywords}`)
           .reply(200, response);
         const expectedActions = [
           {
@@ -494,7 +512,7 @@ describe('itemActions', () => {
             payload: [],
           },
         ];
-        return store.dispatch(actions.searchProducts(keywords))
+        return store.dispatch(actions.searchProducts({searchKeywords}))
           .catch(() => {
             const actions = store.getActions();
             expect(actions).toEqual(expectedActions);
@@ -631,6 +649,22 @@ describe('itemActions', () => {
         ];
         return store.dispatch(actions.fetchItems({ categoryId, type: 'category' }))
           .then(() => {
+            const actions = store.getActions();
+            expect(actions).toEqual(expectedActions);
+          });
+      });
+    });
+
+    describe('searchProductsRecommendation', () => {
+      test('should dispatch action - Success', () => {
+        const response = { rows: [] }
+        const searchKeywords = 'text'
+        nock(API_URL_TEST)
+          .get(`/products/search?limit=5&page=1&query_string=${searchKeywords}`)
+          .reply(200, response);
+        const expectedActions = [];
+        return store.dispatch(actions.searchProductsRecommendation(searchKeywords))
+          .catch(() => {
             const actions = store.getActions();
             expect(actions).toEqual(expectedActions);
           });

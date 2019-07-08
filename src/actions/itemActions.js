@@ -82,6 +82,16 @@ export const addingItemToCart = payload => ({
   payload,
 });
 
+export const setItemsNotFound = payload => ({
+  type: types.SET_ITEMS_NOT_FOUND,
+  payload,
+});
+
+export const setSearchKeywords = payload => ({
+  type: types.SET_SEARCH_KEYWORDS,
+  payload,
+});
+
 export const fetchDepartments = () => dispatch => {
   return axios
     .get('/departments')
@@ -153,19 +163,22 @@ export const addItemToCart = ({ itemId, cartId }) => dispatch => {
     })
 };
 
-export const searchProducts = keywords => dispatch => {
+export const searchProducts = ({ searchKeywords, page = 1}) => dispatch => {
   dispatch(setSearchingItems(true));
-  dispatch(setSearchedItems([]));
+  dispatch(setSearchedItems({ rows: [] }));
   return axios
-    .get(`/products/search?limit=5&query_string=${keywords}`)
+    .get(`/products/search?limit=20&page=${page}&query_string=${searchKeywords}`)
     .then(({ data }) => {
-      dispatch(setSearchedItems(data.rows));
+      const { rows, count } = data;
+      const meta = getMetaData({ page, count });
+      dispatch(setSearchedItems({ rows, meta }));
+      dispatch(setItemsNotFound(rows.length === 0));
       dispatch(setSearchingItems(false));
       return data;
     })
     .catch(err => {
       dispatch(setSearchingItems(false));
-      dispatch(setSearchedItems([]));
+      dispatch(setItemsNotFound(false));
     });
 };
 
@@ -204,4 +217,12 @@ export const fetchItems = ({
       dispatch(setItemError(error));
       dispatch(setLoadingItems(false));
     });
+};
+
+export const searchProductsRecommendation = (searchKeywords) => dispatch => {
+  return axios
+    .get(`/products/search?limit=5&page=1&query_string=${searchKeywords}`)
+    .then(({ data }) => {
+      return data.rows;
+    })
 };
