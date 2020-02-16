@@ -91,7 +91,7 @@ const Pagination = ({ page, pages, goToPage }) => (
           <button
             type="button"
             onClick={() => goToPage(1)}
-            className="pagination-page active page-1-btn"
+            className="pagination-page page-1-btn"
             aria-label="Goto page 1"
           >
             1
