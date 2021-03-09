@@ -125,7 +125,7 @@ export class AuthModal extends Component {
               onClick={() => _setAuthModal('Sign Up')}
               className="bottom-btn"
             >
-              Crate an account
+              Create an account
             </button>
           </div>
         </div>
